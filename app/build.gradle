@@ -44,6 +44,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'commons-io:commons-io:2.4'
 
+    compile 'com.jakewharton.timber:timber:4.5.1'
+
     compile 'com.android.support:recyclerview-v7:26.0.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

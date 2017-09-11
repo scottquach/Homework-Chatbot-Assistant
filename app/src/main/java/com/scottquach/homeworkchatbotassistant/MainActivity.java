@@ -4,12 +4,17 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.Toast;
 
 import com.scottquach.homeworkchatbotassistant.databinding.ActivityMainBinding;
 
@@ -27,7 +32,13 @@ import ai.api.android.AIService;
 import ai.api.model.AIError;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
+import timber.log.Timber;
+
 import com.google.gson.JsonElement;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -38,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements AIListener{
     private AIService aiService;
     private AIDataService aiDataService;
 
+    private List<MessageModel> messageModels;
+    private RecyclerChatAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements AIListener{
                 AIConfiguration.RecognitionEngine.System);
         aiService = AIService.getService(this, config);
         aiService.setListener(this);
+
+        messageModels = new ArrayList<>();
+        setupRecyclerView();
     }
 
     @Override
@@ -69,14 +86,15 @@ public class MainActivity extends AppCompatActivity implements AIListener{
         }
 
         // Show results in TextView.
-        binding.respondText.setText("Query:" + result.getResolvedQuery() +
-                "\nAction: " + result.getAction() +
-                "\nParameters: " + parameterString);
+//        binding.respondText.setText("Query:" + result.getResolvedQuery() +
+//                "\nAction: " + result.getAction() +
+//                "\nParameters: " + parameterString);
     }
 
     @Override
     public void onError(AIError error) {
-        binding.respondText.setText(error.toString());
+        Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show();
+        Timber.e(error.toString());
     }
 
     @Override
@@ -99,9 +117,25 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
     }
 
-    public void mainButtonClicked(View view) {
-        aiService.startListening();
-        Log.d("stuff", "starting aiService");
+    private void setupRecyclerView() {
+        adapter = new RecyclerChatAdapter(messageModels, this);
+        binding.recyclerMessages.setAdapter(adapter);
+        binding.recyclerMessages.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void addMessage(final int messageType, final String message) {
+        Handler mainHandler = new Handler(MainActivity.this.getMainLooper());
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                MessageModel model = new MessageModel(messageType, message, new Timestamp(1000));
+                messageModels.add(model);
+                adapter.addMessage(messageModels);
+            }
+        };
+        mainHandler.post(myRunnable);
+
     }
 
     private void requestPermissions() {
@@ -113,8 +147,9 @@ public class MainActivity extends AppCompatActivity implements AIListener{
         }
     }
 
-    public void textButtonClicked(View view) throws AIServiceException {
-        String text = binding.editText.getText().toString();
+    public void sendButtonClicked(View view) throws AIServiceException {
+        String text = binding.editInput.getText().toString();
+        addMessage(MessageType.SENT, text);
 //        AIRequest aiRequest = new AIRequest();
 //        aiRequest.setQuery(text);
 //        aiService.textRequest(aiRequest);
@@ -136,14 +171,19 @@ public class MainActivity extends AppCompatActivity implements AIListener{
                     }
                 }
 
+                String textResponse = result.getFulfillment().getSpeech();
+
+                Timber.d("text response was" + textResponse);
+                Timber.d(result.getResolvedQuery());
                 // Show results in TextView.
-                binding.respondText.setText("Query:" + result.getResolvedQuery() +
-                        "\nAction: " + result.getAction() +
-                        "\nParameters: " + parameterString);
-                // might depend on you implementation ; find out how to
-                // retrieve the AIService instance and replace "aiDialog.getAIService()"
+//                binding.respondText.setText("Query:" + result.getResolvedQuery() +
+//                        "\nAction: " + result.getAction() +
+//                        "\nParameters: " + parameterString);
+
+                addMessage(MessageType.RECEIVED, result.getFulfillment().getSpeech());
+
             } catch (Exception e) {
-                this.exception = e;
+                Timber.d(e);
             }
             return resp;
         }
