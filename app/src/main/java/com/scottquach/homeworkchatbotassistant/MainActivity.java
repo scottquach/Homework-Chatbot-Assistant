@@ -14,6 +14,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.scottquach.homeworkchatbotassistant.databinding.ActivityMainBinding;
 
 import ai.api.AIDataService;
@@ -41,15 +45,21 @@ public class MainActivity extends AppCompatActivity implements AIListener{
     ActivityMainBinding binding;
 
     private AIService aiService;
-    private AIDataService aiDataService;
 
     private List<MessageModel> messageModels;
     private RecyclerChatAdapter adapter;
+
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+
         final AIConfiguration config = new AIConfiguration("35b6e6bf57cf4c6dbeeb18b1753471ab",
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
@@ -57,13 +67,14 @@ public class MainActivity extends AppCompatActivity implements AIListener{
         aiService.setListener(this);
 
         messageModels = new ArrayList<>();
-        setupRecyclerView();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         requestPermissions();
+        setupRecyclerView();
     }
 
     @Override
@@ -78,11 +89,6 @@ public class MainActivity extends AppCompatActivity implements AIListener{
                 parameterString += "(" + entry.getKey() + ", " + entry.getValue() + ") ";
             }
         }
-
-        // Show results in TextView.
-//        binding.respondText.setText("Query:" + result.getResolvedQuery() +
-//                "\nAction: " + result.getAction() +
-//                "\nParameters: " + parameterString);
     }
 
     @Override
@@ -95,17 +101,14 @@ public class MainActivity extends AppCompatActivity implements AIListener{
     public void onAudioLevel(float level) {
 
     }
-
     @Override
     public void onListeningStarted() {
 
     }
-
     @Override
     public void onListeningCanceled() {
 
     }
-
     @Override
     public void onListeningFinished() {
 
@@ -118,35 +121,26 @@ public class MainActivity extends AppCompatActivity implements AIListener{
     }
 
     private void addMessage(final int messageType, final String message) {
-        Handler mainHandler = new Handler(MainActivity.this.getMainLooper());
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        String key = databaseReference.child("users").child(user.getUid()).child("messages").push().getKey();
 
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
-                MessageModel model = new MessageModel(messageType, message, new Timestamp(System.currentTimeMillis()));
-                messageModels.add(model);
-                adapter.addMessage(messageModels);
-            }
-        };
-        mainHandler.post(myRunnable);
+        MessageModel model = new MessageModel(messageType, message, new Timestamp(System.currentTimeMillis()), key);
+        messageModels.add(model);
+        adapter.addMessage(messageModels);
 
+        databaseReference.child("users").child(user.getUid()).child("messages").child(key).setValue(model);
     }
 
     private void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-
-
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET, Manifest.permission.RECORD_AUDIO}, 0);
-
         }
     }
 
     public void sendButtonClicked(View view) throws AIServiceException {
         String text = binding.editInput.getText().toString();
         addMessage(MessageType.SENT, text);
-//        AIRequest aiRequest = new AIRequest();
-//        aiRequest.setQuery(text);
-//        aiService.textRequest(aiRequest);
         new DoTextRequestTask().execute(text);
     }
 
@@ -156,7 +150,16 @@ public class MainActivity extends AppCompatActivity implements AIListener{
             AIResponse resp = null;
             try {
                 resp = aiService.textRequest(text[0], new RequestExtras());
-                Result result = resp.getResult();
+
+
+            } catch (Exception e) {
+                Timber.d(e);
+            }
+            return resp;
+        }
+        protected void onPostExecute(AIResponse response) {
+            if (response != null && !response.isError()) {
+                Result result = response.getResult();
                 // Get parameters
                 String parameterString = "";
                 if (result.getParameters() != null && !result.getParameters().isEmpty()) {
@@ -172,16 +175,9 @@ public class MainActivity extends AppCompatActivity implements AIListener{
                         "\nAction: " + result.getAction() +
                         "\nParameters: " + parameterString);
 
-                addMessage(MessageType.RECEIVED, result.getFulfillment().getSpeech());
+                addMessage(MessageType.RECEIVED, textResponse);
+            } else {
 
-            } catch (Exception e) {
-                Timber.d(e);
-            }
-            return resp;
-        }
-        protected void onPostExecute(AIResponse response) {
-            if (this.exception == null) {
-                // todo : handle the exception
             }
         }
     }
