@@ -16,8 +16,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.scottquach.homeworkchatbotassistant.databinding.ActivityMainBinding;
 
 import ai.api.AIDataService;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         final AIConfiguration config = new AIConfiguration("35b6e6bf57cf4c6dbeeb18b1753471ab",
                 AIConfiguration.SupportedLanguages.English,
@@ -68,13 +73,24 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
         messageModels = new ArrayList<>();
 
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Timber.d("Retrieved DataSnapshot");
+                loadData(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         requestPermissions();
-        setupRecyclerView();
     }
 
     @Override
@@ -114,14 +130,24 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
     }
 
+    private void loadData(DataSnapshot dataSnapshot) {
+        for (DataSnapshot ds : dataSnapshot.child("users").child(user.getUid()).child("messages").getChildren()) {
+            MessageModel messageModel = new MessageModel();
+            messageModel.setType((Long) ds.child("type").getValue());
+            messageModel.setMessage((String) ds.child("message").getValue());
+            messageModel.setTimestamp(new Timestamp((Long) ds.child("timestamp").child("time").getValue()));
+            messageModels.add(messageModel);
+        }
+        setupRecyclerView();
+    }
+
     private void setupRecyclerView() {
         adapter = new RecyclerChatAdapter(messageModels, this);
         binding.recyclerMessages.setAdapter(adapter);
         binding.recyclerMessages.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    private void addMessage(final int messageType, final String message) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private void addMessage(int messageType, String message) {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         String key = databaseReference.child("users").child(user.getUid()).child("messages").push().getKey();
 

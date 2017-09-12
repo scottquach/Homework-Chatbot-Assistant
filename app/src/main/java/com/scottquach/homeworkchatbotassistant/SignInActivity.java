@@ -77,8 +77,6 @@ public class SignInActivity extends AppCompatActivity{
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        Timber.d("Account id is " + account.getId());
-
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

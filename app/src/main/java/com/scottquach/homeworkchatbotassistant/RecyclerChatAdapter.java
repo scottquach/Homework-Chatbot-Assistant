@@ -57,7 +57,7 @@ public class RecyclerChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        switch (messageModels.get(position).getType()) {
+        switch ((int) messageModels.get(position).getType()) {
             case MessageType.SENT:
                 return MessageType.SENT;
             case MessageType.RECEIVED:
