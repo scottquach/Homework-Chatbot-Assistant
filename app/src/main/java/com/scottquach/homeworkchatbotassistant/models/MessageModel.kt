@@ -1,4 +1,4 @@
-package com.scottquach.homeworkchatbotassistant
+package com.scottquach.homeworkchatbotassistant.models
 
 import java.sql.Timestamp
 

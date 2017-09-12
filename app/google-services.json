@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1019132114966",
+    "firebase_url": "https://homework-assistant-e9558.firebaseio.com",
+    "project_id": "homework-assistant-e9558",
+    "storage_bucket": "homework-assistant-e9558.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019132114966:android:60c170c30a4892f1",
+        "android_client_info": {
+          "package_name": "com.scottquach.homeworkchatbotassistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019132114966-j0d0n7bumhank306bije8qiq4kos5c7f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scottquach.homeworkchatbotassistant",
+            "certificate_hash": "a03d396e5be69096da9a17d44f91c0343a9d419c"
+          }
+        },
+        {
+          "client_id": "1019132114966-rqm0skrrj7i44qpqmagb8r5aikbgspj6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADT56HTQ5r369lnWnJnkHs9g2yLxkYoZs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019132114966-rqm0skrrj7i44qpqmagb8r5aikbgspj6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

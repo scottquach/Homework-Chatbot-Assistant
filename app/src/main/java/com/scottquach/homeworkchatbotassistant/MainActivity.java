@@ -10,10 +10,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Toast;
 
 import com.scottquach.homeworkchatbotassistant.databinding.ActivityMainBinding;
@@ -24,17 +22,13 @@ import ai.api.AIServiceException;
 import ai.api.RequestExtras;
 import ai.api.android.AIService;
 import ai.api.model.AIError;
-import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
-import ai.api.AIListener;
 import ai.api.android.AIConfiguration;
-import ai.api.android.AIService;
-import ai.api.model.AIError;
-import ai.api.model.AIResponse;
 import ai.api.model.Result;
 import timber.log.Timber;
 
 import com.google.gson.JsonElement;
+import com.scottquach.homeworkchatbotassistant.models.MessageModel;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -129,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements AIListener{
         Runnable myRunnable = new Runnable() {
             @Override
             public void run() {
-                MessageModel model = new MessageModel(messageType, message, new Timestamp(1000));
+                MessageModel model = new MessageModel(messageType, message, new Timestamp(System.currentTimeMillis()));
                 messageModels.add(model);
                 adapter.addMessage(messageModels);
             }
@@ -174,11 +168,9 @@ public class MainActivity extends AppCompatActivity implements AIListener{
                 String textResponse = result.getFulfillment().getSpeech();
 
                 Timber.d("text response was" + textResponse);
-                Timber.d(result.getResolvedQuery());
-                // Show results in TextView.
-//                binding.respondText.setText("Query:" + result.getResolvedQuery() +
-//                        "\nAction: " + result.getAction() +
-//                        "\nParameters: " + parameterString);
+                Timber.d("Query:" + result.getResolvedQuery() +
+                        "\nAction: " + result.getAction() +
+                        "\nParameters: " + parameterString);
 
                 addMessage(MessageType.RECEIVED, result.getFulfillment().getSpeech());
 

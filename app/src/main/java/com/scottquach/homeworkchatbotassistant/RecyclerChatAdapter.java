@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.scottquach.homeworkchatbotassistant.models.MessageModel;
+
 import java.util.List;
 
 import timber.log.Timber;
@@ -46,11 +48,9 @@ public class RecyclerChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         switch (holder.getItemViewType()) {
             case MessageType.SENT:
                 ((SentViewHolder) holder).messageViewSent.setText(messageModels.get(position).getMessage());
-                Timber.d("Binding a SENT message");
                 break;
             case MessageType.RECEIVED:
                 ((ReceivedViewHolder) holder).messageViewReceived.setText(messageModels.get(position).getMessage());
-                Timber.d("Binding a RECEIVED message");
                 break;
         }
     }
@@ -70,14 +70,12 @@ public class RecyclerChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        Timber.d("size is " + messageModels.size());
         return messageModels.size();
     }
 
     public void addMessage(List messageModels) {
         this.messageModels = messageModels;
         notifyDataSetChanged();
-        Timber.d("message was added");
     }
 
     public class SentViewHolder extends RecyclerView.ViewHolder{
