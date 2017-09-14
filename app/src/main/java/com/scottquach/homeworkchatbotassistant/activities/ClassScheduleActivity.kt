@@ -10,16 +10,12 @@ import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.changeFragment
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
-import java.sql.Timestamp
 
 class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClassInterface,
     DisplayScheduleFragment.ScheduleDisplayListener{
 
-
     private lateinit var databaseReference: DatabaseReference
     private var user: FirebaseUser? = null
-    private var userClasses = mutableListOf<ClassModel>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,17 +23,6 @@ class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClas
 
         databaseReference = FirebaseDatabase.getInstance().reference
         user = FirebaseAuth.getInstance().currentUser
-
-        databaseReference!!.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                loadData(dataSnapshot)
-            }
-
-            override fun onCancelled(error: DatabaseError?) {
-
-            }
-
-        })
     }
 
     override fun onResume() {
@@ -45,35 +30,20 @@ class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClas
         openScheduleDisplayFragment()
     }
 
-    fun loadData(dataSnapshot: DataSnapshot) {
-        for (ds in dataSnapshot.child("users").child(user?.uid).child("classes").children) {
-            var classModel = ClassModel()
-            classModel.title = ds.child("title").getValue() as String
-            classModel.timeStart = Timestamp(ds.child("timeStart").child("time").value as Long)
-            classModel.timeEnd = Timestamp(ds.child("timeEnd").child("time").value as Long)
-            var days = mutableListOf<Int>()
-            for (ds in  dataSnapshot.child("users").child(user?.uid).child("classes").child(classModel.title).child("day").children) {
-                days.add((ds.value as Long).toInt())
-            }
-            classModel.days = days
-            userClasses.add(classModel)
-        }
-    }
-
-    fun openScheduleDisplayFragment() {
+    private fun openScheduleDisplayFragment() {
         val fragment = DisplayScheduleFragment()
         supportFragmentManager.changeFragment(R.id.fragment_container_class, fragment, false)
     }
 
-    fun openCreateClassFragment() {
+    private fun openCreateClassFragment() {
         val fragment = CreateClassFragment()
-        supportFragmentManager.changeFragment(R.id.fragment_container_class, fragment)
+        supportFragmentManager.changeFragment(R.id.fragment_container_class, fragment, false)
     }
 
-
-
     override fun addClass(newClass: ClassModel) {
-        databaseReference.child("users").child(user?.uid).child("classes").child(newClass.title).setValue(newClass)
+        user?.let {
+            databaseReference.child("users").child(user?.uid).child("classes").child(newClass.title).setValue(newClass)
+        }
     }
 
     override fun switchToCreateFragment() {

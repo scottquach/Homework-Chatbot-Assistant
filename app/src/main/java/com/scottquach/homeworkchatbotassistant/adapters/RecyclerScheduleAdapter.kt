@@ -7,12 +7,13 @@ import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import kotlinx.android.synthetic.main.row_class.view.*
+import timber.log.Timber
 
 /**
  * Created by Scott Quach on 9/13/2017.
  */
 
-class RecyclerScheduleAdapter(var userClassModels: MutableList<ClassModel>) : RecyclerView.Adapter<RecyclerScheduleAdapter.ViewHolder>() {
+class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassModel>) : RecyclerView.Adapter<RecyclerScheduleAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder? {
         return ViewHolder(parent.inflate(R.layout.row_class))
@@ -22,14 +23,22 @@ class RecyclerScheduleAdapter(var userClassModels: MutableList<ClassModel>) : Re
         holder.bindInformation(userClassModels[position])
     }
 
-    override fun getItemCount(): Int {
-        return userClassModels.size
+    override fun getItemCount() = userClassModels.size
+
+    fun updateData(newClasses: MutableList<ClassModel>) {
+        userClassModels.apply {
+            clear()
+            newClasses
+        }
+        notifyDataSetChanged()
+        Timber.d("updated data")
     }
 
     class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindInformation(model: ClassModel) {
             itemView.text_title.text = model.title
+            itemView.text_time.text = model.timeEnd.toString()
         }
     }
 

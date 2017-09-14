@@ -31,7 +31,6 @@ public class RecyclerChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Timber.d(String.valueOf(viewType));
         switch (viewType) {
             case MessageType.SENT:
                 View view = LayoutInflater.from(context).inflate(R.layout.row_message_sent, parent, false);
