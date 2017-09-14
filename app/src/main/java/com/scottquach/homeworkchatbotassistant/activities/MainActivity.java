@@ -1,10 +1,10 @@
-package com.scottquach.homeworkchatbotassistant;
+package com.scottquach.homeworkchatbotassistant.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,9 +21,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.scottquach.homeworkchatbotassistant.MessageType;
+import com.scottquach.homeworkchatbotassistant.R;
+import com.scottquach.homeworkchatbotassistant.adapters.RecyclerChatAdapter;
 import com.scottquach.homeworkchatbotassistant.databinding.ActivityMainBinding;
 
-import ai.api.AIDataService;
 import ai.api.AIListener;
 import ai.api.AIServiceException;
 import ai.api.RequestExtras;
@@ -52,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements AIListener{
     private List<MessageModel> messageModels;
     private RecyclerChatAdapter adapter;
 
-    private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private FirebaseUser user;
 
@@ -61,8 +62,7 @@ public class MainActivity extends AppCompatActivity implements AIListener{
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         final AIConfiguration config = new AIConfiguration("35b6e6bf57cf4c6dbeeb18b1753471ab",
@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements AIListener{
                 Timber.d("Retrieved DataSnapshot");
                 loadData(dataSnapshot);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -97,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements AIListener{
     public void onResult(AIResponse response) {
         Log.d("stuff", "on response was called");
         Result result = response.getResult();
-
         // Get parameters
         String parameterString = "";
         if (result.getParameters() != null && !result.getParameters().isEmpty()) {
@@ -170,14 +168,16 @@ public class MainActivity extends AppCompatActivity implements AIListener{
         new DoTextRequestTask().execute(text);
     }
 
+    public void classButtonClicked(View view) {
+        startActivity(new Intent(this, ClassScheduleActivity.class));
+    }
+
     class DoTextRequestTask extends AsyncTask<String, Void, AIResponse> {
         private Exception exception = null;
         protected AIResponse doInBackground(String... text) {
             AIResponse resp = null;
             try {
                 resp = aiService.textRequest(text[0], new RequestExtras());
-
-
             } catch (Exception e) {
                 Timber.d(e);
             }

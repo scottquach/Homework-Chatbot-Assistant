@@ -1,4 +1,4 @@
-package com.scottquach.homeworkchatbotassistant;
+package com.scottquach.homeworkchatbotassistant.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.scottquach.homeworkchatbotassistant.MessageType;
+import com.scottquach.homeworkchatbotassistant.R;
 import com.scottquach.homeworkchatbotassistant.models.MessageModel;
 
 import java.util.List;

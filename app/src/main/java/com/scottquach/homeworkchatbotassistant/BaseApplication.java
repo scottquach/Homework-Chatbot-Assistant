@@ -2,6 +2,9 @@ package com.scottquach.homeworkchatbotassistant;
 
 import android.app.Application;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import timber.log.Timber;
 
 /**

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.scottquach.homeworkchatbotassistant.SignInActivity"
+    tools:context="com.scottquach.homeworkchatbotassistant.activities.SignInActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="81dp">
 
@@ -47,3 +48,4 @@
         tools:layout_editor_absoluteY="127dp" />
 
 </android.support.constraint.ConstraintLayout>
+</layout>

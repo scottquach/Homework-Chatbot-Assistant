@@ -1,4 +1,4 @@
-package com.scottquach.homeworkchatbotassistant;
+package com.scottquach.homeworkchatbotassistant.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -11,7 +11,6 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.scottquach.homeworkchatbotassistant.R;
 
 import timber.log.Timber;
 
