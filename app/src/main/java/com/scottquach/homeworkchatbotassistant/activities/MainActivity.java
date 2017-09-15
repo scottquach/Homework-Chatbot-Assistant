@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.scottquach.homeworkchatbotassistant.BaseApplication;
+import com.scottquach.homeworkchatbotassistant.MessageHandler;
 import com.scottquach.homeworkchatbotassistant.MessageType;
 import com.scottquach.homeworkchatbotassistant.R;
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerChatAdapter;
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements AIListener{
     private DatabaseReference databaseReference;
     private FirebaseUser user;
 
+    private MessageHandler messageHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        messageHandler = new MessageHandler();
 
         final AIConfiguration config = new AIConfiguration("35b6e6bf57cf4c6dbeeb18b1753471ab",
                 AIConfiguration.SupportedLanguages.English,
@@ -73,7 +79,12 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
         messageModels = new ArrayList<>();
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        if (BaseApplication.getInstance().isFirstOpen()) {
+            messageHandler.receiveWelcomeMessage();
+            BaseApplication.getInstance().getSharePref().edit().putBoolean("first_open", false).apply();
+        }
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Timber.d("Retrieved DataSnapshot");
@@ -129,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements AIListener{
     }
 
     private void loadData(DataSnapshot dataSnapshot) {
+        messageModels.clear();
         for (DataSnapshot ds : dataSnapshot.child("users").child(user.getUid()).child("messages").getChildren()) {
             MessageModel messageModel = new MessageModel();
             messageModel.setType((Long) ds.child("type").getValue());
@@ -203,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
                 addMessage(MessageType.RECEIVED, textResponse);
             } else {
-
+                Timber.d("API.AI response was an error ");
             }
         }
     }

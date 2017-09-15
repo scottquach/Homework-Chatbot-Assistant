@@ -1,6 +1,7 @@
 package com.scottquach.homeworkchatbotassistant;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -12,9 +13,9 @@ import timber.log.Timber;
  */
 
 public class BaseApplication extends Application {
-    private static final BaseApplication instance = new BaseApplication();
+    private static BaseApplication instance;
 
-    static BaseApplication getInstance() {
+    public static BaseApplication getInstance() {
         return instance;
     }
 
@@ -23,7 +24,16 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         Timber.plant(new MyDebugTree());
+    }
+
+    public SharedPreferences getSharePref() {
+        return this.getApplicationContext().getSharedPreferences("app", MODE_PRIVATE);
+    }
+
+    public boolean isFirstOpen() {
+        return getSharePref().getBoolean("first_open", true);
     }
 
     /**
