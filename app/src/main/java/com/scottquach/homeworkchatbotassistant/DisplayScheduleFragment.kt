@@ -83,13 +83,11 @@ class DisplayScheduleFragment : Fragment() {
         userClasses.clear()
         for (ds in dataSnapshot.child("users").child(user?.uid).child("classes").children) {
             var classModel = ClassModel()
-            classModel.title = ds.child("title").getValue() as String
+            classModel.title = ds.child("title").value as String
             classModel.timeStart = Timestamp(ds.child("timeStart").child("time").value as Long)
             classModel.timeEnd = Timestamp(ds.child("timeEnd").child("time").value as Long)
             var days = mutableListOf<Int>()
-            for (ds in dataSnapshot.child("users").child(user?.uid).child("classes").child(classModel.title).child("day").children) {
-                days.add((ds.value as Long).toInt())
-            }
+            dataSnapshot.child("users").child(user?.uid).child("classes").child(classModel.title).child("day").children.mapTo(days) { (it.value as Long).toInt() }
             classModel.days = days
             userClasses.add(classModel)
         }

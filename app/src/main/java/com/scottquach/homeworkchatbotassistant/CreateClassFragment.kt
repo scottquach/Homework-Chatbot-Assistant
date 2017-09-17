@@ -8,22 +8,22 @@ import android.view.View
 import android.view.ViewGroup
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import kotlinx.android.synthetic.main.fragment_create_class.*
+import timber.log.Timber
 import java.sql.Timestamp
 
 class CreateClassFragment : Fragment() {
 
     private var listener: CreateClassInterface? = null
+    private var timeStart: Long = 0
+    private var timeEnd: Long = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
+    interface CreateClassInterface {
+        fun addClass(newClass: ClassModel)
+        fun switchToDisplayFragment()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-
         return container?.inflate(R.layout.fragment_create_class)
     }
 
@@ -42,6 +42,18 @@ class CreateClassFragment : Fragment() {
         floating_cancel.setOnClickListener {
             listener?.switchToDisplayFragment()
         }
+
+        button_change_start_time.setOnClickListener {
+            var fragment = TimePickerFragment.newInstance(Constants.TIME_PICKER_START)
+            fragment.setTargetFragment(this, Constants.TIME_PICKER_START)
+            fragment.show(fragmentManager, "timePicker")
+        }
+
+        button_change_end_time.setOnClickListener {
+            var fragment = TimePickerFragment.newInstance(Constants.TIME_PICKER_END)
+            fragment.setTargetFragment(this, Constants.TIME_PICKER_END)
+            fragment.show(fragmentManager, "timePicker")
+        }
     }
 
     override fun onAttach(context: Context?) {
@@ -59,42 +71,28 @@ class CreateClassFragment : Fragment() {
     }
 
 
-    fun  createNewClassModel(): ClassModel {
+    private fun createNewClassModel(): ClassModel {
         var newClassModel = ClassModel()
         newClassModel.title = edit_title.text.toString()
-        newClassModel.timeStart = Timestamp(edit_time_start.text.toString().toLong())
-        newClassModel.timeEnd = Timestamp(edit_time_end.text.toString().toLong())
+        newClassModel.timeStart = Timestamp(timeStart)
+        newClassModel.timeEnd = Timestamp(timeEnd)
         newClassModel.days = mutableListOf(1, 2, 3)
         return newClassModel
     }
 
-    interface CreateClassInterface {
-        fun addClass(newClass: ClassModel)
-        fun switchToDisplayFragment()
-    }
+    fun setTime(tag: Int, time: Long) {
+        Timber.d("set time was called " + tag)
+        when (tag) {
+            Constants.TIME_PICKER_START -> {
+                timeStart = time
+                text_start_time.text = time.toString()
+            }
+            Constants.TIME_PICKER_END -> {
+                timeEnd = time
+                text_end_time.text = time.toString()
+            }
 
-    companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private val ARG_PARAM1 = "param1"
-        private val ARG_PARAM2 = "param2"
-
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CreateClassFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String, param2: String): CreateClassFragment {
-            val fragment = CreateClassFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
         }
     }
-}// Required empty public constructor
+
+}

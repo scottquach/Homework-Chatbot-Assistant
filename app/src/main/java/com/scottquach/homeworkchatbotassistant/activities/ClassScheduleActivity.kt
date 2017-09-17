@@ -5,11 +5,10 @@ import android.support.v4.app.FragmentActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.scottquach.homeworkchatbotassistant.CreateClassFragment
+import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.R
-import com.scottquach.homeworkchatbotassistant.DisplayScheduleFragment
-import com.scottquach.homeworkchatbotassistant.changeFragment
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
+import timber.log.Timber
 
 class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClassInterface,
     DisplayScheduleFragment.ScheduleDisplayListener{

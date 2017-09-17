@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.scottquach.homeworkchatbotassistant.BaseApplication;
+import com.scottquach.homeworkchatbotassistant.Constants;
 import com.scottquach.homeworkchatbotassistant.MessageHandler;
 import com.scottquach.homeworkchatbotassistant.MessageType;
 import com.scottquach.homeworkchatbotassistant.R;
@@ -153,8 +154,10 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
     private void setupRecyclerView() {
         adapter = new RecyclerChatAdapter(messageModels, this);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setStackFromEnd(true);
         binding.recyclerMessages.setAdapter(adapter);
-        binding.recyclerMessages.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerMessages.setLayoutManager(manager);
     }
 
     private void addMessage(int messageType, String message) {
@@ -163,9 +166,21 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
         MessageModel model = new MessageModel(messageType, message, new Timestamp(System.currentTimeMillis()), key);
         messageModels.add(model);
-        adapter.addMessage(messageModels);
+        adapter.addMessage(model);
 
         databaseReference.child("users").child(user.getUid()).child("messages").child(key).setValue(model);
+    }
+
+    private void determineResponseActions(Result result) {
+        switch (result.getAction()) {
+            case Constants.ACTION_ASSIGNMENT_SPECIFIC_CLASS:
+                Timber.d("Action was specific class");
+            break;
+
+            case Constants.ACTION_ASSIGNMENT_PROMPTED_CLASS:
+                Timber.d("Action was prompted class");
+                break;
+        }
     }
 
     private void requestPermissions() {
@@ -213,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements AIListener{
                         "\nAction: " + result.getAction() +
                         "\nParameters: " + parameterString);
 
+                determineResponseActions(result);
                 addMessage(MessageType.RECEIVED, textResponse);
             } else {
                 Timber.d("API.AI response was an error ");

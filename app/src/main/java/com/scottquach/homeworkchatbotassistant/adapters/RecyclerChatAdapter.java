@@ -74,8 +74,8 @@ public class RecyclerChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return messageModels.size();
     }
 
-    public void addMessage(List messageModels) {
-        this.messageModels = messageModels;
+    public void addMessage(MessageModel model) {
+        this.messageModels.add(model);
         notifyDataSetChanged();
     }
 
