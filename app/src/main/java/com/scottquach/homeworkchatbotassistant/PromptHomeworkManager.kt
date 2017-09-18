@@ -11,8 +11,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
+import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import timber.log.Timber
-import java.sql.Timestamp
 import java.util.*
 
 /**
@@ -40,11 +40,10 @@ class PromptHomeworkManager(var context: Context) {
     }
 
     fun determineNextAlarm() {
-        val currentTime = Timestamp(System.currentTimeMillis())
+        val calendar = Calendar.getInstance()
         val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
         val classesOnDay = getNextClassesByDay(currentDay)
-
-        val nextClass = getNextClassOfDay(classesOnDay)
+        val nextClass = getNextClassOfDay(classesOnDay, TimeModel(10, 11))
 
 
     }
@@ -56,10 +55,13 @@ class PromptHomeworkManager(var context: Context) {
         for (ds in dataSnapshot.child("users").child(user?.uid).child("classes").children) {
             var model = ClassModel()
             model.title = ds.child("title").value as String
-            model.timeStart = Timestamp(ds.child("timeEnd").child("time").value as Long)
-            ds.child("days").children.mapTo(model.days) { (it.value as Long).toInt()}
+            model.timeEnd = TimeModel(ds.child("timeEnd").child("timeEndHour").value as Long,
+                    ds.child("timeEnd").child("timeEndMinute").value as Long)
+            ds.child("days").children.mapTo(model.days) { (it.value as Long).toInt() }
             userClasses.add(model)
         }
+        Timber.d(userClasses.toString())
+        determineNextAlarm()
     }
 
     /**
@@ -67,24 +69,41 @@ class PromptHomeworkManager(var context: Context) {
      *
      * @param Day of the week as an Int
      */
-    private fun getNextClassesByDay(specifiedDay:Int): MutableList<ClassModel> {
-        var classesOnDay = mutableListOf<ClassModel>()
-        for(model in userClasses) {
-            if (model.days.contains(specifiedDay)) {
-                classesOnDay.add(model)
-                break
-            }
-        }
+    private fun getNextClassesByDay(specifiedDay: Int): List<ClassModel> {
+        var classesOnDay = userClasses
+                .filter { it.days.contains(specifiedDay) }
+        Timber.d(classesOnDay.toString())
         return classesOnDay
     }
 
-    private fun getNextClassOfDay(classesOnDay: MutableList<ClassModel>): ClassModel {
-
-
-        return ClassModel()
+    private fun getNextClassOfDay(classesOnDay: List<ClassModel>, currentTime: TimeModel): ClassModel {
+        Timber.d("current time is" + currentTime.timeEndHour + " " + currentTime.timeEndMinute)
+        Timber.d("original list " + classesOnDay.toString())
+        var nextClasses = classesOnDay
+                .filter {
+                    it.timeEnd.timeEndHour >= currentTime.timeEndHour &&
+                            it.timeEnd.timeEndMinute >= currentTime.timeEndMinute
+                }
+                .sortedBy { it.timeEnd.timeEndHour }
+        Timber.d(nextClasses.toString())
+        if (nextClasses.isEmpty()) {
+            Timber.d("classes was empty")
+            Timber.d(classesOnDay.toString())
+            nextClasses = classesOnDay
+                    .sortedBy { it.timeEnd.timeEndHour }
+        }
+        Timber.d("hour organized" + nextClasses.toString())
+        return if (nextClasses.size > 1 && nextClasses[0].timeEnd.timeEndHour == nextClasses[1].timeEnd.timeEndHour) {
+            var nextClassesByHour = nextClasses
+                    .filter { it.timeEnd.timeEndHour == nextClasses[0].timeEnd.timeEndHour }
+                    .sortedBy { it.timeEnd.timeEndMinute }
+            Timber.d(nextClassesByHour.toString())
+            nextClassesByHour[0]
+        } else {
+            Timber.d("single result" + nextClasses[0].toString()  )
+            nextClasses[0]
+        }
     }
-
-
 
 
     private fun startNextAlarm() {

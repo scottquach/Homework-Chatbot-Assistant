@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
+import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import kotlinx.android.synthetic.main.fragment_create_class.*
 import timber.log.Timber
 import java.sql.Timestamp
@@ -14,8 +15,8 @@ import java.sql.Timestamp
 class CreateClassFragment : Fragment() {
 
     private var listener: CreateClassInterface? = null
-    private var timeStart: Long = 0
-    private var timeEnd: Long = 0
+
+    private lateinit var timeEnd: TimeModel
 
     interface CreateClassInterface {
         fun addClass(newClass: ClassModel)
@@ -36,7 +37,6 @@ class CreateClassFragment : Fragment() {
                 it.addClass(newClass)
                 it.switchToDisplayFragment()
             }
-
         }
 
         floating_cancel.setOnClickListener {
@@ -74,25 +74,14 @@ class CreateClassFragment : Fragment() {
     private fun createNewClassModel(): ClassModel {
         var newClassModel = ClassModel()
         newClassModel.title = edit_title.text.toString()
-        newClassModel.timeStart = Timestamp(timeStart)
-        newClassModel.timeEnd = Timestamp(timeEnd)
+        newClassModel.timeEnd = this.timeEnd
         newClassModel.days = mutableListOf(1, 2, 3)
         return newClassModel
     }
 
-    fun setTime(tag: Int, time: Long) {
+    fun setTime(tag: Int, time: TimeModel) {
         Timber.d("set time was called " + tag)
-        when (tag) {
-            Constants.TIME_PICKER_START -> {
-                timeStart = time
-                text_start_time.text = time.toString()
-            }
-            Constants.TIME_PICKER_END -> {
-                timeEnd = time
-                text_end_time.text = time.toString()
-            }
-
-        }
+        timeEnd = time
     }
 
 }

@@ -7,6 +7,5 @@ import java.sql.Timestamp
  */
 data class ClassModel(
         var title:String = "",
-        var timeStart:Timestamp = Timestamp(0),
-        var timeEnd:Timestamp = Timestamp(0),
+        var timeEnd:TimeModel = TimeModel(),
         var days: MutableList<Int> = mutableListOf())

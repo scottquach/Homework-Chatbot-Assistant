@@ -25,6 +25,7 @@ import com.scottquach.homeworkchatbotassistant.BaseApplication;
 import com.scottquach.homeworkchatbotassistant.Constants;
 import com.scottquach.homeworkchatbotassistant.MessageHandler;
 import com.scottquach.homeworkchatbotassistant.MessageType;
+import com.scottquach.homeworkchatbotassistant.PromptHomeworkManager;
 import com.scottquach.homeworkchatbotassistant.R;
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerChatAdapter;
 import com.scottquach.homeworkchatbotassistant.databinding.ActivityMainBinding;

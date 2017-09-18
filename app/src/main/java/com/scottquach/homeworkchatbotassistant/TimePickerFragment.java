@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.TimePicker;
 
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
+import com.scottquach.homeworkchatbotassistant.models.TimeModel;
 
+import java.util.Calendar;
 import timber.log.Timber;
 
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
@@ -51,7 +51,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        long milliseconds = (TimeUnit.HOURS.toMillis(hour) + TimeUnit.MINUTES.toMillis(minute));
-        ((CreateClassFragment) getTargetFragment()).setTime(tag, milliseconds);
+
+        ((CreateClassFragment) getTargetFragment()).setTime(tag, new TimeModel((long) hour,(long) minute));
     }
 }
