@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements AIListener{
         messageModels = new ArrayList<>();
 
         if (BaseApplication.getInstance().isFirstOpen()) {
+            Timber.d("first open");
             messageHandler.receiveWelcomeMessage();
             BaseApplication.getInstance().getSharePref().edit().putBoolean("first_open", false).apply();
         }
@@ -191,9 +192,10 @@ public class MainActivity extends AppCompatActivity implements AIListener{
     }
 
     public void sendButtonClicked(View view) throws AIServiceException {
-        String text = binding.editInput.getText().toString();
-        addMessage(MessageType.SENT, text);
-        new DoTextRequestTask().execute(text);
+//        String text = binding.editInput.getText().toString();
+//        addMessage(MessageType.SENT, text);
+//        new DoTextRequestTask().execute(text);
+        PromptHomeworkManager manager = new PromptHomeworkManager(this);
     }
 
     public void classButtonClicked(View view) {

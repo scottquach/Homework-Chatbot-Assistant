@@ -37,7 +37,7 @@ class MessageHandler {
             val model = MessageModel()
 
             model.message = message
-            model.type = MessageType.RECEIVED as Long
+            model.type = MessageType.RECEIVED.toLong()
             model.key = getMessageKey()
             model.timestamp = Timestamp(System.currentTimeMillis())
             messagesModels.add(model)
@@ -50,7 +50,7 @@ class MessageHandler {
         val model = MessageModel()
 
         model.message = "Do you have any homework for " + userClass
-        model.type = MessageType.RECEIVED as Long
+        model.type = MessageType.RECEIVED.toLong()
         model.key = getMessageKey()
         model.timestamp = Timestamp(System.currentTimeMillis())
 
