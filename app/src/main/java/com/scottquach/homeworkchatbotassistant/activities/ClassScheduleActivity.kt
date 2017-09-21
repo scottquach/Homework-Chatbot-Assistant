@@ -29,6 +29,12 @@ class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClas
         openScheduleDisplayFragment()
     }
 
+    override fun onPause() {
+        super.onPause()
+        val manager = PromptHomeworkManager(this@ClassScheduleActivity)
+        manager.startManaging()
+    }
+
     private fun openScheduleDisplayFragment() {
         val fragment = DisplayScheduleFragment()
         supportFragmentManager.changeFragment(R.id.fragment_container_class, fragment, false)

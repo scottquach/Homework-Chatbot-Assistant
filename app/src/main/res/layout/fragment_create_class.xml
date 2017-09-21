@@ -27,7 +27,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:clickable="true"
-        android:src="@color/colorPrimary"
+        android:src="@drawable/ic_check"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -38,52 +38,37 @@
         android:layout_marginBottom="16dp"
         android:layout_marginStart="16dp"
         android:clickable="true"
-        android:src="@color/colorAccent"
+        android:src="@drawable/ic_close"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/button_change_start_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="19dp"
-        android:layout_marginTop="18dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_start_time"
-        app:layout_constraintTop_toBottomOf="@+id/edit_title" />
-
-    <TextView
-        android:id="@+id/text_start_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="35dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/button_change_start_time"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_title" />
 
     <TextView
         android:id="@+id/text_end_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="85dp"
         android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/button_change_end_time"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_start_time" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/button_change_end_time"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button_change_end_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="19dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginEnd="86dp"
+        android:layout_marginTop="141dp"
         android:text="Button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/text_end_time"
-        app:layout_constraintTop_toBottomOf="@+id/button_change_start_time" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_day_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="Day Picker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_change_end_time" />
 
 </android.support.constraint.ConstraintLayout>

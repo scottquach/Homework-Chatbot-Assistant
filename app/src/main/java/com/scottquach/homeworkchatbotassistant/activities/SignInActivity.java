@@ -83,6 +83,7 @@ public class SignInActivity extends AppCompatActivity{
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            Timber.d("Firebase auth with google successful");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             Toast.makeText(SignInActivity.this, "Signed in", Toast.LENGTH_SHORT).show();
                             createUserInDatabase(user);

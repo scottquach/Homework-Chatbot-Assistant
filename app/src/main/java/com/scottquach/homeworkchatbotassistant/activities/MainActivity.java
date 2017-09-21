@@ -25,7 +25,6 @@ import com.scottquach.homeworkchatbotassistant.BaseApplication;
 import com.scottquach.homeworkchatbotassistant.Constants;
 import com.scottquach.homeworkchatbotassistant.MessageHandler;
 import com.scottquach.homeworkchatbotassistant.MessageType;
-import com.scottquach.homeworkchatbotassistant.PromptHomeworkManager;
 import com.scottquach.homeworkchatbotassistant.R;
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerChatAdapter;
 import com.scottquach.homeworkchatbotassistant.databinding.ActivityMainBinding;
@@ -34,6 +33,7 @@ import ai.api.AIListener;
 import ai.api.AIServiceException;
 import ai.api.RequestExtras;
 import ai.api.android.AIService;
+import ai.api.model.AIContext;
 import ai.api.model.AIError;
 import ai.api.model.AIResponse;
 import ai.api.android.AIConfiguration;
@@ -45,17 +45,20 @@ import com.scottquach.homeworkchatbotassistant.models.MessageModel;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class MainActivity extends AppCompatActivity implements AIListener{
+public class MainActivity extends AppCompatActivity implements AIListener {
 
     ActivityMainBinding binding;
 
     private AIService aiService;
 
     private List<MessageModel> messageModels;
+    private String convoContext;
+    private String classContext;
     private RecyclerChatAdapter adapter;
 
     private DatabaseReference databaseReference;
@@ -95,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements AIListener{
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Timber.d("error retrieving data" + databaseError.toString());
             }
         });
     }
@@ -151,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements AIListener{
             messageModel.setTimestamp(new Timestamp((Long) ds.child("timestamp").child("time").getValue()));
             messageModels.add(messageModel);
         }
+        convoContext = (String) dataSnapshot.child("users").child(user.getUid()).child("contexts").child("conversation").getValue();
+        classContext = (String) dataSnapshot.child("users").child(user.getUid()).child("contexts").child("class").getValue();
         setupRecyclerView();
     }
 
@@ -163,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements AIListener{
     }
 
     private void addMessage(int messageType, String message) {
-        databaseReference = FirebaseDatabase.getInstance().getReference();
         String key = databaseReference.child("users").child(user.getUid()).child("messages").push().getKey();
 
         MessageModel model = new MessageModel(messageType, message, new Timestamp(System.currentTimeMillis()), key);
@@ -177,25 +181,32 @@ public class MainActivity extends AppCompatActivity implements AIListener{
         switch (result.getAction()) {
             case Constants.ACTION_ASSIGNMENT_SPECIFIC_CLASS:
                 Timber.d("Action was specific class");
-            break;
-
+                break;
             case Constants.ACTION_ASSIGNMENT_PROMPTED_CLASS:
                 Timber.d("Action was prompted class");
+                final HashMap<String, JsonElement> params = result.getParameters();
+                String date = params.get("date").getAsString();
+                String assignment = params.get("assignment-official").getAsString();
+                Timber.d("Received words were " + date + " " + assignment);
+                messageHandler.confirmNewHomework(assignment, classContext, date);
+                break;
+            default:
+                String textResponse = result.getFulfillment().getSpeech();
+                addMessage(MessageType.RECEIVED, textResponse);
                 break;
         }
     }
 
     private void requestPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET, Manifest.permission.RECORD_AUDIO}, 0);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 0);
         }
     }
 
     public void sendButtonClicked(View view) throws AIServiceException {
-//        String text = binding.editInput.getText().toString();
-//        addMessage(MessageType.SENT, text);
-//        new DoTextRequestTask().execute(text);
-        PromptHomeworkManager manager = new PromptHomeworkManager(this);
+        String text = binding.editInput.getText().toString().trim();
+        addMessage(MessageType.SENT, text);
+        new DoTextRequestTask().execute(text);
     }
 
     public void classButtonClicked(View view) {
@@ -204,35 +215,40 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
     class DoTextRequestTask extends AsyncTask<String, Void, AIResponse> {
         private Exception exception = null;
+
         protected AIResponse doInBackground(String... text) {
             AIResponse resp = null;
             try {
-                resp = aiService.textRequest(text[0], new RequestExtras());
+                if (convoContext != null) {
+                    List<AIContext> contexts = new ArrayList<>();
+                    contexts.add(new AIContext(convoContext));
+                    Timber.d("context is " + convoContext);
+                    RequestExtras requestExtras = new RequestExtras(contexts, null);
+                    resp = aiService.textRequest(text[0], requestExtras);
+                } else {
+                    Timber.d("context was null");
+                    resp = aiService.textRequest(text[0], new RequestExtras());
+                }
             } catch (Exception e) {
                 Timber.d(e);
             }
             return resp;
         }
+
         protected void onPostExecute(AIResponse response) {
             if (response != null && !response.isError()) {
                 Result result = response.getResult();
-                // Get parameters
-                String parameterString = "";
-                if (result.getParameters() != null && !result.getParameters().isEmpty()) {
-                    for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
-                        parameterString += "(" + entry.getKey() + ", " + entry.getValue() + ") ";
+
+                final HashMap<String, JsonElement> params = result.getParameters();
+                if (params != null && !params.isEmpty()) {
+                    for (final Map.Entry<String, JsonElement> entry : params.entrySet()) {
+                        Timber.d(String.format("%s: %s", entry.getKey(), entry.getValue().toString()));
                     }
                 }
 
-                String textResponse = result.getFulfillment().getSpeech();
-
-                Timber.d("text response was" + textResponse);
                 Timber.d("Query:" + result.getResolvedQuery() +
-                        "\nAction: " + result.getAction() +
-                        "\nParameters: " + parameterString);
-
+                        "\nAction: " + result.getAction());
                 determineResponseActions(result);
-                addMessage(MessageType.RECEIVED, textResponse);
             } else {
                 Timber.d("API.AI response was an error ");
             }

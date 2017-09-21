@@ -5,4 +5,4 @@ import java.sql.Timestamp
 /**
  * Created by Scott Quach on 9/11/2017.
  */
-data class AssignmentModel(var title:String, var scale:Int, var dueDate:Timestamp)
+data class AssignmentModel(var title:String, var scale:Int = 0, var dueDate:String)

@@ -10,4 +10,8 @@ public class Constants {
 
     public static final int TIME_PICKER_START = 120;
     public static final int TIME_PICKER_END = 121;
+
+    //Contexts for API.AI
+    public static final String CONETEXT_DEFAULT = "default";
+    public static final String CONTEXT_PROMPT_HOMEWORK = "prompt-homework";
 }

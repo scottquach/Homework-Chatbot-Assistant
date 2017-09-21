@@ -75,11 +75,6 @@ class DisplayScheduleFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Timber.d("on start called")
-    }
-
     fun loadData(dataSnapshot: DataSnapshot) {
         userClasses.clear()
         for (ds in dataSnapshot.child("users").child(user?.uid).child("classes").children) {

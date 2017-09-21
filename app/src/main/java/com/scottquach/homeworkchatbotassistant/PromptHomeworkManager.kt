@@ -29,8 +29,8 @@ class PromptHomeworkManager(var context: Context) {
 
     private var daysFromNow: Int = 0
 
-    init {
-        databaseReference!!.addListenerForSingleValueEvent(object : ValueEventListener {
+    fun startManaging() {
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Timber.d("onDataChange called from homework manager")
                 loadData(dataSnapshot)
@@ -43,7 +43,7 @@ class PromptHomeworkManager(var context: Context) {
     }
 
 
-    fun determineNextAlarm() {
+    private fun determineNextAlarm() {
         val calendar = Calendar.getInstance()
         val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
         val classesOnDay = getNextClassesByDay(currentDay)
@@ -64,7 +64,7 @@ class PromptHomeworkManager(var context: Context) {
             ds.child("days").children.mapTo(model.days) { (it.value as Long).toInt() }
             userClasses.add(model)
         }
-        Timber.d(userClasses.toString())
+        Timber.d("original classes" + userClasses.toString())
         determineNextAlarm()
     }
 
@@ -83,7 +83,9 @@ class PromptHomeworkManager(var context: Context) {
         do {
             if (iteratedDay < 7 && !occursOnDay) {
                 iteratedDay++
-            } else iteratedDay = 1
+            } else if (!occursOnDay) {
+                iteratedDay = 1
+            }
             daysFromNow++
             classesOnDay = userClasses
                     .filter { it.days.contains(iteratedDay) }
@@ -101,8 +103,7 @@ class PromptHomeworkManager(var context: Context) {
      * @param List of classes for the day, current time that returned class returns after
      */
     private fun getNextClassOfDay(classesOnDay: List<ClassModel>, currentTime: TimeModel): ClassModel {
-        Timber.d("current time is" + currentTime.timeEndHour + " " + currentTime.timeEndMinute)
-        Timber.d("original list " + classesOnDay.toString())
+        Timber.d("original of classes on day " + classesOnDay.toString())
         var nextClasses = classesOnDay
                 .filter {
                     (it.timeEnd.timeEndHour > currentTime.timeEndHour) ||
@@ -155,7 +156,7 @@ class PromptHomeworkManager(var context: Context) {
             Timber.d("alarm is after now")
         }
 
-        Timber.d("added days is " + daysFromNow + " selected class is " + model)
+        Timber.d("added days is $daysFromNow selected class is $model")
 
 
         var intent = Intent(context, PromptHomeworkReceiver::class.java)
@@ -164,5 +165,4 @@ class PromptHomeworkManager(var context: Context) {
         var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
     }
-
 }

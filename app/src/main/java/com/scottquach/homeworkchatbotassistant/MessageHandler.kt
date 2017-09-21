@@ -4,7 +4,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
+import timber.log.Timber
 
 import java.sql.Timestamp
 import java.util.ArrayList
@@ -22,6 +24,11 @@ class MessageHandler {
         for (model in messageModels) {
             databaseReference.child("users").child(user!!.uid).child("messages").child(model.key).setValue(model)
         }
+    }
+
+    private fun updateConvoContext(convoContext: String, classContext: String) {
+        databaseReference.child("users").child(user!!.uid).child("contexts").child("conversation").setValue(convoContext)
+        databaseReference.child("users").child(user!!.uid).child("contexts").child("class").setValue(classContext)
     }
 
     fun receiveWelcomeMessage(): List<MessageModel> {
@@ -42,20 +49,36 @@ class MessageHandler {
             model.timestamp = Timestamp(System.currentTimeMillis())
             messagesModels.add(model)
         }
+        Timber.d("saving welcome message")
         saveToDatabase(messagesModels)
         return messagesModels
     }
 
-    fun promptForHomework(userClass:String): List<MessageModel> {
+    fun promptForHomework(userClass: String): List<MessageModel> {
         val model = MessageModel()
-
-        model.message = "Do you have any homework for " + userClass
+        model.message = "Do you have any homework for $userClass?"
         model.type = MessageType.RECEIVED.toLong()
         model.key = getMessageKey()
         model.timestamp = Timestamp(System.currentTimeMillis())
 
+        saveToDatabase(listOf(model))
+        updateConvoContext(Constants.CONTEXT_PROMPT_HOMEWORK, userClass)
         return listOf(model)
     }
 
+    fun confirmNewHomework(assignment: String, userClass: String,
+                           dueDate: String) {
+
+        val model = MessageModel()
+        model.message = "Assignment \"$assignment\" for $userClass on $dueDate saved"
+        model.type = MessageType.RECEIVED.toLong()
+        model.key = getMessageKey()
+        model.timestamp = Timestamp(System.currentTimeMillis())
+        databaseReference.child("users").child(user!!.uid).child("assignments")
+                .child(userClass).child(assignment).setValue(AssignmentModel(assignment, 0, dueDate))
+        saveToDatabase(listOf(model))
+    }
+
     private fun getMessageKey() = databaseReference.child("users").child(user!!.uid).child("messages").push().key
+
 }
