@@ -37,12 +37,18 @@ class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClas
 
     private fun openScheduleDisplayFragment() {
         val fragment = DisplayScheduleFragment()
-        supportFragmentManager.changeFragment(R.id.fragment_container_class, fragment, false)
+        val transaction = supportFragmentManager.beginTransaction()
+//        transaction.setCustomAnimations(R.anim.slide_enter, R.anim.slide_enter, R.anim.pop_enter, R.anim.pop_exit)
+        transaction.replace(R.id.fragment_container_class, fragment, "fragment")
+        transaction.commit()
     }
 
     private fun openCreateClassFragment() {
         val fragment = CreateClassFragment()
-        supportFragmentManager.changeFragment(R.id.fragment_container_class, fragment, false)
+        val transaction = supportFragmentManager.beginTransaction()
+//        transaction.setCustomAnimations(R.anim.slide_enter, R.anim.slide_enter, R.anim.pop_enter, R.anim.pop_exit)
+        transaction.replace(R.id.fragment_container_class, fragment, "fragment")
+        transaction.commit()
     }
 
     override fun addClass(newClass: ClassModel) {

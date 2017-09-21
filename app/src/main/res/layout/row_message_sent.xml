@@ -7,15 +7,16 @@
     android:layout_gravity="end">
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
     <TextView
         android:id="@+id/view_message_sent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
         android:layout_marginBottom="8dp"
-        android:padding="4dp"
+        android:padding="8dp"
         android:text="testing testing"
         android:textSize="18sp"
         android:background="@drawable/message_sent_background"/>

@@ -85,7 +85,11 @@ class CreateClassFragment : Fragment() {
 
     fun setTime(tag: Int, time: TimeModel) {
         Timber.d("set time was called " + tag)
-        text_end_time.text = "hour " + time.timeEndHour + " minute " + time.timeEndMinute
+        if (time.timeEndHour >= 12) {
+            text_end_time.text = time.timeEndHour.toString() +  " : " + time.timeEndMinute + " PM"
+        } else {
+            text_end_time.text = time.timeEndHour.toString() +  " : " + time.timeEndMinute + " AM"
+        }
         timeEnd = time
     }
 

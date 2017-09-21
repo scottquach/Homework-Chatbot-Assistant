@@ -13,8 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MainActivity">
-        </activity>
+        <activity android:name=".activities.MainActivity"></activity>
         <activity android:name=".activities.ClassScheduleActivity" />
         <activity android:name=".activities.SignInActivity">
             <intent-filter>
@@ -24,7 +23,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".PromptHomeworkReceiver"/>
+        <receiver android:name=".PromptHomeworkReceiver" />
+
+        <activity android:name=".activities.DisplayHomeworkActivity"></activity>
     </application>
 
 </manifest>

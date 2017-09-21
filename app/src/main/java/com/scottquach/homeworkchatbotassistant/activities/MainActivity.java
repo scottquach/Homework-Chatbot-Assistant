@@ -207,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         String text = binding.editInput.getText().toString().trim();
         addMessage(MessageType.SENT, text);
         new DoTextRequestTask().execute(text);
+        binding.editInput.setText("");
     }
 
     public void classButtonClicked(View view) {

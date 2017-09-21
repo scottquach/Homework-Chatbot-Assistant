@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.scottquach.homeworkchatbotassistant.BaseApplication;
 import com.scottquach.homeworkchatbotassistant.R;
 
 import timber.log.Timber;
@@ -52,6 +53,9 @@ public class SignInActivity extends AppCompatActivity{
     @Override
     protected void onStart() {
         super.onStart();
+        if (BaseApplication.getInstance().isFirstOpen()) {
+            FirebaseAuth.getInstance().signOut();
+        }
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
             Timber.d("Current user is " + currentUser.getDisplayName());
