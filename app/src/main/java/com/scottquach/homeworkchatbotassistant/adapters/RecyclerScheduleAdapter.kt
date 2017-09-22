@@ -37,8 +37,10 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
     class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindInformation(model: ClassModel) {
-            itemView.text_title.text = model.title
-            itemView.text_time.text = model.timeEnd.toString()
+            itemView.apply {
+                text_title.text = model.title
+                text_time.text = model.timeEnd.toString()
+            }
         }
     }
 

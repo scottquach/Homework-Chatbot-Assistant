@@ -70,9 +70,6 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-//
-//        databaseReference = FirebaseDatabase.getInstance().getReference();
-//        user = FirebaseAuth.getInstance().getCurrentUser();
 
         messageHandler = new MessageHandler();
 
