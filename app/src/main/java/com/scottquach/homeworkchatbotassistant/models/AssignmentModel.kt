@@ -1,8 +1,12 @@
 package com.scottquach.homeworkchatbotassistant.models
 
-import java.sql.Timestamp
-
 /**
  * Created by Scott Quach on 9/11/2017.
  */
-data class AssignmentModel(var title:String, var scale:Int = 0, var dueDate:String)
+data class AssignmentModel(
+        var title: String = "",
+        var userClass: String = "",
+        var scale: Int = 0,
+        var dueDate: String = "",
+        var key: String = ""
+)

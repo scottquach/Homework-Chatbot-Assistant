@@ -42,7 +42,6 @@ class PromptHomeworkManager(var context: Context) {
         })
     }
 
-
     private fun determineNextAlarm() {
         val calendar = Calendar.getInstance()
         val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
@@ -138,7 +137,6 @@ class PromptHomeworkManager(var context: Context) {
         return alarm.before(calendar)
     }
 
-
     /**
      * Initializes the next alarm. Adds time if the next class occurs multiple days in the future
      *
@@ -158,10 +156,9 @@ class PromptHomeworkManager(var context: Context) {
 
         Timber.d("added days is $daysFromNow selected class is $model")
 
-
         var intent = Intent(context, PromptHomeworkReceiver::class.java)
         intent.putExtra("class_name", model.title)
-        var pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
     }

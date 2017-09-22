@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     private String classContext;
     private RecyclerChatAdapter adapter;
 
-    private DatabaseReference databaseReference;
-    private FirebaseUser user;
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     private MessageHandler messageHandler;
 
@@ -70,9 +70,9 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        user = FirebaseAuth.getInstance().getCurrentUser();
+//
+//        databaseReference = FirebaseDatabase.getInstance().getReference();
+//        user = FirebaseAuth.getInstance().getCurrentUser();
 
         messageHandler = new MessageHandler();
 
@@ -167,6 +167,11 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         binding.recyclerMessages.setLayoutManager(manager);
     }
 
+    private void defaultContext() {
+        databaseReference.child("users").child(user.getUid()).child("contexts").child("conversation")
+                .setValue(Constants.CONETEXT_DEFAULT);
+    }
+
     private void addMessage(int messageType, String message) {
         String key = databaseReference.child("users").child(user.getUid()).child("messages").push().getKey();
 
@@ -189,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
                 String assignment = params.get("assignment-official").getAsString();
                 Timber.d("Received words were " + date + " " + assignment);
                 messageHandler.confirmNewHomework(assignment, classContext, date);
+                defaultContext();
                 break;
             default:
                 String textResponse = result.getFulfillment().getSpeech();
@@ -211,7 +217,8 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     }
 
     public void classButtonClicked(View view) {
-        startActivity(new Intent(this, ClassScheduleActivity.class));
+        startActivity(new Intent(this, DisplayHomeworkActivity.class));
+//        startActivity(new Intent(this, ClassScheduleActivity.class));
     }
 
     class DoTextRequestTask extends AsyncTask<String, Void, AIResponse> {

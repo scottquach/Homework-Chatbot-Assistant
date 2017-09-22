@@ -31,7 +31,6 @@ public class PromptHomeworkReceiver extends BroadcastReceiver {
             PromptHomeworkManager manager = new PromptHomeworkManager(context);
             manager.startManaging();
         }
-
     }
 
     private void createNotification(Context context, String className) {
@@ -48,6 +47,5 @@ public class PromptHomeworkReceiver extends BroadcastReceiver {
         Notification notification = builder.build();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1011, notification);
-        Timber.d("creating notification");
     }
 }

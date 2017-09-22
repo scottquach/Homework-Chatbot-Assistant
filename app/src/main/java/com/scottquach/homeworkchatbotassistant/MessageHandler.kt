@@ -20,7 +20,7 @@ class MessageHandler {
     private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
     private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
-    private fun saveToDatabase(messageModels: List<MessageModel>) {
+    private fun saveMessagesToDatabase(messageModels: List<MessageModel>) {
         for (model in messageModels) {
             databaseReference.child("users").child(user!!.uid).child("messages").child(model.key).setValue(model)
         }
@@ -50,7 +50,7 @@ class MessageHandler {
             messagesModels.add(model)
         }
         Timber.d("saving welcome message")
-        saveToDatabase(messagesModels)
+        saveMessagesToDatabase(messagesModels)
         return messagesModels
     }
 
@@ -61,7 +61,7 @@ class MessageHandler {
         model.key = getMessageKey()
         model.timestamp = Timestamp(System.currentTimeMillis())
 
-        saveToDatabase(listOf(model))
+        saveMessagesToDatabase(listOf(model))
         updateConvoContext(Constants.CONTEXT_PROMPT_HOMEWORK, userClass)
         return listOf(model)
     }
@@ -74,11 +74,15 @@ class MessageHandler {
         model.type = MessageType.RECEIVED.toLong()
         model.key = getMessageKey()
         model.timestamp = Timestamp(System.currentTimeMillis())
+
+        val assignmentKey = getAssignmentKey()
         databaseReference.child("users").child(user!!.uid).child("assignments")
-                .child(userClass).child(assignment).setValue(AssignmentModel(assignment, 0, dueDate))
-        saveToDatabase(listOf(model))
+                .child(assignmentKey).setValue(AssignmentModel(assignment, userClass, 0, dueDate, assignmentKey))
+        saveMessagesToDatabase(listOf(model))
     }
 
     private fun getMessageKey() = databaseReference.child("users").child(user!!.uid).child("messages").push().key
+
+    private fun getAssignmentKey() = databaseReference.child("users").child(user!!.uid).child("assignments").push().key
 
 }

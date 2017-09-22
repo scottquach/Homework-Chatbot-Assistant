@@ -13,15 +13,12 @@ import timber.log.Timber
 class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClassInterface,
     DisplayScheduleFragment.ScheduleDisplayListener{
 
-    private lateinit var databaseReference: DatabaseReference
-    private var user: FirebaseUser? = null
+    private var databaseReference = FirebaseDatabase.getInstance().reference
+    private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_class_schedule)
-
-        databaseReference = FirebaseDatabase.getInstance().reference
-        user = FirebaseAuth.getInstance().currentUser
     }
 
     override fun onResume() {
