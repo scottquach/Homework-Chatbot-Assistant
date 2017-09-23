@@ -1,4 +1,4 @@
-package com.scottquach.homeworkchatbotassistant
+package com.scottquach.homeworkchatbotassistant.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -10,16 +10,17 @@ import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerScheduleAdapter
+import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import kotlinx.android.synthetic.main.fragment_display_schedule.*
 import timber.log.Timber
-import java.sql.Timestamp
 
 class DisplayScheduleFragment : Fragment() {
 
-    private var listener: ScheduleDisplayListener? = null
+    private var listener: ScheduleDisplayInterface? = null
 
     private lateinit var databaseReference: DatabaseReference
     private var user: FirebaseUser? = null
@@ -32,20 +33,16 @@ class DisplayScheduleFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is ScheduleDisplayListener) {
+        if (context is ScheduleDisplayInterface) {
             listener = context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement ScheduleDisplayListener")
+            throw RuntimeException(context!!.toString() + " must implement ScheduleDisplayInterface")
         }
     }
 
     override fun onDetach() {
         super.onDetach()
         listener = null
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -96,7 +93,7 @@ class DisplayScheduleFragment : Fragment() {
         scheduleRecycler.adapter = scheduleAdapter
     }
 
-    interface ScheduleDisplayListener {
+    interface ScheduleDisplayInterface {
         fun switchToCreateFragment()
     }
 }

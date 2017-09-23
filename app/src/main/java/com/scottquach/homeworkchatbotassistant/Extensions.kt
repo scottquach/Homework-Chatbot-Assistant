@@ -15,10 +15,6 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false) : View {
     return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
 }
 
-fun ViewGroup.test() {
-    Timber.d("test for extensions")
-}
-
 fun FragmentManager.changeFragment(containerId: Int, fragment: Fragment, addToBackStack: Boolean = true) {
     val transaction = beginTransaction()
 

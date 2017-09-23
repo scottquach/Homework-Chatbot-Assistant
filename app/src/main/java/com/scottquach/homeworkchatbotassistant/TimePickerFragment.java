@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.TimePicker;
 
+import com.scottquach.homeworkchatbotassistant.fragments.CreateClassFragment;
 import com.scottquach.homeworkchatbotassistant.models.TimeModel;
 
 import java.util.Calendar;

@@ -1,5 +1,6 @@
 package com.scottquach.homeworkchatbotassistant.activities
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -9,13 +10,14 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerHomeworkAdapter
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import kotlinx.android.synthetic.main.activity_display_homework.*
 import timber.log.Timber
 
-class DisplayHomeworkActivity : AppCompatActivity() {
+class DisplayHomeworkActivity : AppCompatActivity(), NavigationFragment.NavigationFragmentInterface {
 
     private val databaseReference = FirebaseDatabase.getInstance().reference
     private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -63,5 +65,17 @@ class DisplayHomeworkActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@DisplayHomeworkActivity)
             adapter = this@DisplayHomeworkActivity.adapter
         }
+    }
+
+    override fun startClassScheduleActivity() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun startDisplayHomeworkActivity() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun startMainActivity() {
+        startActivity(Intent(this@DisplayHomeworkActivity, MainActivity::class.java))
     }
 }

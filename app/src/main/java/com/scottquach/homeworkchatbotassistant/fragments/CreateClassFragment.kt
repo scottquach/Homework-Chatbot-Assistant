@@ -1,4 +1,4 @@
-package com.scottquach.homeworkchatbotassistant
+package com.scottquach.homeworkchatbotassistant.fragments
 
 import android.content.Context
 import android.content.DialogInterface
@@ -9,6 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.scottquach.homeworkchatbotassistant.Constants
+import com.scottquach.homeworkchatbotassistant.R
+import com.scottquach.homeworkchatbotassistant.TimePickerFragment
+import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import kotlinx.android.synthetic.main.fragment_create_class.*
@@ -64,7 +68,7 @@ class CreateClassFragment : Fragment() {
         if (context is CreateClassInterface) {
             listener = context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement ScheduleDisplayListener")
+            throw RuntimeException(context!!.toString() + " must implement ScheduleDisplayInterface")
         }
     }
 

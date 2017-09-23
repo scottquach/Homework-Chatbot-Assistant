@@ -1,5 +1,6 @@
 package com.scottquach.homeworkchatbotassistant.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -8,10 +9,13 @@ import com.google.firebase.database.*
 import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
-import timber.log.Timber
+import com.scottquach.homeworkchatbotassistant.fragments.CreateClassFragment
+import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
+import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
 
 class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClassInterface,
-    DisplayScheduleFragment.ScheduleDisplayListener{
+    DisplayScheduleFragment.ScheduleDisplayInterface, NavigationFragment.NavigationFragmentInterface{
+
 
     private var databaseReference = FirebaseDatabase.getInstance().reference
     private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -60,5 +64,18 @@ class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClas
 
     override fun switchToDisplayFragment() {
         openScheduleDisplayFragment()
+    }
+
+    override fun startClassScheduleActivity() {
+        val fragment = DisplayScheduleFragment()
+        supportFragmentManager.changeFragment(R.id.fragment_container_class, fragment)
+    }
+
+    override fun startDisplayHomeworkActivity() {
+        startActivity(Intent(this@ClassScheduleActivity, DisplayHomeworkActivity::class.java))
+    }
+
+    override fun startMainActivity() {
+        startActivity(Intent(this@ClassScheduleActivity, MainActivity::class.java))
     }
 }
