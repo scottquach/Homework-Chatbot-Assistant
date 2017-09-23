@@ -47,7 +47,7 @@ class NavigationFragment : Fragment() {
         if (context is NavigationFragmentInterface) {
             listener = context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException(context!!.toString() + " must implement DisplayHomeworkInterface")
         }
     }
 

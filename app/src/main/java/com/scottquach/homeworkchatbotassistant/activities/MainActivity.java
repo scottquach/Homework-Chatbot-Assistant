@@ -9,7 +9,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,15 +43,17 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements AIListener,
         NavigationFragment.NavigationFragmentInterface, ChatFragment.ChatInterface{
 
-    ActivityMainBinding binding;
-
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         ChatFragment fragment = new ChatFragment();
         ExtensionsKt.changeFragment(getSupportFragmentManager(), R.id.fragment_container_main, fragment, false);
@@ -67,6 +72,13 @@ public class MainActivity extends AppCompatActivity implements AIListener,
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Timber.d("error retrieving data" + databaseError.toString());
+            }
+        });
+
+        toolbar.findViewById(R.id.toolbar_menu_icon).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openNavigation();
             }
         });
     }
@@ -119,6 +131,13 @@ public class MainActivity extends AppCompatActivity implements AIListener,
         }
     }
 
+    private void openNavigation() {
+        NavigationFragment fragment = new NavigationFragment();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ExtensionsKt.changeFragment(fragmentManager, R.id.fragment_container_main, fragment, true);
+    }
+
     @Override
     public void startClassScheduleActivity() {
         startActivity(new Intent(MainActivity.this, ClassScheduleActivity.class));
@@ -131,14 +150,7 @@ public class MainActivity extends AppCompatActivity implements AIListener,
 
     @Override
     public void startMainActivity() {
-
-    }
-
-    @Override
-    public void openNavigation() {
-        NavigationFragment fragment = new NavigationFragment();
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        ExtensionsKt.changeFragment(fragmentManager, R.id.fragment_container_main, fragment, true);
+        ChatFragment fragment = new ChatFragment();
+        ExtensionsKt.changeFragment(getSupportFragmentManager(), R.id.fragment_container_main, fragment, true);
     }
 }

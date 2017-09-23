@@ -2,7 +2,7 @@ package com.scottquach.homeworkchatbotassistant.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -12,10 +12,10 @@ import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.fragments.CreateClassFragment
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
+import kotlinx.android.synthetic.main.toolbar_main.*
 
-class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClassInterface,
+class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateClassInterface,
     DisplayScheduleFragment.ScheduleDisplayInterface, NavigationFragment.NavigationFragmentInterface{
-
 
     private var databaseReference = FirebaseDatabase.getInstance().reference
     private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -23,17 +23,19 @@ class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClas
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_class_schedule)
+
+        val toolbar = toolbar_main
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
+
+        toolbar_menu_icon.setOnClickListener {
+            openNavigation()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         openScheduleDisplayFragment()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        val manager = PromptHomeworkManager(this@ClassScheduleActivity)
-        manager.startManaging()
     }
 
     private fun openScheduleDisplayFragment() {
@@ -52,10 +54,17 @@ class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClas
         transaction.commit()
     }
 
+    private fun openNavigation() {
+        val fragment = NavigationFragment()
+        supportFragmentManager.changeFragment(R.id.fragment_container_class, fragment)
+    }
+
     override fun addClass(newClass: ClassModel) {
         user?.let {
             databaseReference.child("users").child(user?.uid).child("classes").child(newClass.title).setValue(newClass)
         }
+        val manager = PromptHomeworkManager(this@ClassScheduleActivity)
+        manager.startManaging()
     }
 
     override fun switchToCreateFragment() {
@@ -67,8 +76,7 @@ class ClassScheduleActivity : FragmentActivity(), CreateClassFragment.CreateClas
     }
 
     override fun startClassScheduleActivity() {
-        val fragment = DisplayScheduleFragment()
-        supportFragmentManager.changeFragment(R.id.fragment_container_class, fragment)
+        openScheduleDisplayFragment()
     }
 
     override fun startDisplayHomeworkActivity() {

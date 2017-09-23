@@ -53,7 +53,6 @@ class ChatFragment : Fragment() {
     private var listener: ChatFragment.ChatInterface? = null
 
     interface ChatInterface {
-        fun openNavigation()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -89,7 +88,6 @@ class ChatFragment : Fragment() {
         }
 
         button4.setOnClickListener {
-            listener?.openNavigation()
         }
     }
 
