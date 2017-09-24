@@ -25,7 +25,7 @@
 
         <receiver android:name=".PromptHomeworkReceiver" />
 
-        <activity android:name=".activities.DisplayHomeworkActivity"></activity>
+        <activity android:name=".activities.DisplayAssignmentsActivity"></activity>
     </application>
 
 </manifest>

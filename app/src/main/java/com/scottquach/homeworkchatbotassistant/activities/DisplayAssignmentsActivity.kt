@@ -6,11 +6,11 @@ import android.os.Bundle
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.changeFragment
-import com.scottquach.homeworkchatbotassistant.fragments.DisplayHomeworkFragment
+import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
 import kotlinx.android.synthetic.main.toolbar_main.*
 
-class DisplayHomeworkActivity : AppCompatActivity(), NavigationFragment.NavigationFragmentInterface,
-        DisplayHomeworkFragment.DisplayHomeworkInterface {
+class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.NavigationFragmentInterface,
+        DisplayAssignmentsFragment.DisplayHomeworkInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +27,7 @@ class DisplayHomeworkActivity : AppCompatActivity(), NavigationFragment.Navigati
 
     override fun onResume() {
         super.onResume()
-        val fragment = DisplayHomeworkFragment()
+        val fragment = DisplayAssignmentsFragment()
         supportFragmentManager.changeFragment(R.id.fragment_container_homework, fragment)
     }
 
@@ -37,15 +37,15 @@ class DisplayHomeworkActivity : AppCompatActivity(), NavigationFragment.Navigati
     }
 
     override fun startClassScheduleActivity() {
-        startActivity(Intent(this@DisplayHomeworkActivity, ClassScheduleActivity::class.java))
+        startActivity(Intent(this@DisplayAssignmentsActivity, ClassScheduleActivity::class.java))
     }
 
     override fun startDisplayHomeworkActivity() {
-        val fragment = DisplayHomeworkFragment()
+        val fragment = DisplayAssignmentsFragment()
         supportFragmentManager.changeFragment(R.id.fragment_container_homework, fragment)
     }
 
     override fun startMainActivity() {
-        startActivity(Intent(this@DisplayHomeworkActivity, MainActivity::class.java))
+        startActivity(Intent(this@DisplayAssignmentsActivity, MainActivity::class.java))
     }
 }

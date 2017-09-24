@@ -15,13 +15,16 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 import com.scottquach.homeworkchatbotassistant.R
-import com.scottquach.homeworkchatbotassistant.adapters.RecyclerHomeworkAdapter
+import com.scottquach.homeworkchatbotassistant.adapters.RecyclerAssignmentsAdapter
 import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import kotlinx.android.synthetic.main.fragment_display_homework.*
 import timber.log.Timber
 
-class DisplayHomeworkFragment : Fragment() {
+class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.AssignmentAdapterInterface {
+    override fun delete(key: String) {
+        deleteAssignment(key)
+    }
 
     private var listener: DisplayHomeworkInterface? = null
 
@@ -33,7 +36,7 @@ class DisplayHomeworkFragment : Fragment() {
     private val recycler by lazy {
         recycler_homework
     }
-    private lateinit var adapter: RecyclerHomeworkAdapter
+    private var adapter: RecyclerAssignmentsAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -70,6 +73,7 @@ class DisplayHomeworkFragment : Fragment() {
     }
 
     private fun loadData(dataSnapshot: DataSnapshot) {
+        userAssignments.clear()
         for (ds in dataSnapshot.child("users").child(user!!.uid).child("assignments").children) {
             var model = AssignmentModel()
             model.title = ds.child("title").value as String
@@ -84,11 +88,19 @@ class DisplayHomeworkFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = RecyclerHomeworkAdapter(userAssignments)
-        recycler.apply {
-            layoutManager = LinearLayoutManager(this@DisplayHomeworkFragment.context)
-            adapter = this@DisplayHomeworkFragment.adapter
+        if (adapter == null) {
+            adapter = RecyclerAssignmentsAdapter(userAssignments, this@DisplayAssignmentsFragment)
+            recycler.apply {
+                layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
+                adapter = this@DisplayAssignmentsFragment.adapter
+            }
+        } else {
+            adapter!!.updateData(userAssignments)
         }
+    }
+
+     private fun deleteAssignment(key: String) {
+        databaseReference.child("users").child(user!!.uid).child("assignments").child(key).removeValue()
     }
 
     interface DisplayHomeworkInterface {

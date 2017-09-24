@@ -80,7 +80,7 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
     }
 
     override fun startDisplayHomeworkActivity() {
-        startActivity(Intent(this@ClassScheduleActivity, DisplayHomeworkActivity::class.java))
+        startActivity(Intent(this@ClassScheduleActivity, DisplayAssignmentsActivity::class.java))
     }
 
     override fun startMainActivity() {

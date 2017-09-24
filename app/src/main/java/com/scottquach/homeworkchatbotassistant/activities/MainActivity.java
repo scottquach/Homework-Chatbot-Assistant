@@ -3,7 +3,6 @@ package com.scottquach.homeworkchatbotassistant.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -11,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,7 +25,6 @@ import com.scottquach.homeworkchatbotassistant.ExtensionsKt;
 import com.scottquach.homeworkchatbotassistant.fragments.ChatFragment;
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment;
 import com.scottquach.homeworkchatbotassistant.R;
-import com.scottquach.homeworkchatbotassistant.databinding.ActivityMainBinding;
 
 import ai.api.AIListener;
 import ai.api.model.AIError;
@@ -145,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements AIListener,
 
     @Override
     public void startDisplayHomeworkActivity() {
-        startActivity(new Intent(MainActivity.this, DisplayHomeworkActivity.class));
+        startActivity(new Intent(MainActivity.this, DisplayAssignmentsActivity.class));
     }
 
     @Override
