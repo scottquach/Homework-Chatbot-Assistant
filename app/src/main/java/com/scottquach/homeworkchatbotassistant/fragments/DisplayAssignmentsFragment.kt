@@ -67,7 +67,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
             }
 
             override fun onCancelled(p0: DatabaseError?) {
-                Timber.d("Database Error " + p0.toString())
+                Timber.e("Database Error " + p0.toString())
             }
         })
     }

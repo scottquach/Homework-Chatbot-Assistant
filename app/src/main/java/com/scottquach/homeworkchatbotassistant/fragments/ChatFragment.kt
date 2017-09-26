@@ -38,7 +38,7 @@ class ChatFragment : Fragment() {
     private val user = FirebaseAuth.getInstance().currentUser
 
     private val messageHandler by lazy {
-        MessageHandler()
+        MessageHandler(context)
     }
 
     private val recycler by lazy {

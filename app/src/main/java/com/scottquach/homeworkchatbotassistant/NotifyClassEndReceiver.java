@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 
 import com.scottquach.homeworkchatbotassistant.activities.SignInActivity;
 
@@ -17,18 +16,18 @@ import timber.log.Timber;
  * Created by Scott Quach on 9/16/2017.
  */
 
-public class PromptHomeworkReceiver extends BroadcastReceiver {
+public class NotifyClassEndReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Timber.d("ON RECEIVE WAS CALLED");
         if (intent.getExtras() != null) {
             String className = intent.getExtras().getString("class_name", "class");
-            MessageHandler messageHandler = new MessageHandler();
+            MessageHandler messageHandler = new MessageHandler(context);
             messageHandler.promptForHomework(className);
 
             createNotification(context, className);
-            PromptHomeworkManager manager = new PromptHomeworkManager(context);
+            NotifyClassEndManager manager = new NotifyClassEndManager(context);
             manager.startManaging();
         }
     }

@@ -1,5 +1,6 @@
 package com.scottquach.homeworkchatbotassistant
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
@@ -15,7 +16,7 @@ import java.util.ArrayList
  * Created by Scott Quach on 9/15/2017.
  */
 
-class MessageHandler {
+class MessageHandler(val context: Context) {
 
     private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
     private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -56,7 +57,7 @@ class MessageHandler {
 
     fun promptForHomework(userClass: String): List<MessageModel> {
         val model = MessageModel()
-        model.message = "Do you have any homework for $userClass?"
+        model.message = "Provide homework for $userClass?"
         model.type = MessageType.RECEIVED.toLong()
         model.key = getMessageKey()
         model.timestamp = Timestamp(System.currentTimeMillis())
@@ -76,8 +77,11 @@ class MessageHandler {
         model.timestamp = Timestamp(System.currentTimeMillis())
 
         val assignmentKey = getAssignmentKey()
+        val assignmentModel = AssignmentModel(assignment, userClass, 0, dueDate, assignmentKey)
         databaseReference.child("users").child(user!!.uid).child("assignments")
-                .child(assignmentKey).setValue(AssignmentModel(assignment, userClass, 0, dueDate, assignmentKey))
+                .child(assignmentKey).setValue(assignmentModel)
+        val assignmentManager = AssignmentDueManager(context)
+        assignmentManager.startNextAlarm(assignmentModel)
         saveMessagesToDatabase(listOf(model))
     }
 

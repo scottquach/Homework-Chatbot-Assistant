@@ -23,7 +23,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".PromptHomeworkReceiver" />
+        <receiver android:name=".NotifyClassEndReceiver" />
+        <receiver android:name=".AssignmentDueReceiver" />
 
         <activity android:name=".activities.DisplayAssignmentsActivity"></activity>
     </application>

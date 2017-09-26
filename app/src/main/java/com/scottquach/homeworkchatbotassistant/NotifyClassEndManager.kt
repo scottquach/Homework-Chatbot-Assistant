@@ -20,7 +20,7 @@ import java.util.*
  * Created by Scott Quach on 9/16/2017.
  */
 
-class PromptHomeworkManager(var context: Context) {
+class NotifyClassEndManager(var context: Context) {
 
     private var databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
     private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -156,7 +156,7 @@ class PromptHomeworkManager(var context: Context) {
 
         Timber.d("added days is $daysFromNow selected class is $model")
 
-        var intent = Intent(context, PromptHomeworkReceiver::class.java)
+        var intent = Intent(context, NotifyClassEndReceiver::class.java)
         intent.putExtra("class_name", model.title)
         var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

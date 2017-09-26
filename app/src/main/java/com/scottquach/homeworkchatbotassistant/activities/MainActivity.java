@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.scottquach.homeworkchatbotassistant.BaseApplication;
 import com.scottquach.homeworkchatbotassistant.ExtensionsKt;
+import com.scottquach.homeworkchatbotassistant.MessageHandler;
 import com.scottquach.homeworkchatbotassistant.fragments.ChatFragment;
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment;
 import com.scottquach.homeworkchatbotassistant.R;
@@ -57,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements AIListener,
 
         if (BaseApplication.getInstance().isFirstOpen()) {
             Timber.d("first open");
-//            messageHandler.receiveWelcomeMessage();
+            MessageHandler handler = new MessageHandler(this);
+            handler.receiveWelcomeMessage();
             BaseApplication.getInstance().getSharePref().edit().putBoolean("first_open", false).apply();
         }
 

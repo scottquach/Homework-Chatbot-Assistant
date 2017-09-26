@@ -63,7 +63,7 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
         user?.let {
             databaseReference.child("users").child(user?.uid).child("classes").child(newClass.title).setValue(newClass)
         }
-        val manager = PromptHomeworkManager(this@ClassScheduleActivity)
+        val manager = NotifyClassEndManager(this@ClassScheduleActivity)
         manager.startManaging()
     }
 
