@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.scottquach.homeworkchatbotassistant.BaseApplication;
 import com.scottquach.homeworkchatbotassistant.ExtensionsKt;
@@ -54,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements AIListener,
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         ChatFragment fragment = new ChatFragment();
-        ExtensionsKt.changeFragment(getSupportFragmentManager(), R.id.fragment_container_main, fragment, false);
+        ExtensionsKt.changeFragmentRightAnimated(getSupportFragmentManager(),
+                R.id.fragment_container_main, fragment, false);
 
         if (BaseApplication.getInstance().isFirstOpen()) {
             Timber.d("first open");
@@ -133,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements AIListener,
     private void openNavigation() {
         NavigationFragment fragment = new NavigationFragment();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        ExtensionsKt.changeFragment(fragmentManager, R.id.fragment_container_main, fragment, true);
+        ExtensionsKt.changeFragmentLeftAnimated(getSupportFragmentManager(),
+                R.id.fragment_container_main, fragment, true);
     }
 
     @Override
@@ -150,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements AIListener,
     @Override
     public void startMainActivity() {
         ChatFragment fragment = new ChatFragment();
-        ExtensionsKt.changeFragment(getSupportFragmentManager(), R.id.fragment_container_main, fragment, true);
+        ExtensionsKt.changeFragmentRightAnimated(getSupportFragmentManager(),
+                R.id.fragment_container_main, fragment, true);
     }
 }

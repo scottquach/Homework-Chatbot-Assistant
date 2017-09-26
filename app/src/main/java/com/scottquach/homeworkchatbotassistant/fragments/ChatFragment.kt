@@ -86,9 +86,6 @@ class ChatFragment : Fragment() {
             DoTextRequestTask().execute(text)
             edit_input.setText("")
         }
-
-        button4.setOnClickListener {
-        }
     }
 
     override fun onAttach(context: Context?) {

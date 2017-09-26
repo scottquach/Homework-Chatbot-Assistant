@@ -6,6 +6,8 @@ import android.os.Bundle
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.changeFragment
+import com.scottquach.homeworkchatbotassistant.changeFragmentLeftAnimated
+import com.scottquach.homeworkchatbotassistant.changeFragmentRightAnimated
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
 import kotlinx.android.synthetic.main.toolbar_main.*
 
@@ -28,12 +30,12 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
     override fun onResume() {
         super.onResume()
         val fragment = DisplayAssignmentsFragment()
-        supportFragmentManager.changeFragment(R.id.fragment_container_homework, fragment)
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_homework, fragment)
     }
 
     private fun openNavigation() {
         val fragment = NavigationFragment()
-        supportFragmentManager.changeFragment(R.id.fragment_container_homework, fragment)
+        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_homework, fragment)
     }
 
     override fun startClassScheduleActivity() {
@@ -42,7 +44,7 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
 
     override fun startDisplayHomeworkActivity() {
         val fragment = DisplayAssignmentsFragment()
-        supportFragmentManager.changeFragment(R.id.fragment_container_homework, fragment)
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_homework, fragment)
     }
 
     override fun startMainActivity() {

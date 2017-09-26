@@ -22,3 +22,19 @@ fun FragmentManager.changeFragment(containerId: Int, fragment: Fragment, addToBa
     if (addToBackStack) transaction.addToBackStack(null)
     transaction.commit()
 }
+
+fun FragmentManager.changeFragmentLeftAnimated(containerId: Int, fragment: Fragment, addToBackStack: Boolean = true) {
+    val transaction = beginTransaction()
+    transaction.setCustomAnimations(R.anim.enter_left, R.anim.exit_right, R.anim.enter_right, R.anim.exit_left)
+    transaction.replace(containerId, fragment)
+    if (addToBackStack) transaction.addToBackStack(null)
+    transaction.commit()
+}
+
+fun FragmentManager.changeFragmentRightAnimated(containerId: Int, fragment: Fragment, addToBackStack: Boolean = true) {
+    val transaction = beginTransaction()
+    transaction.setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
+    transaction.replace(containerId, fragment)
+    if (addToBackStack) transaction.addToBackStack(null)
+    transaction.commit()
+}

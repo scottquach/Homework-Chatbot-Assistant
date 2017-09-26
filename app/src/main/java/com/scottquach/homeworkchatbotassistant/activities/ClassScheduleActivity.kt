@@ -35,28 +35,23 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
 
     override fun onResume() {
         super.onResume()
-        openScheduleDisplayFragment()
+        val fragment = DisplayScheduleFragment()
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment)
     }
 
     private fun openScheduleDisplayFragment() {
         val fragment = DisplayScheduleFragment()
-        val transaction = supportFragmentManager.beginTransaction()
-//        transaction.setCustomAnimations(R.anim.slide_enter, R.anim.slide_enter, R.anim.pop_enter, R.anim.pop_exit)
-        transaction.replace(R.id.fragment_container_class, fragment, "fragment")
-        transaction.commit()
+        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment)
     }
 
     private fun openCreateClassFragment() {
         val fragment = CreateClassFragment()
-        val transaction = supportFragmentManager.beginTransaction()
-//        transaction.setCustomAnimations(R.anim.slide_enter, R.anim.slide_enter, R.anim.pop_enter, R.anim.pop_exit)
-        transaction.replace(R.id.fragment_container_class, fragment, "fragment")
-        transaction.commit()
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment)
     }
 
     private fun openNavigation() {
         val fragment = NavigationFragment()
-        supportFragmentManager.changeFragment(R.id.fragment_container_class, fragment)
+        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment)
     }
 
     override fun addClass(newClass: ClassModel) {
