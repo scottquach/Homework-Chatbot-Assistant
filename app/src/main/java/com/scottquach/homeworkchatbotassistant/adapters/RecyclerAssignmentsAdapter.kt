@@ -43,10 +43,8 @@ class RecyclerAssignmentsAdapter(private var userAssignments:MutableList<Assignm
     }
 
     fun updateData(newData: MutableList<AssignmentModel>) {
-        userAssignments.apply {
-            clear()
-            newData
-        }
+        userAssignments.clear()
+        userAssignments = newData
         notifyDataSetChanged()
         Timber.d("data updated")
     }

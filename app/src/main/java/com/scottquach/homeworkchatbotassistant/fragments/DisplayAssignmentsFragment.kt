@@ -88,15 +88,11 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
     }
 
     private fun setupRecyclerView() {
-        if (adapter == null) {
             adapter = RecyclerAssignmentsAdapter(userAssignments, this@DisplayAssignmentsFragment)
             recycler.apply {
                 layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
                 adapter = this@DisplayAssignmentsFragment.adapter
             }
-        } else {
-            adapter!!.updateData(userAssignments)
-        }
     }
 
      private fun deleteAssignment(key: String) {
