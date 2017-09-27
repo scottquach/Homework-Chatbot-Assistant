@@ -94,8 +94,8 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
             adapter = this@DisplayAssignmentsFragment.adapter
         }
 
-        if (text_no_homework.visibility == View.VISIBLE && !userAssignments.isEmpty()) {
-            text_no_homework.visibility = View.INVISIBLE
+        if (text_no_homework?.visibility == View.VISIBLE && !userAssignments.isEmpty()) {
+            text_no_homework?.visibility = View.INVISIBLE
         }
     }
 

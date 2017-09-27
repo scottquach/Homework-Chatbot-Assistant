@@ -125,8 +125,8 @@ class ChatFragment : Fragment() {
             layoutManager = manager
         }
 
-        if (text_loading_messages.visibility == View.VISIBLE) {
-            text_loading_messages.visibility = View.INVISIBLE
+        if (text_loading_messages?.visibility == View.VISIBLE && !userMessages.isEmpty()) {
+            text_loading_messages?.visibility = View.INVISIBLE
         }
     }
 

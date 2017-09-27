@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.scottquach.homeworkchatbotassistant.R
+import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import kotlinx.android.synthetic.main.row_class.view.*
@@ -13,7 +14,21 @@ import timber.log.Timber
  * Created by Scott Quach on 9/13/2017.
  */
 
-class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassModel>) : RecyclerView.Adapter<RecyclerScheduleAdapter.ViewHolder>() {
+class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassModel>, val fragment:DisplayScheduleFragment) :
+        RecyclerView.Adapter<RecyclerScheduleAdapter.ViewHolder>() {
+
+    private var listener: ScheduleAdapterInterface? = null
+
+    init {
+        if (fragment is DisplayScheduleFragment) {
+            listener = fragment
+        } else throw RuntimeException(fragment!!.toString() + " must implement DisplayHomeworkInterface")
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        listener = null
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder? {
         return ViewHolder(parent.inflate(R.layout.row_class))
@@ -21,6 +36,9 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindInformation(userClassModels[position])
+        holder.itemView.button_class_delete.setOnClickListener {
+            listener?.deleteClass(userClassModels[position])
+        }
     }
 
     override fun getItemCount() = userClassModels.size
@@ -44,5 +62,8 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
         }
     }
 
+    interface ScheduleAdapterInterface {
+        fun deleteClass(model: ClassModel)
+    }
 
 }

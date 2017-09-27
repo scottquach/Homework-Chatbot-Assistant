@@ -37,7 +37,7 @@ class RecyclerAssignmentsAdapter(private var userAssignments:MutableList<Assignm
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         (holder as AssignmentViewHolder).bindInformation(userAssignments[position])
-        (holder as AssignmentViewHolder).itemView.button_delete.setOnClickListener {
+        (holder as AssignmentViewHolder).itemView.button_assignment_delete.setOnClickListener {
             listener?.delete(userAssignments[position].key)
         }
     }

@@ -19,7 +19,7 @@ import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import kotlinx.android.synthetic.main.fragment_display_schedule.*
 import timber.log.Timber
 
-class DisplayScheduleFragment : Fragment() {
+class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdapterInterface {
 
     private var listener: ScheduleDisplayInterface? = null
 
@@ -81,7 +81,7 @@ class DisplayScheduleFragment : Fragment() {
             classModel.timeEnd = TimeModel(ds.child("timeEnd").child("timeEndHour").value as Long,
                     ds.child("timeEnd").child("timeEndMinute").value as Long)
             var days = mutableListOf<Int>()
-            dataSnapshot.child("users").child(user?.uid).child("classes").child(classModel.title).child("day").children.mapTo(days) { (it.value as Long).toInt() }
+            dataSnapshot.child("users").child(user!!.uid).child("classes").child(classModel.title).child("day").children.mapTo(days) { (it.value as Long).toInt() }
             classModel.days = days
             userClasses.add(classModel)
         }
@@ -89,18 +89,38 @@ class DisplayScheduleFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        scheduleAdapter = RecyclerScheduleAdapter(userClasses)
+        scheduleAdapter = RecyclerScheduleAdapter(userClasses, this@DisplayScheduleFragment)
         scheduleRecycler.apply {
             adapter = scheduleAdapter
             layoutManager = LinearLayoutManager(context)
         }
 
-        if (text_no_classes.visibility == View.VISIBLE && !userClasses.isEmpty()) {
-            text_no_classes.visibility = View.INVISIBLE
+        if (text_no_classes?.visibility == View.VISIBLE && !userClasses.isEmpty()) {
+            text_no_classes?.visibility = View.INVISIBLE
         }
     }
 
     interface ScheduleDisplayInterface {
         fun switchToCreateFragment()
     }
+
+    override fun deleteClass(model: ClassModel) {
+        databaseReference.child("users").child(user!!.uid).child("classes").child(model.title).removeValue()
+
+        //Delete the assignments for corresponding class
+        databaseReference.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.child("users").child(user!!.uid).child("assignments").children
+                        .filter { it.child("userClass") as String == model.title }
+                        .forEach { databaseReference.child("users").child(user!!.uid).child("assignments").child(it.key).removeValue() }
+            }
+            override fun onCancelled(p0: DatabaseError?) {
+
+            }
+
+
+
+        })
+    }
+
 }
