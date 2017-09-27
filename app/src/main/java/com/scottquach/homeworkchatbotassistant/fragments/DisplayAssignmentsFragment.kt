@@ -18,7 +18,7 @@ import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerAssignmentsAdapter
 import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
-import kotlinx.android.synthetic.main.fragment_display_homework.*
+import kotlinx.android.synthetic.main.fragment_display_assignments.*
 import timber.log.Timber
 
 class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.AssignmentAdapterInterface {
@@ -40,7 +40,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return container?.inflate(R.layout.fragment_display_homework)
+        return container?.inflate(R.layout.fragment_display_assignments)
     }
 
     override fun onAttach(context: Context?) {
@@ -88,14 +88,18 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
     }
 
     private fun setupRecyclerView() {
-            adapter = RecyclerAssignmentsAdapter(userAssignments, this@DisplayAssignmentsFragment)
-            recycler.apply {
-                layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
-                adapter = this@DisplayAssignmentsFragment.adapter
-            }
+        adapter = RecyclerAssignmentsAdapter(userAssignments, this@DisplayAssignmentsFragment)
+        recycler.apply {
+            layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
+            adapter = this@DisplayAssignmentsFragment.adapter
+        }
+
+        if (text_no_homework.visibility == View.VISIBLE && !userAssignments.isEmpty()) {
+            text_no_homework.visibility = View.INVISIBLE
+        }
     }
 
-     private fun deleteAssignment(key: String) {
+    private fun deleteAssignment(key: String) {
         databaseReference.child("users").child(user!!.uid).child("assignments").child(key).removeValue()
     }
 

@@ -124,6 +124,10 @@ class ChatFragment : Fragment() {
             adapter = this@ChatFragment.adapter
             layoutManager = manager
         }
+
+        if (text_loading_messages.visibility == View.VISIBLE) {
+            text_loading_messages.visibility = View.INVISIBLE
+        }
     }
 
     private fun addMessage(messageType: Int, message: String) {

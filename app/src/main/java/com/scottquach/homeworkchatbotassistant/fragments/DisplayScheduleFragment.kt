@@ -1,6 +1,7 @@
 package com.scottquach.homeworkchatbotassistant.fragments
 
 import android.content.Context
+import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -88,9 +89,15 @@ class DisplayScheduleFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        scheduleRecycler.layoutManager = LinearLayoutManager(context)
         scheduleAdapter = RecyclerScheduleAdapter(userClasses)
-        scheduleRecycler.adapter = scheduleAdapter
+        scheduleRecycler.apply {
+            adapter = scheduleAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
+        if (text_no_classes.visibility == View.VISIBLE && !userClasses.isEmpty()) {
+            text_no_classes.visibility = View.INVISIBLE
+        }
     }
 
     interface ScheduleDisplayInterface {

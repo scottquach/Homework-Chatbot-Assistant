@@ -35,13 +35,12 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
 
     override fun onResume() {
         super.onResume()
-        val fragment = DisplayScheduleFragment()
-        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment)
+        openScheduleDisplayFragment()
     }
 
     private fun openScheduleDisplayFragment() {
         val fragment = DisplayScheduleFragment()
-        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment)
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment)
     }
 
     private fun openCreateClassFragment() {
@@ -67,7 +66,9 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
     }
 
     override fun switchToDisplayFragment() {
-        openScheduleDisplayFragment()
+        //Needs to switch from the standard left to right since create card is from right
+        val fragment = DisplayScheduleFragment()
+        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment)
     }
 
     override fun startClassScheduleActivity() {
