@@ -25,7 +25,7 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
 
     private lateinit var databaseReference: DatabaseReference
     private var user: FirebaseUser? = null
-    private var userClasses = mutableListOf<ClassModel>()
+    public var userClasses = mutableListOf<ClassModel>()
 
     private val scheduleRecycler by lazy {
         recycler_schedule
@@ -48,7 +48,6 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
         return container?.inflate(R.layout.fragment_display_schedule)
     }
 
@@ -58,22 +57,25 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
         databaseReference = FirebaseDatabase.getInstance().reference
         user = FirebaseAuth.getInstance().currentUser
 
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                loadData(dataSnapshot)
-            }
-
-            override fun onCancelled(p0: DatabaseError?) {
-                Timber.d(p0?.message)
-            }
-        })
+        loadData()
 
         floating_create_class.setOnClickListener {
             listener?.switchToCreateFragment()
         }
     }
 
-    fun loadData(dataSnapshot: DataSnapshot) {
+    fun loadData() {
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                compileData(dataSnapshot)
+            }
+            override fun onCancelled(p0: DatabaseError?) {
+                Timber.d(p0?.message)
+            }
+        })
+    }
+
+    fun compileData(dataSnapshot: DataSnapshot) {
         userClasses.clear()
         for (ds in dataSnapshot.child("users").child(user?.uid).child("classes").children) {
             var classModel = ClassModel()
@@ -89,12 +91,19 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
     }
 
     private fun setupRecyclerView() {
-        scheduleAdapter = RecyclerScheduleAdapter(userClasses, this@DisplayScheduleFragment)
-        scheduleRecycler.apply {
-            adapter = scheduleAdapter
-            layoutManager = LinearLayoutManager(context)
+        if (scheduleAdapter == null) {
+            Timber.d("adapter was null")
+            scheduleAdapter = RecyclerScheduleAdapter(userClasses, this@DisplayScheduleFragment)
+            scheduleRecycler.apply {
+                adapter = scheduleAdapter
+                layoutManager = LinearLayoutManager(context)
+            }
         }
 
+        toggleNoClassLabel()
+    }
+
+    private fun toggleNoClassLabel() {
         if (text_no_classes?.visibility == View.VISIBLE && !userClasses.isEmpty()) {
             text_no_classes?.visibility = View.INVISIBLE
         }
@@ -106,21 +115,16 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
 
     override fun deleteClass(model: ClassModel) {
         databaseReference.child("users").child(user!!.uid).child("classes").child(model.title).removeValue()
-
         //Delete the assignments for corresponding class
         databaseReference.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 dataSnapshot.child("users").child(user!!.uid).child("assignments").children
-                        .filter { it.child("userClass") as String == model.title }
+                        .filter { it.child("userClass").value as String == model.title }
                         .forEach { databaseReference.child("users").child(user!!.uid).child("assignments").child(it.key).removeValue() }
             }
             override fun onCancelled(p0: DatabaseError?) {
 
             }
-
-
-
         })
     }
-
 }

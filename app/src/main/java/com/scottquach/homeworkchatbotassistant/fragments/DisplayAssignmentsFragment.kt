@@ -13,6 +13,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerAssignmentsAdapter
@@ -22,9 +23,7 @@ import kotlinx.android.synthetic.main.fragment_display_assignments.*
 import timber.log.Timber
 
 class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.AssignmentAdapterInterface {
-    override fun delete(key: String) {
-        deleteAssignment(key)
-    }
+
 
     private var listener: DisplayHomeworkInterface? = null
 
@@ -33,10 +32,10 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     private var userAssignments = mutableListOf<AssignmentModel>()
 
-    private val recycler by lazy {
+    private val assignmentsRecycler by lazy {
         recycler_homework
     }
-    private var adapter: RecyclerAssignmentsAdapter? = null
+    private var assignmentsAdapter: RecyclerAssignmentsAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -59,11 +58,14 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        loadData()
+    }
 
-        databaseReference.addValueEventListener(object : ValueEventListener {
+    private fun loadData() {
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
                 Timber.d("Data Changed called")
-                loadData(p0)
+                compileData(p0)
             }
 
             override fun onCancelled(p0: DatabaseError?) {
@@ -72,7 +74,8 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
         })
     }
 
-    private fun loadData(dataSnapshot: DataSnapshot) {
+
+    private fun compileData(dataSnapshot: DataSnapshot) {
         userAssignments.clear()
         for (ds in dataSnapshot.child("users").child(user!!.uid).child("assignments").children) {
             var model = AssignmentModel()
@@ -88,10 +91,12 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
     }
 
     private fun setupRecyclerView() {
-        adapter = RecyclerAssignmentsAdapter(userAssignments, this@DisplayAssignmentsFragment)
-        recycler.apply {
-            layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
-            adapter = this@DisplayAssignmentsFragment.adapter
+        if (assignmentsAdapter == null) {
+            assignmentsAdapter = RecyclerAssignmentsAdapter(userAssignments, this@DisplayAssignmentsFragment)
+            assignmentsRecycler.apply {
+                layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
+                adapter = this@DisplayAssignmentsFragment.assignmentsAdapter
+            }
         }
 
         if (text_no_homework?.visibility == View.VISIBLE && !userAssignments.isEmpty()) {
@@ -99,8 +104,10 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
         }
     }
 
-    private fun deleteAssignment(key: String) {
-        databaseReference.child("users").child(user!!.uid).child("assignments").child(key).removeValue()
+    override fun delete(model: AssignmentModel) {
+        databaseReference.child("users").child(user!!.uid).child("assignments").child(model.key).removeValue()
+        val manager = NotifyClassEndManager(context)
+        manager.startManaging()
     }
 
     interface DisplayHomeworkInterface {

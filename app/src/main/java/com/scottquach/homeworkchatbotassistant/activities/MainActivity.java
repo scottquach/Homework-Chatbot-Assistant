@@ -41,7 +41,7 @@ import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity implements AIListener,
-        NavigationFragment.NavigationFragmentInterface, ChatFragment.ChatInterface{
+        NavigationFragment.NavigationFragmentInterface, ChatFragment.ChatInterface {
 
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -55,9 +55,6 @@ public class MainActivity extends AppCompatActivity implements AIListener,
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        ChatFragment fragment = new ChatFragment();
-        ExtensionsKt.changeFragmentRightAnimated(getSupportFragmentManager(),
-                R.id.fragment_container_main, fragment, false);
 
         if (BaseApplication.getInstance().isFirstOpen()) {
             Timber.d("first open");
@@ -66,11 +63,18 @@ public class MainActivity extends AppCompatActivity implements AIListener,
             BaseApplication.getInstance().getSharePref().edit().putBoolean("first_open", false).apply();
         }
 
+        if (savedInstanceState == null) {
+            ChatFragment fragment = new ChatFragment();
+            ExtensionsKt.changeFragmentRightAnimated(getSupportFragmentManager(),
+                    R.id.fragment_container_main, fragment, false);
+        }
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Timber.d("Retrieved DataSnapshot");
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Timber.d("error retrieving data" + databaseError.toString());
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements AIListener,
     @Override
     protected void onResume() {
         super.onResume();
+
         requestPermissions();
     }
 
@@ -114,14 +119,17 @@ public class MainActivity extends AppCompatActivity implements AIListener,
     public void onAudioLevel(float level) {
 
     }
+
     @Override
     public void onListeningStarted() {
 
     }
+
     @Override
     public void onListeningCanceled() {
 
     }
+
     @Override
     public void onListeningFinished() {
 

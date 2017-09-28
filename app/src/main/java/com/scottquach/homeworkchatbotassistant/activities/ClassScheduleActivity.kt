@@ -28,14 +28,13 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
+        if (savedInstanceState == null) {
+            openScheduleDisplayFragment()
+        }
+
         toolbar_menu_icon.setOnClickListener {
             openNavigation()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        openScheduleDisplayFragment()
     }
 
     private fun openScheduleDisplayFragment() {

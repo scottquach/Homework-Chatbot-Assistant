@@ -35,25 +35,18 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindInformation(userClassModels[position])
+        holder.bindInformation(userClassModels[holder.adapterPosition])
         holder.itemView.button_class_delete.setOnClickListener {
-            listener?.deleteClass(userClassModels[position])
+            Timber.d("position " + holder.adapterPosition + " data " + userClassModels.toString())
+            listener?.deleteClass(userClassModels[holder.adapterPosition])
+            userClassModels.removeAt(holder.adapterPosition)
+            notifyItemRemoved(holder.adapterPosition)
         }
     }
 
     override fun getItemCount() = userClassModels.size
 
-    fun updateData(newClasses: MutableList<ClassModel>) {
-        userClassModels.apply {
-            clear()
-            newClasses
-        }
-        notifyDataSetChanged()
-        Timber.d("updated data")
-    }
-
     class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         fun bindInformation(model: ClassModel) {
             itemView.apply {
                 text_title.text = model.title

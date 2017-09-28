@@ -46,7 +46,7 @@ class AssignmentDueManager(var context: Context) {
         val alarm = Calendar.getInstance()
         alarm.time = dueDate
         alarm.add(Calendar.DAY_OF_MONTH, -1)
-        alarm.set(Calendar.HOUR_OF_DAY, 12)
+        alarm.set(Calendar.HOUR_OF_DAY, 5)
         alarm.set(Calendar.MINUTE, 0)
 
         val intent = Intent(context, AssignmentDueReceiver::class.java)
@@ -59,6 +59,4 @@ class AssignmentDueManager(var context: Context) {
 
         Timber.d("Homework alarm set for " + alarm)
     }
-
-
 }

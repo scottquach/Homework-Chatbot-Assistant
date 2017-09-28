@@ -22,15 +22,14 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
+        if (savedInstanceState == null) {
+            val fragment = DisplayAssignmentsFragment()
+            supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_homework, fragment)
+        }
+
         toolbar_menu_icon.setOnClickListener {
             openNavigation()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val fragment = DisplayAssignmentsFragment()
-        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_homework, fragment)
     }
 
     private fun openNavigation() {
