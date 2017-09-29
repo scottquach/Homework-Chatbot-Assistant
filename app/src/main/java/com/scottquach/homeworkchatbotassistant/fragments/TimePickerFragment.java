@@ -1,4 +1,4 @@
-package com.scottquach.homeworkchatbotassistant;
+package com.scottquach.homeworkchatbotassistant.fragments;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.TimePicker;
 
-import com.scottquach.homeworkchatbotassistant.fragments.CreateClassFragment;
 import com.scottquach.homeworkchatbotassistant.models.TimeModel;
 
 import java.util.Calendar;
@@ -53,6 +52,6 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 
-        ((CreateClassFragment) getTargetFragment()).setTime(tag, new TimeModel((long) hour,(long) minute));
+        ((CreateClassFragment) getTargetFragment()).setEndTime(tag, new TimeModel((long) hour,(long) minute));
     }
 }

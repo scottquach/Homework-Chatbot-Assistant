@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.scottquach.homeworkchatbotassistant.R
+import com.scottquach.homeworkchatbotassistant.StringUtils
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
@@ -37,7 +38,6 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindInformation(userClassModels[holder.adapterPosition])
         holder.itemView.button_class_delete.setOnClickListener {
-            Timber.d("position " + holder.adapterPosition + " data " + userClassModels.toString())
             listener?.deleteClass(userClassModels[holder.adapterPosition])
             userClassModels.removeAt(holder.adapterPosition)
             notifyItemRemoved(holder.adapterPosition)
@@ -50,7 +50,8 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
         fun bindInformation(model: ClassModel) {
             itemView.apply {
                 text_title.text = model.title
-                text_time.text = model.timeEnd.toString()
+                text_time.text = StringUtils.getTimeString(model.timeEnd)
+                text_day_display.text = StringUtils.getDaysOfWeek(model.days)
             }
         }
     }

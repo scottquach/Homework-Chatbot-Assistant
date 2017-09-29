@@ -9,10 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.scottquach.homeworkchatbotassistant.Constants
-import com.scottquach.homeworkchatbotassistant.R
-import com.scottquach.homeworkchatbotassistant.TimePickerFragment
-import com.scottquach.homeworkchatbotassistant.inflate
+import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import kotlinx.android.synthetic.main.fragment_create_class.*
@@ -77,9 +74,7 @@ class CreateClassFragment : Fragment() {
         listener = null
     }
 
-
     private fun createNewClassModel(): ClassModel {
-        convertToDayFormat()
         var newClassModel = ClassModel()
         newClassModel.title = edit_title.text.toString()
         newClassModel.timeEnd = this.timeEnd!!
@@ -87,23 +82,19 @@ class CreateClassFragment : Fragment() {
         return newClassModel
     }
 
-    fun setTime(tag: Int, time: TimeModel) {
+    fun setEndTime(tag: Int, time: TimeModel) {
         Timber.d("set time was called " + tag)
-        if (time.timeEndHour >= 12) {
-            text_end_time.text = time.timeEndHour.toString() +  " : " + time.timeEndMinute + " PM"
-        } else {
-            text_end_time.text = time.timeEndHour.toString() +  " : " + time.timeEndMinute + " AM"
-        }
+        text_end_time.text = StringUtils.getTimeString(time)
         timeEnd = time
     }
 
     private fun showDayPickerDialog() {
+        selectedDays.clear()
         val items: Array<String> = resources.getStringArray(R.array.days_of_week)
 
         val dialog = AlertDialog.Builder(context)
                 .setTitle("temporary title")
                 .setMultiChoiceItems(items, null, { dialogInterface: DialogInterface?, index: Int, isChecked: Boolean ->
-
                     if (isChecked) {
                         selectedDays.add(index)
                     } else if (selectedDays.contains(index)) {
@@ -111,7 +102,10 @@ class CreateClassFragment : Fragment() {
                     }
                     Timber.d(selectedDays.toString())
                 })
-                .setPositiveButton(getString(R.string.set), { dialogInterface, i ->  })
+                .setPositiveButton(getString(R.string.set), { dialogInterface, i ->
+                    convertToDayFormat()
+                    text_day_display.text = StringUtils.getDaysOfWeek(selectedDays)
+                })
                 .setNegativeButton(getString(R.string.cancel), { dialogInterface, i ->  })
                 .create().show()
     }

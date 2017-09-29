@@ -83,7 +83,7 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
             classModel.timeEnd = TimeModel(ds.child("timeEnd").child("timeEndHour").value as Long,
                     ds.child("timeEnd").child("timeEndMinute").value as Long)
             var days = mutableListOf<Int>()
-            dataSnapshot.child("users").child(user!!.uid).child("classes").child(classModel.title).child("day").children.mapTo(days) { (it.value as Long).toInt() }
+            dataSnapshot.child("users").child(user!!.uid).child("classes").child(classModel.title).child("days").children.mapTo(days) { (it.value as Long).toInt() }
             classModel.days = days
             userClasses.add(classModel)
         }
