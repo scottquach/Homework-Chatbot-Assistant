@@ -27,7 +27,7 @@ class NotifyClassEndManager(var context: Context) {
 
     private var userClasses: MutableList<ClassModel> = mutableListOf()
 
-    private var daysFromNow: Int = 0
+    private var daysFromNow: Int = -1
 
     fun startManaging() {
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -73,25 +73,27 @@ class NotifyClassEndManager(var context: Context) {
      * @param Day of the week as an Int, occursOnDay - set false if you want to get a class
      * that occurs after the specified day(such as a weekend from Friday to Monday)
      */
-    private fun getNextClassesByDay(specifiedDay: Int, occursOnDay: Boolean = true): MutableList<ClassModel> {
+    private fun getNextClassesByDay(specifiedDay: Int): MutableList<ClassModel> {
         var iteratedDay = specifiedDay
         //Make sure days from now is reset
-        daysFromNow = 0
+        daysFromNow = -1
+        Timber.d(userClasses.toString())
         var classesOnDay = emptyList<ClassModel>().toMutableList()
-        Timber.d("iterated day is" + iteratedDay)
         do {
-            if (iteratedDay < 7 && !occursOnDay) {
-                iteratedDay++
-            } else if (!occursOnDay) {
-                iteratedDay = 1
-            }
-            daysFromNow++
-            classesOnDay = userClasses
-                    .filter { it.days.contains(iteratedDay) }
-                    .toMutableList()
+        classesOnDay = userClasses
+                .filter { it.days.contains(iteratedDay) }
+                .toMutableList()
+        if (iteratedDay < 7) {
+            iteratedDay++
+            Timber.d("iterated up")
+        } else {
+            iteratedDay = 1
+            Timber.d("iterator reset")
+        }
+        Timber.d("loop was called")
+        daysFromNow++
 
-        } while (classesOnDay.isEmpty())
-        Timber.d("iterated day new " + iteratedDay)
+    } while (classesOnDay.isEmpty())
         Timber.d(classesOnDay.toString())
         return classesOnDay
     }
@@ -103,6 +105,8 @@ class NotifyClassEndManager(var context: Context) {
      */
     private fun getNextClassOfDay(classesOnDay: List<ClassModel>, currentTime: TimeModel): ClassModel {
         Timber.d("original of classes on day " + classesOnDay.toString())
+
+        //This filters class that have occur on today but time has already passed
         var nextClasses = classesOnDay
                 .filter {
                     (it.timeEnd.timeEndHour > currentTime.timeEndHour) ||
@@ -110,15 +114,18 @@ class NotifyClassEndManager(var context: Context) {
                 }
                 .sortedBy { it.timeEnd.timeEndHour }
         Timber.d(nextClasses.toString())
+
+        //This reloads the list of nextClasses if no more will occur today after current time
         if (nextClasses.isEmpty()) {
             Timber.d("classes was empty, occurs on another day")
             Timber.d(classesOnDay.toString())
-            //Re-load class of the day, except day is automatically the next day that a class occurs
-            var classesNextDay = getNextClassesByDay((Calendar.getInstance().get(Calendar.DAY_OF_WEEK)), false)
+            //Reload class of the day, except day is tomorrow
+            var classesNextDay = getNextClassesByDay((Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1))
             nextClasses = classesNextDay
                     .sortedBy { it.timeEnd.timeEndHour }
         }
         Timber.d("hour organized" + nextClasses.toString())
+
         return if (nextClasses.size > 1 && nextClasses[0].timeEnd.timeEndHour == nextClasses[1].timeEnd.timeEndHour) {
             var nextClassesByHour = nextClasses
                     .filter { it.timeEnd.timeEndHour == nextClasses[0].timeEnd.timeEndHour }
@@ -134,6 +141,9 @@ class NotifyClassEndManager(var context: Context) {
     private fun isAlarmBeforeNow(alarm: Calendar): Boolean {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()
+        //May sometimes say alarm is after based on seconds not minutes
+        calendar.add(Calendar.MINUTE, 1)
+
         return alarm.before(calendar)
     }
 

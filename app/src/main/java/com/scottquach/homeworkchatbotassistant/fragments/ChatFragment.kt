@@ -154,9 +154,10 @@ class ChatFragment : Fragment() {
                 val date = params["date"]!!.asString
                 val assignment = params["assignment-official"]!!.asString
                 Timber.d("Received words were $date $assignment")
-                messageHandler.confirmNewHomework(assignment, classContext, date)
+                messageHandler.confirmNewAssignment(assignment, classContext, date)
 //                defaultContext()
             }
+            Constants.ACTION_NEXT_ASSIGNMENT -> {}
             else -> {
                 val textResponse = result.fulfillment.speech
                 addMessage(MessageType.RECEIVED, textResponse)

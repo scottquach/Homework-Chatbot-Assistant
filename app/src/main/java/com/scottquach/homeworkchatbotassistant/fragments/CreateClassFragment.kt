@@ -83,6 +83,7 @@ class CreateClassFragment : Fragment() {
     }
 
     fun setEndTime(tag: Int, time: TimeModel) {
+        timeEnd = null
         Timber.d("set time was called " + tag)
         text_end_time.text = StringUtils.getTimeString(time)
         timeEnd = time

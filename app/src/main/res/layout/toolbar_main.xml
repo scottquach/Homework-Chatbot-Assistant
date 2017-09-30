@@ -10,7 +10,8 @@
     <ImageView
         android:id="@+id/toolbar_menu_icon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="5dp"
         android:src="@drawable/ic_menu"
         android:layout_gravity="left"
         android:background="?selectableItemBackgroundBorderless"

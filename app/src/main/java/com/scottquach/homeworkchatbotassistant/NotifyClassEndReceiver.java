@@ -24,7 +24,7 @@ public class NotifyClassEndReceiver extends BroadcastReceiver {
         if (intent.getExtras() != null) {
             String className = intent.getExtras().getString("class_name", "class");
             MessageHandler messageHandler = new MessageHandler(context);
-            messageHandler.promptForHomework(className);
+            messageHandler.promptForAssignment(className);
 
             createNotification(context, className);
             NotifyClassEndManager manager = new NotifyClassEndManager(context);

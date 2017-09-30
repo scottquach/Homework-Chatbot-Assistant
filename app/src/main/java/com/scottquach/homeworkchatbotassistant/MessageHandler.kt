@@ -55,7 +55,17 @@ class MessageHandler(val context: Context) {
         return messagesModels
     }
 
-    fun promptForHomework(userClass: String): List<MessageModel> {
+    fun assignmentDueReminder(assignmentName: String) {
+        val model = MessageModel()
+        model.message = "\"$assignmentName\" is due tomorrow"
+        model.type = MessageType.RECEIVED.toLong()
+        model.key = getMessageKey()
+        model.timestamp = Timestamp(System.currentTimeMillis())
+
+        saveMessagesToDatabase(listOf(model))
+    }
+
+    fun promptForAssignment(userClass: String): List<MessageModel> {
         val model = MessageModel()
         model.message = "Provide homework for $userClass?"
         model.type = MessageType.RECEIVED.toLong()
@@ -67,8 +77,8 @@ class MessageHandler(val context: Context) {
         return listOf(model)
     }
 
-    fun confirmNewHomework(assignment: String, userClass: String,
-                           dueDate: String) {
+    fun confirmNewAssignment(assignment: String, userClass: String,
+                             dueDate: String) {
 
         val model = MessageModel()
         model.message = "Assignment \"$assignment\" for $userClass on $dueDate saved"

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerScheduleAdapter
 import com.scottquach.homeworkchatbotassistant.inflate
@@ -121,9 +122,11 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
                 dataSnapshot.child("users").child(user!!.uid).child("assignments").children
                         .filter { it.child("userClass").value as String == model.title }
                         .forEach { databaseReference.child("users").child(user!!.uid).child("assignments").child(it.key).removeValue() }
+                val manager = NotifyClassEndManager(context)
+                manager.startManaging()
             }
             override fun onCancelled(p0: DatabaseError?) {
-
+                Timber.e("Error loading data " + p0.toString() )
             }
         })
     }

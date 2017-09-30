@@ -22,11 +22,6 @@ import java.util.*
 
 class AssignmentDueManager(var context: Context) {
 
-    private val databaseReference = FirebaseDatabase.getInstance().reference
-    private val user = FirebaseAuth.getInstance().currentUser
-
-    private var userAssignments = mutableListOf<AssignmentModel>()
-
     private fun convertStringToDate(stringDate: String): Date? {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         var convertedDate: Date? = null
