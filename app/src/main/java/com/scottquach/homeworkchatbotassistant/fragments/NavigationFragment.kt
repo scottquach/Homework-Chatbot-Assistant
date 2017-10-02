@@ -1,6 +1,7 @@
 package com.scottquach.homeworkchatbotassistant.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.scottquach.homeworkchatbotassistant.R
+import com.scottquach.homeworkchatbotassistant.activities.SettingsActivity
 import com.scottquach.homeworkchatbotassistant.inflate
 import kotlinx.android.synthetic.main.fragment_navigation.*
 
@@ -28,6 +30,10 @@ class NavigationFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        button_settings.setOnClickListener {
+            startActivity(Intent(context, SettingsActivity::class.java))
+        }
 
         card_navigation_classes.setOnClickListener {
             listener?.startClassScheduleActivity()

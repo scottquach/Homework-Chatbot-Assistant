@@ -11,6 +11,7 @@
     <string name="loading_messages">Loading Messages</string>
     <string name="no_classes">No Classes</string>
     <string name="no_homework">No Homework!</string>
+    <string name="settings">Settings</string>
     <string-array name="days_of_week">
         <item>Sunday</item>
         <item>Monday</item>

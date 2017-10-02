@@ -141,7 +141,7 @@ class NotifyClassEndManager(var context: Context) {
     private fun isAlarmBeforeNow(alarm: Calendar): Boolean {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()
-        //May sometimes say alarm is after based on seconds not minutes
+        //May sometimes say alarm is after based on seconds not minutes, this fixes that
         calendar.add(Calendar.MINUTE, 1)
 
         return alarm.before(calendar)
