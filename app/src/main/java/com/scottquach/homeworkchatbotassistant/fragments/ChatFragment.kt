@@ -53,6 +53,7 @@ class ChatFragment : Fragment() {
     private var listener: ChatFragment.ChatInterface? = null
 
     interface ChatInterface {
+
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -147,7 +148,17 @@ class ChatFragment : Fragment() {
 
     private fun determineResponseActions(result: Result) {
         when (result.action) {
-            Constants.ACTION_ASSIGNMENT_SPECIFIC_CLASS -> Timber.d("Action was specific class")
+            Constants.ACTION_ASSIGNMENT_SPECIFIC_CLASS -> {
+                Timber.d("Action was specific class")
+                val params = result.parameters
+                val date = params["date"]!!.asString
+                val assignment = params["assignment-official"]!!.asString
+                val userClass = params["class"]!!.asString
+
+                messageHandler.confirmNewAssignmentSpecificClass(assignment, userClass, date)
+            }
+
+
             Constants.ACTION_ASSIGNMENT_PROMPTED_CLASS -> {
                 Timber.d("Action was prompted class")
                 val params = result.parameters
@@ -157,7 +168,8 @@ class ChatFragment : Fragment() {
                 messageHandler.confirmNewAssignment(assignment, classContext, date)
 //                defaultContext()
             }
-            Constants.ACTION_NEXT_ASSIGNMENT -> {}
+            Constants.ACTION_NEXT_ASSIGNMENT -> {
+            }
             else -> {
                 val textResponse = result.fulfillment.speech
                 addMessage(MessageType.RECEIVED, textResponse)

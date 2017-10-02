@@ -3,8 +3,7 @@ package com.scottquach.homeworkchatbotassistant
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import timber.log.Timber
@@ -75,6 +74,38 @@ class MessageHandler(val context: Context) {
         saveMessagesToDatabase(listOf(model))
         updateConvoContext(Constants.CONTEXT_PROMPT_HOMEWORK, userClass)
         return listOf(model)
+    }
+
+    fun promptCouldntFindClass(userClass: String) {
+        val model = MessageModel()
+        model.message = "Couldn't find class $userClass"
+        model.type = MessageType.RECEIVED.toLong()
+        model.key = getMessageKey()
+        model.timestamp = Timestamp(System.currentTimeMillis())
+
+        saveMessagesToDatabase(listOf(model))
+    }
+
+    fun confirmNewAssignmentSpecificClass(assignment: String, userClass: String, dueDate: String) {
+        databaseReference.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot?) {
+                var classMatch = false
+                for (ds in dataSnapshot!!.child("users").child(user!!.uid).child("classes").children) {
+                    if ((ds.child("title").value as String).equals(userClass, true)) {
+                        confirmNewAssignment(assignment, userClass, dueDate)
+                        classMatch = true
+                        break
+                    }
+                }
+                if(!classMatch) {
+                    promptCouldntFindClass(userClass)
+                }
+
+            }
+            override fun onCancelled(p0: DatabaseError?) {
+                Timber.e("Error loading data " + p0.toString())
+            }
+        })
     }
 
     fun confirmNewAssignment(assignment: String, userClass: String,
