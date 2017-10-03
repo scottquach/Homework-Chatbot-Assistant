@@ -15,7 +15,19 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.ClassScheduleActivity" />
-        <activity android:name=".activities.SignInActivity">
+        <activity android:name=".activities.SignInActivity"></activity>
+
+        <receiver android:name=".NotifyClassEndReceiver" />
+        <receiver android:name=".AssignmentDueReceiver" />
+
+        <activity android:name=".activities.DisplayAssignmentsActivity" />
+        <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.IntroActivity">
+
+        </activity>
+        <activity
+            android:name=".activities.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,11 +35,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".NotifyClassEndReceiver" />
-        <receiver android:name=".AssignmentDueReceiver" />
-
-        <activity android:name=".activities.DisplayAssignmentsActivity" />
-        <activity android:name=".activities.SettingsActivity"></activity>
     </application>
+
 
 </manifest>

@@ -43,12 +43,17 @@ class NotifyClassEndManager(var context: Context) {
     }
 
     private fun determineNextAlarm() {
-        val calendar = Calendar.getInstance()
-        val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-        val classesOnDay = getNextClassesByDay(currentDay)
-        Timber.d("current day is " + currentDay)
-        var nextClass = getNextClassOfDay(classesOnDay, TimeModel(calendar.get(Calendar.HOUR_OF_DAY).toLong(), calendar.get(Calendar.MINUTE).toLong()))
-        startNextAlarm(nextClass)
+        if (userClasses.isNotEmpty()) {
+            val calendar = Calendar.getInstance()
+            val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+            val classesOnDay = getNextClassesByDay(currentDay)
+            Timber.d("current day is " + currentDay)
+            var nextClass = getNextClassOfDay(classesOnDay, TimeModel(calendar.get(Calendar.HOUR_OF_DAY).toLong(), calendar.get(Calendar.MINUTE).toLong()))
+
+            startNextAlarm(nextClass)
+        } else {
+            cancelAlarm()
+        }
     }
 
     /**
@@ -76,24 +81,24 @@ class NotifyClassEndManager(var context: Context) {
     private fun getNextClassesByDay(specifiedDay: Int): MutableList<ClassModel> {
         var iteratedDay = specifiedDay
         //Make sure days from now is reset
-        daysFromNow = -1
+        daysFromNow = 0
         Timber.d(userClasses.toString())
         var classesOnDay = emptyList<ClassModel>().toMutableList()
         do {
-        classesOnDay = userClasses
-                .filter { it.days.contains(iteratedDay) }
-                .toMutableList()
-        if (iteratedDay < 7) {
-            iteratedDay++
-            Timber.d("iterated up")
-        } else {
-            iteratedDay = 1
-            Timber.d("iterator reset")
-        }
-        Timber.d("loop was called")
-        daysFromNow++
+            classesOnDay = userClasses
+                    .filter { it.days.contains(iteratedDay) }
+                    .toMutableList()
+            if (iteratedDay < 7) {
+                iteratedDay++
+                Timber.d("iterated up")
+            } else {
+                iteratedDay = 1
+                Timber.d("iterator reset")
+            }
+            Timber.d("loop was called")
+            daysFromNow++
 
-    } while (classesOnDay.isEmpty())
+        } while (classesOnDay.isEmpty())
         Timber.d(classesOnDay.toString())
         return classesOnDay
     }
@@ -171,5 +176,15 @@ class NotifyClassEndManager(var context: Context) {
         var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+    }
+
+    /**
+     * Cancels any class ending alarm that currently exists
+     */
+    private fun cancelAlarm() {
+        var intent = Intent(context, NotifyClassEndReceiver::class.java)
+        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(pendingIntent)
     }
 }

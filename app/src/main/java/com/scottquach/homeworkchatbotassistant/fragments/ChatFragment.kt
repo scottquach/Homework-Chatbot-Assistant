@@ -128,6 +128,8 @@ class ChatFragment : Fragment() {
 
         if (text_loading_messages?.visibility == View.VISIBLE && !userMessages.isEmpty()) {
             text_loading_messages?.visibility = View.INVISIBLE
+        } else if (text_loading_messages?.visibility == View.VISIBLE) {
+            text_loading_messages.text = "No Messages"
         }
     }
 
