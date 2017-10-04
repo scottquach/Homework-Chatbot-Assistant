@@ -48,6 +48,14 @@ public class SignInActivity extends AppCompatActivity{
                 .build();
 
         firebaseAuth = FirebaseAuth.getInstance();
+
+        this.findViewById(R.id.signInButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Timber.d("sign in button clicked");
+                signIn();
+            }
+        });
     }
 
     @Override
@@ -91,6 +99,7 @@ public class SignInActivity extends AppCompatActivity{
                             Toast.makeText(SignInActivity.this, "Signed in", Toast.LENGTH_SHORT).show();
                             createUserInDatabase(user);
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                            finish();
                         } else {
                             Timber.d("Sign in failed to authenticate google with firebase");
                         }
@@ -113,10 +122,6 @@ public class SignInActivity extends AppCompatActivity{
 
     private void signOut() {
         FirebaseAuth.getInstance().signOut();
-    }
-
-    public void signOutButtonClicked(View view) {
-        signOut();
     }
 
     public void signInButtonClicked(View view) {

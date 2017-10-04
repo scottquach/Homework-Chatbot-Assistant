@@ -15,7 +15,10 @@ public class SplashActivity extends AppCompatActivity {
         if (BaseApplication.getInstance().isFirstOpen()) {
             startActivity(new Intent(this, IntroActivity.class));
             finish();
-        } else startActivity(new Intent(this, SignInActivity.class));
+        } else {
+            startActivity(new Intent(this, SignInActivity.class));
+            finish();
+        }
 
     }
 }
