@@ -49,7 +49,7 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
 
     private fun openNavigation() {
         val fragment = NavigationFragment()
-        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment)
+        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment,false)
     }
 
     override fun addClass(newClass: ClassModel) {
