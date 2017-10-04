@@ -25,11 +25,14 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
         setContentView(R.layout.activity_class_schedule)
 
         val toolbar = toolbar_main
+        toolbar_title.text = "Classes"
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
         if (savedInstanceState == null) {
-            openScheduleDisplayFragment()
+//            openScheduleDisplayFragment()
+            val fragment = DisplayScheduleFragment()
+            supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment, canGoBack = false)
         }
 
         toolbar_menu_icon.setOnClickListener {
@@ -39,17 +42,18 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
 
     private fun openScheduleDisplayFragment() {
         val fragment = DisplayScheduleFragment()
-        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment)
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment, false, true)
     }
 
     private fun openCreateClassFragment() {
         val fragment = CreateClassFragment()
-        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment)
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment, false, true)
     }
 
     private fun openNavigation() {
+        toolbar_title.text = "Navigation"
         val fragment = NavigationFragment()
-        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment,false)
+        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment, false, true)
     }
 
     override fun addClass(newClass: ClassModel) {
@@ -67,7 +71,7 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
     override fun switchToDisplayFragment() {
         //Needs to switch from the standard left to right since create card is from right
         val fragment = DisplayScheduleFragment()
-        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment)
+        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment, canGoBack = false)
     }
 
     override fun startClassScheduleActivity() {

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements AIListener,
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        toolbarTitle.setText("Chat");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements AIListener,
         if (savedInstanceState == null) {
             ChatFragment fragment = new ChatFragment();
             ExtensionsKt.changeFragmentRightAnimated(getSupportFragmentManager(),
-                    R.id.fragment_container_main, fragment, false);
+                    R.id.fragment_container_main, fragment, false, false);
         }
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -142,10 +145,12 @@ public class MainActivity extends AppCompatActivity implements AIListener,
     }
 
     private void openNavigation() {
-        NavigationFragment fragment = new NavigationFragment();
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        toolbarTitle.setText("Chat");
 
+        NavigationFragment fragment = new NavigationFragment();
         ExtensionsKt.changeFragmentLeftAnimated(getSupportFragmentManager(),
-                R.id.fragment_container_main, fragment, true);
+                R.id.fragment_container_main, fragment, true, true);
     }
 
     @Override
@@ -162,6 +167,6 @@ public class MainActivity extends AppCompatActivity implements AIListener,
     public void startMainActivity() {
         ChatFragment fragment = new ChatFragment();
         ExtensionsKt.changeFragmentRightAnimated(getSupportFragmentManager(),
-                R.id.fragment_container_main, fragment, true);
+                R.id.fragment_container_main, fragment, false, true);
     }
 }

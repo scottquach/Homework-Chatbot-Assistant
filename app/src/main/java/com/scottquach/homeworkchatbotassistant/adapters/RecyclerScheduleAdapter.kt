@@ -42,9 +42,11 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
             userClassModels.removeAt(holder.adapterPosition)
             notifyItemRemoved(holder.adapterPosition)
         }
+        Timber.d("on bind viewholder called")
     }
 
     override fun getItemCount() = userClassModels.size
+
 
     class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindInformation(model: ClassModel) {

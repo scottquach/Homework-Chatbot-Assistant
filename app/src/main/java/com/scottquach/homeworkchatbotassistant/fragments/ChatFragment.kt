@@ -12,6 +12,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,9 +42,8 @@ class ChatFragment : Fragment() {
         MessageHandler(context)
     }
 
-    private val recycler by lazy {
-        recycler_messages
-    }
+    private var recycler: RecyclerView? = null
+
     private lateinit var adapter: RecyclerChatAdapter
 
     private var userMessages = mutableListOf<MessageModel>()
@@ -70,6 +70,19 @@ class ChatFragment : Fragment() {
         aiService = AIService.getService(context, config)
 //        aiService.setListener(context)
 
+        recycler = recycler_messages
+
+        button_send.setOnClickListener {
+            val text = edit_input.text.toString().trim({ it <= ' ' })
+            addMessage(MessageType.SENT, text)
+            DoTextRequestTask().execute(text)
+            edit_input.setText("")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         databaseReference.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(p0: DataSnapshot) {
@@ -80,13 +93,6 @@ class ChatFragment : Fragment() {
                 Timber.d("Error loading data " + p0?.toString())
             }
         })
-
-        button_send.setOnClickListener {
-            val text = edit_input.text.toString().trim({ it <= ' ' })
-            addMessage(MessageType.SENT, text)
-            DoTextRequestTask().execute(text)
-            edit_input.setText("")
-        }
     }
 
     override fun onAttach(context: Context?) {
@@ -121,7 +127,7 @@ class ChatFragment : Fragment() {
         adapter = RecyclerChatAdapter(userMessages, context)
         val manager = LinearLayoutManager(context)
         manager.stackFromEnd = true
-        recycler.apply {
+        recycler?.apply {
             adapter = this@ChatFragment.adapter
             layoutManager = manager
         }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,9 +33,8 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     private var userAssignments = mutableListOf<AssignmentModel>()
 
-    private val assignmentsRecycler by lazy {
-        recycler_homework
-    }
+    private var assignmentsRecycler: RecyclerView? = null
+
     private var assignmentsAdapter: RecyclerAssignmentsAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -58,6 +58,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        assignmentsRecycler = recycler_homework
         loadData()
     }
 
@@ -91,13 +92,11 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
     }
 
     private fun setupRecyclerView() {
-        if (assignmentsAdapter == null) {
             assignmentsAdapter = RecyclerAssignmentsAdapter(userAssignments, this@DisplayAssignmentsFragment)
-            assignmentsRecycler.apply {
-                layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
+            assignmentsRecycler?.apply {
                 adapter = this@DisplayAssignmentsFragment.assignmentsAdapter
+                layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
             }
-        }
 
         if (text_no_homework?.visibility == View.VISIBLE && !userAssignments.isEmpty()) {
             text_no_homework?.visibility = View.INVISIBLE

@@ -20,11 +20,13 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
 
         val toolbar = toolbar_main
         setSupportActionBar(toolbar)
+        toolbar_title.text = "Assignments"
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
         if (savedInstanceState == null) {
             val fragment = DisplayAssignmentsFragment()
-            supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_homework, fragment)
+            supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_homework,
+                    fragment, false, false)
         }
 
         toolbar_menu_icon.setOnClickListener {
@@ -33,6 +35,8 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
     }
 
     private fun openNavigation() {
+        toolbar_title.text = "Navigation"
+
         val fragment = NavigationFragment()
         supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_homework, fragment)
     }
@@ -43,7 +47,7 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
 
     override fun startDisplayHomeworkActivity() {
         val fragment = DisplayAssignmentsFragment()
-        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_homework, fragment)
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_homework, fragment, false, true)
     }
 
     override fun startMainActivity() {

@@ -12,6 +12,7 @@
     <string name="no_classes">No Classes</string>
     <string name="no_homework">No Homework!</string>
     <string name="settings">Settings</string>
+    <string name="assignments">Assignments</string>
     <string-array name="days_of_week">
         <item>Sunday</item>
         <item>Monday</item>
