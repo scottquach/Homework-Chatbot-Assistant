@@ -11,10 +11,10 @@
         android:id="@+id/recycler_messages"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="0dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="0dp"
         android:clipToPadding="false"
         android:paddingBottom="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -45,7 +45,8 @@
             android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Enter message here"
+            android:background="@android:color/transparent"
+            android:hint="Say Something"
             android:inputType="text" />
 
         <Button
@@ -53,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:background="?attr/selectableItemBackground"
+            android:background="@android:color/transparent"
             android:clickable="true"
             android:text="Send" />
     </LinearLayout>

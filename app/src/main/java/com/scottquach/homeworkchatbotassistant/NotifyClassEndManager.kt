@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -168,6 +169,7 @@ class NotifyClassEndManager(var context: Context) {
         }
 
         Timber.d("added days is $daysFromNow selected class is $model")
+        Timber.d(alarm.timeInMillis.toString())
 
         var intent = Intent(context, NotifyClassEndReceiver::class.java)
         intent.putExtra("class_name", model.title)
@@ -179,10 +181,10 @@ class NotifyClassEndManager(var context: Context) {
     /**
      * Cancels any class ending alarm that currently exists
      */
-    fun cancelAlarm() {
-        var intent = Intent(context, NotifyClassEndReceiver::class.java)
-        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-        var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.cancel(pendingIntent)
-    }
+//    fun cancelAlarm() {
+//        var intent = Intent(context, NotifyClassEndReceiver::class.java)
+//        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+//        var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        alarmManager.cancel(pendingIntent)
+//    }
 }
