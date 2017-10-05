@@ -8,13 +8,12 @@
     <include
         layout="@layout/toolbar_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:transitionName="@string/transition_tooblar"/>
 
     <FrameLayout
         android:id="@+id/fragment_container_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
     </FrameLayout>
 </LinearLayout>

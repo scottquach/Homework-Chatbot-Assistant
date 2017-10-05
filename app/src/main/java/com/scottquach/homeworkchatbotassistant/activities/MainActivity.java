@@ -1,6 +1,7 @@
 package com.scottquach.homeworkchatbotassistant.activities;
 
 import android.Manifest;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -40,6 +41,7 @@ import ai.api.model.Result;
 import timber.log.Timber;
 
 import com.google.gson.JsonElement;
+import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils;
 
 import java.util.Map;
 
@@ -155,9 +157,10 @@ public class MainActivity extends AppCompatActivity implements AIListener,
         }
 
         TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(getString(R.string.navigation));
+        AnimationUtils.textFade(toolbarTitle, getString(R.string.navigation),
+                getResources().getInteger(android.R.integer.config_shortAnimTime));
         ImageView toolbarIcon = (ImageView) findViewById(R.id.toolbar_menu_icon);
-        toolbarIcon.setVisibility(View.INVISIBLE);
+        AnimationUtils.fadeOut(toolbarIcon, getResources().getInteger(android.R.integer.config_shortAnimTime));
 
         NavigationFragment fragment = new NavigationFragment();
         ExtensionsKt.changeFragmentLeftAnimated(getSupportFragmentManager(),
@@ -166,20 +169,37 @@ public class MainActivity extends AppCompatActivity implements AIListener,
 
     @Override
     public void startClassScheduleActivity() {
-        startActivity(new Intent(MainActivity.this, ClassScheduleActivity.class));
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            View sharedView = MainActivity.this.findViewById(R.id.toolbar_main);
+            String transitionName = getString(R.string.transition_tooblar);
+            ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, sharedView, transitionName);
+            startActivity(new Intent(MainActivity.this, ClassScheduleActivity.class),
+                    transitionActivityOptions.toBundle());
+        } else {
+            startActivity(new Intent(MainActivity.this, ClassScheduleActivity.class));
+        }
     }
 
     @Override
     public void startDisplayHomeworkActivity() {
-        startActivity(new Intent(MainActivity.this, DisplayAssignmentsActivity.class));
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            View sharedView = MainActivity.this.findViewById(R.id.toolbar_main);
+            String transitionName = getString(R.string.transition_tooblar);
+            ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, sharedView, transitionName);
+            startActivity(new Intent(MainActivity.this, DisplayAssignmentsActivity.class),
+                    transitionActivityOptions.toBundle());
+        } else {
+            startActivity(new Intent(MainActivity.this, DisplayAssignmentsActivity.class));
+        }
     }
 
     @Override
     public void startMainActivity() {
-        ImageView toolbarIcon = (ImageView) findViewById(R.id.toolbar_menu_icon);
-        toolbarIcon.setVisibility(View.VISIBLE);
         TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(getString(R.string.chat));
+        AnimationUtils.textFade(toolbarTitle, getString(R.string.chat),
+                getResources().getInteger(android.R.integer.config_shortAnimTime));
+        ImageView toolbarIcon = (ImageView) findViewById(R.id.toolbar_menu_icon);
+        AnimationUtils.fadeIn(toolbarIcon, getResources().getInteger(android.R.integer.config_shortAnimTime));
 
         ChatFragment fragment = new ChatFragment();
         ExtensionsKt.changeFragmentRightAnimated(getSupportFragmentManager(),

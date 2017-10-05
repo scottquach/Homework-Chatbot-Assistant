@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.scottquach.homeworkchatbotassistant.R
-import com.scottquach.homeworkchatbotassistant.StringUtils
+import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.ClassModel

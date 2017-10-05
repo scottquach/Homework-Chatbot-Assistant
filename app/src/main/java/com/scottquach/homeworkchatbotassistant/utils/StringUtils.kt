@@ -1,4 +1,4 @@
-package com.scottquach.homeworkchatbotassistant
+package com.scottquach.homeworkchatbotassistant.utils
 
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
 

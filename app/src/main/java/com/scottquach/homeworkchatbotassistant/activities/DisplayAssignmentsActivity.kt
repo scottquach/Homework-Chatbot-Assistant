@@ -1,5 +1,6 @@
 package com.scottquach.homeworkchatbotassistant.activities
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import com.scottquach.homeworkchatbotassistant.changeFragment
 import com.scottquach.homeworkchatbotassistant.changeFragmentLeftAnimated
 import com.scottquach.homeworkchatbotassistant.changeFragmentRightAnimated
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
+import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils
 import kotlinx.android.synthetic.main.toolbar_main.*
 
 class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.NavigationFragmentInterface,
@@ -37,25 +39,42 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
 
     private fun openNavigation() {
         toolbar_title.text = getString(R.string.navigation)
-        toolbar_menu_icon.visibility = View.INVISIBLE
+        AnimationUtils.textFade(toolbar_title, getString(R.string.navigation),
+                resources.getInteger(android.R.integer.config_shortAnimTime))
+        AnimationUtils.fadeOut(toolbar_menu_icon, resources.getInteger(android.R.integer.config_shortAnimTime))
 
         val fragment = NavigationFragment()
         supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_homework, fragment)
     }
 
     override fun startClassScheduleActivity() {
-        startActivity(Intent(this@DisplayAssignmentsActivity, ClassScheduleActivity::class.java))
-    }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            val transitionName = getString(R.string.transition_tooblar)
+            val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@DisplayAssignmentsActivity, toolbar_main, transitionName)
+            startActivity(Intent(this@DisplayAssignmentsActivity, ClassScheduleActivity::class.java),
+                    transitionActivityOptions.toBundle())
+        } else {
+            startActivity(Intent(this@DisplayAssignmentsActivity, ClassScheduleActivity::class.java))
+        }
+        }
 
     override fun startDisplayHomeworkActivity() {
-        toolbar_title.text = getString(R.string.assignments)
-        toolbar_menu_icon.visibility = View.VISIBLE
+        AnimationUtils.textFade(toolbar_title, getString(R.string.assignments),
+                resources.getInteger(android.R.integer.config_shortAnimTime))
+        AnimationUtils.fadeIn(toolbar_menu_icon, resources.getInteger(android.R.integer.config_shortAnimTime))
 
         val fragment = DisplayAssignmentsFragment()
         supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_homework, fragment, false, true)
     }
 
     override fun startMainActivity() {
-        startActivity(Intent(this@DisplayAssignmentsActivity, MainActivity::class.java))
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            val transitionName = getString(R.string.transition_tooblar)
+            val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@DisplayAssignmentsActivity, toolbar_main, transitionName)
+            startActivity(Intent(this@DisplayAssignmentsActivity, MainActivity::class.java),
+                    transitionActivityOptions.toBundle())
+        } else {
+            startActivity(Intent(this@DisplayAssignmentsActivity, MainActivity::class.java))
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.scottquach.homeworkchatbotassistant.activities
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -12,10 +13,11 @@ import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.fragments.CreateClassFragment
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
+import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils
 import kotlinx.android.synthetic.main.toolbar_main.*
 
 class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateClassInterface,
-    DisplayScheduleFragment.ScheduleDisplayInterface, NavigationFragment.NavigationFragmentInterface{
+        DisplayScheduleFragment.ScheduleDisplayInterface, NavigationFragment.NavigationFragmentInterface {
 
     private var databaseReference = FirebaseDatabase.getInstance().reference
     private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -41,7 +43,9 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
     }
 
     private fun openScheduleDisplayFragment() {
-        toolbar_title.text = getString(R.string.classes)
+        AnimationUtils.textFade(toolbar_title, getString(R.string.classes),
+                resources.getInteger(android.R.integer.config_shortAnimTime))
+        AnimationUtils.fadeIn(toolbar_menu_icon, resources.getInteger(android.R.integer.config_shortAnimTime))
         val fragment = DisplayScheduleFragment()
         supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment, false, true)
     }
@@ -52,7 +56,9 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
     }
 
     private fun openNavigation() {
-        toolbar_title.text = getString(R.string.navigation)
+        AnimationUtils.textFade(toolbar_title, getString(R.string.navigation),
+                resources.getInteger(android.R.integer.config_shortAnimTime))
+        AnimationUtils.fadeOut(toolbar_menu_icon, resources.getInteger(android.R.integer.config_shortAnimTime))
         val fragment = NavigationFragment()
         supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment, false, true)
     }
@@ -80,10 +86,25 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
     }
 
     override fun startDisplayHomeworkActivity() {
-        startActivity(Intent(this@ClassScheduleActivity, DisplayAssignmentsActivity::class.java))
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            val transitionName = getString(R.string.transition_tooblar)
+            val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@ClassScheduleActivity, toolbar_main, transitionName)
+            startActivity(Intent(this@ClassScheduleActivity, DisplayAssignmentsActivity::class.java),
+                    transitionActivityOptions.toBundle())
+        } else {
+            startActivity(Intent(this@ClassScheduleActivity, DisplayAssignmentsActivity::class.java))
+        }
     }
 
+
     override fun startMainActivity() {
-        startActivity(Intent(this@ClassScheduleActivity, MainActivity::class.java))
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            val transitionName = getString(R.string.transition_tooblar)
+            val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@ClassScheduleActivity, toolbar_main, transitionName)
+            startActivity(Intent(this@ClassScheduleActivity, MainActivity::class.java),
+                    transitionActivityOptions.toBundle())
+        } else {
+            startActivity(Intent(this@ClassScheduleActivity, MainActivity::class.java))
+        }
     }
 }

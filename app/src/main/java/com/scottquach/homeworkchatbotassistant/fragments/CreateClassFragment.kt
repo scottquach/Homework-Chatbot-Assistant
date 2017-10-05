@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
+import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import kotlinx.android.synthetic.main.fragment_create_class.*
 import timber.log.Timber
 

@@ -106,7 +106,6 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
     override fun delete(model: AssignmentModel) {
         databaseReference.child("users").child(user!!.uid).child("assignments").child(model.key).removeValue()
         val manager = NotifyClassEndManager(context)
-        manager.cancelAlarm()
         manager.startManaging()
     }
 
