@@ -33,10 +33,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.475">
 
-        <View
-            android:layout_width="75dp"
-            android:layout_height="100dp"
-            android:background="@drawable/navigation_tab"/>
+        <!--<View-->
+            <!--android:layout_width="75dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:background="@drawable/navigation_tab"/>-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -66,10 +66,10 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteY="293dp">
 
-        <View
-            android:layout_width="75dp"
-            android:layout_height="100dp"
-            android:background="@drawable/navigation_tab"/>
+        <!--<View-->
+            <!--android:layout_width="75dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:background="@drawable/navigation_tab"/>-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -98,10 +98,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_navigation_homework">
 
-        <View
+       <!-- <View
             android:layout_width="75dp"
-            android:layout_height="100dp"
-            android:background="@drawable/navigation_tab"/>
+            android:layout_height="100dp"-->
+            <!--android:background="@drawable/navigation_tab"/>-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -112,6 +112,4 @@
             android:textSize="34sp" />
 
     </android.support.v7.widget.CardView>
-
-
 </android.support.constraint.ConstraintLayout>

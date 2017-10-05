@@ -25,7 +25,7 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
         setContentView(R.layout.activity_class_schedule)
 
         val toolbar = toolbar_main
-        toolbar_title.text = "Classes"
+        toolbar_title.text = getString(R.string.classes)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
@@ -41,17 +41,18 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
     }
 
     private fun openScheduleDisplayFragment() {
+        toolbar_title.text = getString(R.string.classes)
         val fragment = DisplayScheduleFragment()
         supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment, false, true)
     }
 
     private fun openCreateClassFragment() {
         val fragment = CreateClassFragment()
-        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment, false, true)
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_class, fragment, true, true)
     }
 
     private fun openNavigation() {
-        toolbar_title.text = "Navigation"
+        toolbar_title.text = getString(R.string.navigation)
         val fragment = NavigationFragment()
         supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment, false, true)
     }

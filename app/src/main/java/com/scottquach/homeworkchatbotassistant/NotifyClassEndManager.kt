@@ -51,8 +51,6 @@ class NotifyClassEndManager(var context: Context) {
             var nextClass = getNextClassOfDay(classesOnDay, TimeModel(calendar.get(Calendar.HOUR_OF_DAY).toLong(), calendar.get(Calendar.MINUTE).toLong()))
 
             startNextAlarm(nextClass)
-        } else {
-            cancelAlarm()
         }
     }
 
@@ -181,7 +179,7 @@ class NotifyClassEndManager(var context: Context) {
     /**
      * Cancels any class ending alarm that currently exists
      */
-    private fun cancelAlarm() {
+    fun cancelAlarm() {
         var intent = Intent(context, NotifyClassEndReceiver::class.java)
         var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT)
         var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

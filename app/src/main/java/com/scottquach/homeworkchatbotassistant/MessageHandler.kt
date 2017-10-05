@@ -100,7 +100,6 @@ class MessageHandler(val context: Context) {
                 if(!classMatch) {
                     promptCouldntFindClass(userClass)
                 }
-
             }
             override fun onCancelled(p0: DatabaseError?) {
                 Timber.e("Error loading data " + p0.toString())

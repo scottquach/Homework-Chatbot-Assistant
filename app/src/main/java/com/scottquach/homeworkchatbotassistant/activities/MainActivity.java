@@ -1,6 +1,7 @@
 package com.scottquach.homeworkchatbotassistant.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -145,8 +148,16 @@ public class MainActivity extends AppCompatActivity implements AIListener,
     }
 
     private void openNavigation() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        toolbarTitle.setText("Chat");
+        toolbarTitle.setText(getString(R.string.navigation));
+        ImageView toolbarIcon = (ImageView) findViewById(R.id.toolbar_menu_icon);
+        toolbarIcon.setVisibility(View.INVISIBLE);
 
         NavigationFragment fragment = new NavigationFragment();
         ExtensionsKt.changeFragmentLeftAnimated(getSupportFragmentManager(),
@@ -165,6 +176,11 @@ public class MainActivity extends AppCompatActivity implements AIListener,
 
     @Override
     public void startMainActivity() {
+        ImageView toolbarIcon = (ImageView) findViewById(R.id.toolbar_menu_icon);
+        toolbarIcon.setVisibility(View.VISIBLE);
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(getString(R.string.chat));
+
         ChatFragment fragment = new ChatFragment();
         ExtensionsKt.changeFragmentRightAnimated(getSupportFragmentManager(),
                 R.id.fragment_container_main, fragment, false, true);

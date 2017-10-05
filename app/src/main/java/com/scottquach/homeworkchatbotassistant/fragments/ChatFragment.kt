@@ -73,7 +73,7 @@ class ChatFragment : Fragment() {
         recycler = recycler_messages
 
         button_send.setOnClickListener {
-            val text = edit_input.text.toString().trim({ it <= ' ' })
+            val text = edit_input.text.toString().trim()
             addMessage(MessageType.SENT, text)
             DoTextRequestTask().execute(text)
             edit_input.setText("")

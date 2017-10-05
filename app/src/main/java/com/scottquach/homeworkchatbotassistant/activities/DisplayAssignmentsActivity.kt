@@ -3,6 +3,7 @@ package com.scottquach.homeworkchatbotassistant.activities
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.changeFragment
@@ -35,7 +36,8 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
     }
 
     private fun openNavigation() {
-        toolbar_title.text = "Navigation"
+        toolbar_title.text = getString(R.string.navigation)
+        toolbar_menu_icon.visibility = View.INVISIBLE
 
         val fragment = NavigationFragment()
         supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_homework, fragment)
@@ -46,6 +48,9 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
     }
 
     override fun startDisplayHomeworkActivity() {
+        toolbar_title.text = getString(R.string.assignments)
+        toolbar_menu_icon.visibility = View.VISIBLE
+
         val fragment = DisplayAssignmentsFragment()
         supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_homework, fragment, false, true)
     }

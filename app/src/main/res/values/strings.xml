@@ -16,6 +16,7 @@
     <string name="sign_in_to_continue">Sign in to continue</string>
     <string name="welcome">Welcome</string>
     <string name="created_by">Created by Scott Quach</string>
+    <string name="navigation">Navigation</string>
     <string-array name="days_of_week">
         <item>Sunday</item>
         <item>Monday</item>

@@ -76,7 +76,7 @@ class CreateClassFragment : Fragment() {
 
     private fun createNewClassModel(): ClassModel {
         var newClassModel = ClassModel()
-        newClassModel.title = edit_title.text.toString()
+        newClassModel.title = edit_title.text.toString().trim()
         newClassModel.timeEnd = this.timeEnd!!
         newClassModel.days = selectedDays
         return newClassModel
