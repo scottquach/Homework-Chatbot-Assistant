@@ -157,6 +157,7 @@ class NotifyClassEndManager(var context: Context) {
      * @param model of the class that the alarm should be a notifier of
      */
     private fun startNextAlarm(model: ClassModel) {
+        cancelAlarm()
         var alarm = Calendar.getInstance()
         alarm.set(Calendar.HOUR_OF_DAY, model.timeEnd.timeEndHour.toInt())
         alarm.set(Calendar.MINUTE, model.timeEnd.timeEndMinute.toInt())
@@ -173,7 +174,7 @@ class NotifyClassEndManager(var context: Context) {
 
         var intent = Intent(context, NotifyClassEndReceiver::class.java)
         intent.putExtra("class_name", model.title)
-        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
     }
@@ -181,10 +182,11 @@ class NotifyClassEndManager(var context: Context) {
     /**
      * Cancels any class ending alarm that currently exists
      */
-//    fun cancelAlarm() {
-//        var intent = Intent(context, NotifyClassEndReceiver::class.java)
-//        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-//        var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        alarmManager.cancel(pendingIntent)
-//    }
+    fun cancelAlarm() {
+        var intent = Intent(context, NotifyClassEndReceiver::class.java)
+        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(pendingIntent)
+        pendingIntent.cancel()
+    }
 }
