@@ -32,12 +32,12 @@ class MessageHandler(val context: Context) {
     }
 
     fun receiveWelcomeMessage(): List<MessageModel> {
-        val stringMessages = arrayOf("Welcome to App Name",
+        val stringMessages = arrayOf(
                 "If you haven't done so please specify your classes in the classes tab",
                 "Every time you finish a class, I'll be here to ask you what homework you have whether it be a simple assignment or a big project",
-                "Using advanced machine learning, you can answer naturally such as \"I have a chapter 3 summary due next class\" or \"I have to finish" + "exam in 3 days\"",
-                "Or you can add assignments later by saying something such as \"I have a summary assignment for Research Writing due in 4 days",
-                "Remember that the above statements are just basic examples, feel free to speak the way YOU would naturally speak")
+                "Using advanced machine learning, you can answer naturally such as \"I have a chapter 3 summary due next Monday\" or \"I have an exam in 4 days\"",
+                "Or you can add assignments to specific classes later by saying something such as \"I have a summary assignment for Research Writing due in Friday",
+                "Remember that the above statements are just basic examples, feel free to speak the way YOU would naturally speak and I'll learn over time")
         val messagesModels = ArrayList<MessageModel>()
 
         for (message in stringMessages) {

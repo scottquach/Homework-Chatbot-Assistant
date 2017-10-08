@@ -173,6 +173,7 @@ class NotifyClassEndManager(var context: Context) {
         Timber.d(alarm.timeInMillis.toString())
 
         var intent = Intent(context, NotifyClassEndReceiver::class.java)
+        intent.setClass(context, NotifyClassEndReceiver::class.java)
         intent.putExtra("class_name", model.title)
         var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

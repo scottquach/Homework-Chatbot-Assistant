@@ -45,6 +45,7 @@ class AssignmentDueManager(var context: Context) {
         alarm.set(Calendar.MINUTE, 0)
 
         val intent = Intent(context, AssignmentDueReceiver::class.java)
+        intent.setClass(context, AssignmentDueReceiver::class.java)
         intent.putExtra("assignment_name", model.title)
         val pendingIntent = PendingIntent.getBroadcast(context, System.currentTimeMillis().toInt(),
                 intent, PendingIntent.FLAG_CANCEL_CURRENT)

@@ -3,6 +3,7 @@ package com.scottquach.homeworkchatbotassistant.adapters
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
@@ -37,7 +38,7 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindInformation(userClassModels[holder.adapterPosition])
-        holder.itemView.button_class_delete.setOnClickListener {
+        holder.itemView.findViewById<ImageView>(R.id.button_class_delete).setOnClickListener {
             listener?.deleteClass(userClassModels[holder.adapterPosition])
             userClassModels.removeAt(holder.adapterPosition)
             notifyItemRemoved(holder.adapterPosition)

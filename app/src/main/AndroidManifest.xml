@@ -35,9 +35,12 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".NotifyClassEndReceiver" />
-        <receiver android:name=".AssignmentDueReceiver" />
-        <receiver android:name=".RebootReceiver">
+        <receiver android:name=".NotifyClassEndReceiver"
+            android:enabled="true"/>
+        <receiver android:name=".AssignmentDueReceiver"
+            android:enabled="true"/>
+        <receiver android:name=".RebootReceiver"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
