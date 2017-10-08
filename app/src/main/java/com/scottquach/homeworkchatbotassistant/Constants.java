@@ -2,6 +2,7 @@ package com.scottquach.homeworkchatbotassistant;
 
 /**
  * Created by Scott Quach on 9/16/2017.
+ * Contains Constant values, usually keys or defaults
  */
 
 public class Constants {
@@ -17,4 +18,9 @@ public class Constants {
     public static final String CONETEXT_DEFAULT = "default";
     public static final String CONTEXT_PROMPT_HOMEWORK = "prompt-assignment";
 
+    //Argument key values for AlertdialogFragment
+    public static String ALERT_TITLE = "alert_title";
+    public static String ALERT_MESSAGE = "alert_message";
+    public static String ALERT_POSITIVE = "alert_positive";
+    public static String ALERT_NEGATIVE = "alert_negative";
 }

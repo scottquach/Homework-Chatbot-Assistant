@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.scottquach.homeworkchatbotassistant.AlertDialogFragment
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
@@ -39,14 +40,16 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindInformation(userClassModels[holder.adapterPosition])
         holder.itemView.findViewById<ImageView>(R.id.button_class_delete).setOnClickListener {
-            listener?.deleteClass(userClassModels[holder.adapterPosition])
-            userClassModels.removeAt(holder.adapterPosition)
-            notifyItemRemoved(holder.adapterPosition)
+            listener?.deleteClass(userClassModels[holder.adapterPosition], holder.adapterPosition)
         }
-        Timber.d("on bind viewholder called")
     }
 
     override fun getItemCount() = userClassModels.size
+
+    public fun removeItem(position: Int) {
+       userClassModels.removeAt(position)
+       notifyItemRemoved(position)
+    }
 
 
     class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -60,7 +63,7 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
     }
 
     interface ScheduleAdapterInterface {
-        fun deleteClass(model: ClassModel)
+        fun deleteClass(model: ClassModel, position: Int)
     }
 
 }

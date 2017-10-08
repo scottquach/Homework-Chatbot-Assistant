@@ -39,10 +39,13 @@ class RecyclerAssignmentsAdapter(private var userAssignments:MutableList<Assignm
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         (holder as AssignmentViewHolder).bindInformation(userAssignments[position])
         (holder as AssignmentViewHolder).itemView.findViewById<ImageView>(R.id.button_assignment_delete).setOnClickListener {
-            listener?.delete(userAssignments[holder.adapterPosition])
-            userAssignments.removeAt(holder.adapterPosition)
-            notifyItemChanged(holder.adapterPosition)
+            listener?.delete(userAssignments[holder.adapterPosition], holder.adapterPosition)
         }
+    }
+
+    public fun removeItem(position: Int) {
+        userAssignments.removeAt(position)
+        notifyItemChanged(position)
     }
 
     class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -57,6 +60,6 @@ class RecyclerAssignmentsAdapter(private var userAssignments:MutableList<Assignm
     }
 
     interface AssignmentAdapterInterface {
-        fun delete(model: AssignmentModel)
+        fun delete(model: AssignmentModel, position: Int)
     }
 }

@@ -19,6 +19,9 @@ import java.util.*
 
 /**
  * Created by Scott Quach on 9/16/2017.
+ * Pulls down a list of user classes and determines which
+ * class will end next, then sets an alarm with a broadcast
+ * intent for NotifyClassEndReceiver
  */
 
 class NotifyClassEndManager(var context: Context) {
