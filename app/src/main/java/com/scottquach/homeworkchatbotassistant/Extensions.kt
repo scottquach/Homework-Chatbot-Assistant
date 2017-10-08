@@ -21,7 +21,7 @@ fun FragmentManager.changeFragment(containerId: Int, fragment: Fragment, addToBa
 
     val transaction = beginTransaction()
 
-    transaction.replace(containerId, fragment)
+    transaction.replace(containerId, fragment, fragment.javaClass.name)
     if (canGoBack) {
         if (addToBackStack) {
             transaction.addToBackStack(null)
@@ -38,7 +38,7 @@ fun FragmentManager.changeFragmentLeftAnimated(containerId: Int, fragment: Fragm
 
     val transaction = beginTransaction()
     transaction.setCustomAnimations(R.anim.enter_left, R.anim.exit_right, R.anim.enter_right, R.anim.exit_left)
-    transaction.replace(containerId, fragment)
+    transaction.replace(containerId, fragment, fragment.javaClass.name)
 
     if (canGoBack) {
         if (addToBackStack) {
@@ -56,7 +56,7 @@ fun FragmentManager.changeFragmentRightAnimated(containerId: Int, fragment: Frag
 
     val transaction = beginTransaction()
     transaction.setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
-    transaction.replace(containerId, fragment)
+    transaction.replace(containerId, fragment, fragment.javaClass.name)
 
     if (canGoBack) {
         if (addToBackStack) {

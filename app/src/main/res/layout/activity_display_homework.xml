@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background_gradient_blue">
+    android:background="@drawable/background_gradient_blue"
+    android:id="@+id/activity_container_assignments">
 
     <include
         layout="@layout/toolbar_main"

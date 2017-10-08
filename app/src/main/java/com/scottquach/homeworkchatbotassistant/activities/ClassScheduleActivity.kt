@@ -14,6 +14,7 @@ import com.scottquach.homeworkchatbotassistant.fragments.CreateClassFragment
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
 import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils
+import kotlinx.android.synthetic.main.activity_class_schedule.*
 import kotlinx.android.synthetic.main.toolbar_main.*
 
 class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateClassInterface,
@@ -40,6 +41,22 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
         toolbar_menu_icon.setOnClickListener {
             openNavigation()
         }
+
+        activity_container_class.setOnTouchListener(object : SwipeGestureListener(this) {
+            override fun onSwipeRight() {
+                val fragment = supportFragmentManager.findFragmentByTag(NavigationFragment::class.java.name)
+                if (fragment == null || !fragment.isVisible) {
+                    openNavigation()
+                }
+            }
+
+            override fun onSwipeLeft() {
+                val fragment = supportFragmentManager.findFragmentByTag(DisplayScheduleFragment::class.java.name)
+                if (fragment == null || !fragment.isVisible) {
+                    openScheduleDisplayFragment()
+                }
+            }
+        })
     }
 
     private fun openScheduleDisplayFragment() {

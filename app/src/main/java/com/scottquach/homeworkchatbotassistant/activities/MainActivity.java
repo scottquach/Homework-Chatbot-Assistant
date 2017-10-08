@@ -2,6 +2,7 @@ package com.scottquach.homeworkchatbotassistant.activities;
 
 import android.Manifest;
 import android.app.ActivityOptions;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.scottquach.homeworkchatbotassistant.BaseApplication;
 import com.scottquach.homeworkchatbotassistant.ExtensionsKt;
 import com.scottquach.homeworkchatbotassistant.MessageHandler;
+import com.scottquach.homeworkchatbotassistant.SwipeGestureListener;
 import com.scottquach.homeworkchatbotassistant.fragments.ChatFragment;
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment;
 import com.scottquach.homeworkchatbotassistant.R;
@@ -95,6 +97,24 @@ public class MainActivity extends AppCompatActivity implements AIListener,
                 openNavigation();
             }
         });
+
+        findViewById(R.id.activity_container_main).setOnTouchListener(new SwipeGestureListener(this) {
+            @Override
+            public void onSwipeRight() {
+                NavigationFragment fragment = (NavigationFragment) getSupportFragmentManager().findFragmentByTag(NavigationFragment.class.getName());
+                if (fragment == null || !fragment.isVisible()) {
+                    openNavigation();
+                }
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                ChatFragment fragment = (ChatFragment) getSupportFragmentManager().findFragmentByTag(ChatFragment.class.getName());
+                if (fragment == null || !fragment.isVisible()) {
+                    startMainActivity();
+                }
+            }
+        });
     }
 
     @Override
@@ -152,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements AIListener,
     private void openNavigation() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 

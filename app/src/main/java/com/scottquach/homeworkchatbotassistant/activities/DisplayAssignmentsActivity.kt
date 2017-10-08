@@ -5,14 +5,13 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
-import com.scottquach.homeworkchatbotassistant.R
-import com.scottquach.homeworkchatbotassistant.changeFragment
-import com.scottquach.homeworkchatbotassistant.changeFragmentLeftAnimated
-import com.scottquach.homeworkchatbotassistant.changeFragmentRightAnimated
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
 import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils
+import kotlinx.android.synthetic.main.activity_display_homework.*
 import kotlinx.android.synthetic.main.toolbar_main.*
+import timber.log.Timber
 
 class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.NavigationFragmentInterface,
         DisplayAssignmentsFragment.DisplayHomeworkInterface {
@@ -35,6 +34,22 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
         toolbar_menu_icon.setOnClickListener {
             openNavigation()
         }
+
+        activity_container_assignments.setOnTouchListener(object : SwipeGestureListener(this) {
+            override fun onSwipeRight() {
+                val fragment = supportFragmentManager.findFragmentByTag(NavigationFragment::class.java.name)
+                if (fragment == null || !fragment.isVisible) {
+                    openNavigation()
+                }
+            }
+
+            override fun onSwipeLeft() {
+                val fragment = supportFragmentManager.findFragmentByTag(DisplayAssignmentsFragment::class.java.name)
+                if (fragment == null || !fragment.isVisible) {
+                    startDisplayHomeworkActivity()
+                }
+            }
+        })
     }
 
     private fun openNavigation() {
@@ -56,7 +71,7 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
         } else {
             startActivity(Intent(this@DisplayAssignmentsActivity, ClassScheduleActivity::class.java))
         }
-        }
+    }
 
     override fun startDisplayHomeworkActivity() {
         AnimationUtils.textFade(toolbar_title, getString(R.string.assignments),

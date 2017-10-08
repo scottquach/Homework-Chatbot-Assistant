@@ -90,12 +90,15 @@ class CreateClassFragment : Fragment() {
         timeEnd = time
     }
 
+    /**
+     * Allows users to choose what day they want a class to occur from Sunday to Saturday
+     */
     private fun showDayPickerDialog() {
         selectedDays.clear()
         val items: Array<String> = resources.getStringArray(R.array.days_of_week)
 
         val dialog = AlertDialog.Builder(context)
-                .setTitle("temporary title")
+                .setTitle("Days class occurs")
                 .setMultiChoiceItems(items, null, { dialogInterface: DialogInterface?, index: Int, isChecked: Boolean ->
                     if (isChecked) {
                         selectedDays.add(index)
@@ -123,6 +126,10 @@ class CreateClassFragment : Fragment() {
         Timber.d("converted array " + selectedDays)
     }
 
+    /**
+     * Checks whether all input fields are filled before attempting to
+     * create a new class
+     */
     private fun isRequiredFieldsFilled(): Boolean {
         return (!edit_title.text.isEmpty() && timeEnd != null && selectedDays.isNotEmpty())
     }

@@ -39,5 +39,4 @@ class AssignmentDueReceiver : BroadcastReceiver() {
         val handler = MessageHandler(context)
         handler.assignmentDueReminder(assignmentName)
     }
-
 }
