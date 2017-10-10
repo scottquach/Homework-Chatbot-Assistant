@@ -2,13 +2,10 @@ package com.scottquach.homeworkchatbotassistant.activities;
 
 import android.Manifest;
 import android.app.ActivityOptions;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,7 +23,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.scottquach.homeworkchatbotassistant.BaseApplication;
 import com.scottquach.homeworkchatbotassistant.ExtensionsKt;
@@ -69,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements AIListener,
         if (BaseApplication.getInstance().isFirstOpen()) {
             Timber.d("first open");
             MessageHandler handler = new MessageHandler(this);
-            handler.receiveWelcomeMessage();
+            handler.receiveWelcomeMessages();
             BaseApplication.getInstance().getSharePref().edit().putBoolean("first_open", false).apply();
         }
 

@@ -76,7 +76,7 @@ public class RecyclerChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void addMessage(MessageModel model) {
         this.messageModels.add(model);
-        notifyDataSetChanged();
+        notifyItemInserted(getItemCount() - 1);
     }
 
     public class SentViewHolder extends RecyclerView.ViewHolder{

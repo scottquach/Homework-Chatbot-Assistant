@@ -52,9 +52,7 @@ class ChatFragment : Fragment() {
 
     private var listener: ChatFragment.ChatInterface? = null
 
-    interface ChatInterface {
-
-    }
+    interface ChatInterface {}
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -143,11 +141,7 @@ class ChatFragment : Fragment() {
 
     private fun addMessage(messageType: Int, message: String) {
         val key = databaseReference.child("users").child(user!!.uid).child("messages").push().key
-
         val model = MessageModel(messageType.toLong(), message, Timestamp(System.currentTimeMillis()), key)
-        userMessages.add(model)
-        adapter.addMessage(model)
-
         databaseReference.child("users").child(user!!.uid).child("messages").child(key).setValue(model)
     }
 
@@ -167,8 +161,6 @@ class ChatFragment : Fragment() {
 
                 messageHandler.confirmNewAssignmentSpecificClass(assignment, userClass, date)
             }
-
-
             Constants.ACTION_ASSIGNMENT_PROMPTED_CLASS -> {
                 Timber.d("Action was prompted class")
                 val params = result.parameters
@@ -179,6 +171,9 @@ class ChatFragment : Fragment() {
 //                defaultContext()
             }
             Constants.ACTION_NEXT_ASSIGNMENT -> {
+            }
+            Constants.ACTION_REQUEST_HELP -> {
+                messageHandler.receiveHelp()
             }
             else -> {
                 val textResponse = result.fulfillment.speech
