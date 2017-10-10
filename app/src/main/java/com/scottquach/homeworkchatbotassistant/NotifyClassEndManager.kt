@@ -140,7 +140,7 @@ class NotifyClassEndManager(var context: Context) {
             Timber.d(nextClassesByHour.toString())
             nextClassesByHour[0]
         } else {
-            Timber.d("single result" + nextClasses[0].toString())
+            Timber.d("single result " + nextClasses[0].toString())
             nextClasses[0]
         }
     }
@@ -160,7 +160,6 @@ class NotifyClassEndManager(var context: Context) {
      * @param model of the class that the alarm should be a notifier of
      */
     private fun startNextAlarm(model: ClassModel) {
-        cancelAlarm()
         var alarm = Calendar.getInstance()
         alarm.set(Calendar.HOUR_OF_DAY, model.timeEnd.timeEndHour.toInt())
         alarm.set(Calendar.MINUTE, model.timeEnd.timeEndMinute.toInt())
@@ -175,18 +174,18 @@ class NotifyClassEndManager(var context: Context) {
         Timber.d("added days is $daysFromNow selected class is $model")
         Timber.d(alarm.timeInMillis.toString())
 
-        var intent = Intent(context, NotifyClassEndReceiver::class.java)
+        var intent = Intent("class_trigger")
         intent.setClass(context, NotifyClassEndReceiver::class.java)
         intent.putExtra("class_name", model.title)
         var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
     }
 
     /**
      * Cancels any class ending alarm that currently exists
      */
-    fun cancelAlarm() {
+    private fun cancelAlarm() {
         var intent = Intent(context, NotifyClassEndReceiver::class.java)
         var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

@@ -32,7 +32,6 @@ class StringUtils {
         }
 
         fun getTimeString(model: TimeModel): String {
-            Timber.d(model.toString())
             if (model.timeEndHour > 12) {
                 return if (model.timeEndMinute > 9) {
                     (model.timeEndHour - 12).toString() + ":" + model.timeEndMinute + " PM"
