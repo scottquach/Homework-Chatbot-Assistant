@@ -2,9 +2,12 @@ package com.scottquach.homeworkchatbotassistant
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.job.JobParameters
+import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.support.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -14,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
+import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
 import timber.log.Timber
 import java.util.*
 
@@ -171,15 +175,30 @@ class NotifyClassEndManager(var context: Context) {
             Timber.d("alarm is after now")
         }
 
+        alarm.add(Calendar.MINUTE, -3)
+
+        val minimumLatency = alarm.timeInMillis - System.currentTimeMillis()
+        alarm.add(Calendar.MINUTE, 6)
+        val overrideDeadline = alarm.timeInMillis - System.currentTimeMillis()
+
+
         Timber.d("added days is $daysFromNow selected class is $model")
         Timber.d(alarm.timeInMillis.toString())
 
         var intent = Intent("class_trigger")
         intent.setClass(context, NotifyClassEndReceiver::class.java)
         intent.putExtra("class_name", model.title)
-        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            JobSchedulerUtil.scheduleClassManagerJob(context, minimumLatency, overrideDeadline)
+        }
+//        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+//        var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+//        } else {
+//            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+//        }
     }
 
     /**
