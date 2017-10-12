@@ -53,6 +53,7 @@ class NotifyClassEndManager(var context: Context) {
     private fun determineNextAlarm() {
         if (userClasses.isNotEmpty()) {
             val calendar = Calendar.getInstance()
+            calendar.add(Calendar.MINUTE, 4)
             val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
             val classesOnDay = getNextClassesByDay(currentDay)
             Timber.d("current day is " + currentDay)
@@ -152,8 +153,6 @@ class NotifyClassEndManager(var context: Context) {
     private fun isAlarmBeforeNow(alarm: Calendar): Boolean {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()
-        //May sometimes say alarm is after based on seconds not minutes, this fixes that
-        calendar.add(Calendar.MINUTE, 1)
 
         return alarm.before(calendar)
     }
@@ -185,20 +184,15 @@ class NotifyClassEndManager(var context: Context) {
         Timber.d("added days is $daysFromNow selected class is $model")
         Timber.d(alarm.timeInMillis.toString())
 
-        var intent = Intent("class_trigger")
-        intent.setClass(context, NotifyClassEndReceiver::class.java)
-        intent.putExtra("class_name", model.title)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            JobSchedulerUtil.scheduleClassManagerJob(context, minimumLatency, overrideDeadline)
+            JobSchedulerUtil.scheduleClassManagerJob(context, model.title, minimumLatency, overrideDeadline)
+        } else {
+            val intent = Intent(context, NotifyClassEndReceiver::class.java)
+            intent.putExtra("class_name", model.title)
+            val pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
         }
-//        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-//        var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
-//        } else {
-//            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
-//        }
     }
 
     /**

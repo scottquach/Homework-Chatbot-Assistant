@@ -27,7 +27,8 @@ public class JobNotifyClassEnd extends JobService{
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        notifyUser(jobParameters);
+        Timber.d("onStartJob called");
+        notifyUser(jobParameters, jobParameters.getExtras().getString("class_name"));
         return true;
     }
 
@@ -36,25 +37,25 @@ public class JobNotifyClassEnd extends JobService{
         return true;
     }
 
-    private void notifyUser(JobParameters jobParameters) {
+    private void notifyUser(JobParameters jobParameters, String userClass) {
         Timber.d("ON RECEIVE WAS CALLED");
 //            Timber.d("Class was " + className);
             MessageHandler messageHandler = new MessageHandler(this);
-            messageHandler.promptForAssignment("temporary");
+            messageHandler.promptForAssignment(userClass);
 
-            createNotification(this, "temporary");
+            createNotification(this, userClass);
             NotifyClassEndManager manager = new NotifyClassEndManager(this);
             manager.startManaging();
             jobFinished(jobParameters, false);
     }
 
-    private void createNotification(Context context, String className) {
+    private void createNotification(Context context, String userClass) {
         Intent intent = new Intent(context, SignInActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 102, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "app_channel")
                 .setContentTitle("Homework Tracker")
-                .setContentText("do you have any homework for " + className)
+                .setContentText("do you have any homework for " + userClass)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
