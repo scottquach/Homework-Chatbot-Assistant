@@ -19,8 +19,10 @@ public class Constants {
     public static final String CONTEXT_PROMPT_HOMEWORK = "prompt-assignment";
 
     //Argument key values for AlertdialogFragment
-    public static String ALERT_TITLE = "alert_title";
-    public static String ALERT_MESSAGE = "alert_message";
-    public static String ALERT_POSITIVE = "alert_positive";
-    public static String ALERT_NEGATIVE = "alert_negative";
+    public static final String ALERT_TITLE = "alert_title";
+    public static final String ALERT_MESSAGE = "alert_message";
+    public static final String ALERT_POSITIVE = "alert_positive";
+    public static final String ALERT_NEGATIVE = "alert_negative";
+
+    public static final int JOB_CLASS_MANAGER = 1998;
 }
