@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.scottquach.homeworkchatbotassistant.BaseApplication;
+import com.scottquach.homeworkchatbotassistant.Constants;
 import com.scottquach.homeworkchatbotassistant.ExtensionsKt;
 import com.scottquach.homeworkchatbotassistant.MessageHandler;
 import com.scottquach.homeworkchatbotassistant.SwipeGestureListener;
@@ -66,7 +67,12 @@ public class MainActivity extends AppCompatActivity implements AIListener,
             Timber.d("first open");
             MessageHandler handler = new MessageHandler(this);
             handler.receiveWelcomeMessages();
+            databaseReference.child("users").child(user.getUid()).child("contexts").child("conversation")
+                    .setValue(Constants.CONETEXT_DEFAULT);
+            databaseReference.child("users").child(user.getUid()).child("contexts").child("class").setValue("default");
             BaseApplication.getInstance().getSharePref().edit().putBoolean("first_open", false).apply();
+        } else {
+            Timber.d("Wasn't first open");
         }
 
         if (savedInstanceState == null) {
