@@ -36,11 +36,7 @@
         </activity>
 
         <receiver android:name=".NotifyClassEndReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="class_trigger"/>
-            </intent-filter>
-        </receiver>
+            android:enabled="true"/>
         <receiver android:name=".AssignmentDueReceiver"
             android:enabled="true"/>
         <receiver android:name=".RebootReceiver"
