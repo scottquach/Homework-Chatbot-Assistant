@@ -11,6 +11,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
+import com.scottquach.homeworkchatbotassistant.Constants;
 import com.scottquach.homeworkchatbotassistant.MessageHandler;
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager;
 import com.scottquach.homeworkchatbotassistant.R;
@@ -23,30 +24,32 @@ import timber.log.Timber;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class JobNotifyClassEnd extends JobService{
+public class JobNotifyClassEnd extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         Timber.d("onStartJob called");
-        notifyUser(jobParameters, jobParameters.getExtras().getString("class_name"));
+        notifyUser(jobParameters, jobParameters.getExtras().getString(Constants.CLASS_NAME));
         return true;
     }
 
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-        return true;
+        return false;
     }
 
     private void notifyUser(JobParameters jobParameters, String userClass) {
         Timber.d("ON RECEIVE WAS CALLED");
 //            Timber.d("Class was " + className);
-            MessageHandler messageHandler = new MessageHandler(this);
-            messageHandler.promptForAssignment(userClass);
+        NotifyClassEndManager manager = new NotifyClassEndManager(this);
+        manager.startManaging(jobParameters.getExtras().getLong(Constants.CLASS_END_TIME));
 
-            createNotification(this, userClass);
-            NotifyClassEndManager manager = new NotifyClassEndManager(this);
-            manager.startManaging();
-            jobFinished(jobParameters, false);
+        MessageHandler messageHandler = new MessageHandler(this);
+        messageHandler.promptForAssignment(userClass);
+
+        createNotification(this, userClass);
+
+        jobFinished(jobParameters, false);
     }
 
     private void createNotification(Context context, String userClass) {

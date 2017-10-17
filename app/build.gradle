@@ -59,6 +59,8 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:11.4.0'
     compile 'com.google.android.gms:play-services-auth:11.4.0'
 
+    compile 'com.loopeer.lib:shadow:0.0.3'
+
     implementation 'com.android.support:design:26.1.0'
 }
 

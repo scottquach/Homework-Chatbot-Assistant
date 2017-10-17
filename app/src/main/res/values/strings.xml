@@ -28,4 +28,5 @@
     </string-array>
 
     <string name="transition_tooblar">transition_toolbar</string>
+    <string name="send">Send</string>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,15 +11,30 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
-    <TextView
-        android:id="@+id/view_message_sent"
+
+    <com.loopeer.shadow.ShadowView
+        android:id="@+id/shadow_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
         android:padding="10dp"
-        android:text="testing testing"
-        android:textColor="@color/secondaryTextColor"
-        android:textSize="16sp"
-        android:background="@drawable/message_sent_background"/>
+        android:elevation="6dp"
+        android:foreground="?attr/selectableItemBackground"
+        app:backgroundColor="#3BD684"
+        app:shadowColor="#e0e0e0"
+        app:shadowMargin="8dp"
+        app:shadowRadius="14dp"
+        app:cornerRadiusTL="14dp"
+        app:cornerRadiusTR="14dp"
+        app:cornerRadiusBL="14dp">
+
+        <TextView
+            android:id="@+id/view_message_sent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="testing testing"
+            android:textColor="@color/secondaryTextColor"
+            android:textSize="16sp" />
+    </com.loopeer.shadow.ShadowView>
+
 </LinearLayout>

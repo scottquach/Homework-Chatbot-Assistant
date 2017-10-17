@@ -26,6 +26,7 @@ import com.scottquach.homeworkchatbotassistant.*
 
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerChatAdapter
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
+import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils
 import kotlinx.android.synthetic.main.fragment_chat.*
 import timber.log.Timber
 import java.sql.Timestamp
@@ -72,6 +73,8 @@ class ChatFragment : Fragment() {
 
         button_send.setOnClickListener {
             if(edit_input.text.isNotEmpty()) {
+                AnimationUtils.textFade(button_send, getString(R.string.send),
+                        resources.getInteger(android.R.integer.config_shortAnimTime))
                 val text = edit_input.text.toString().trim()
                 addMessage(MessageType.SENT, text)
                 DoTextRequestTask().execute(text)
@@ -142,7 +145,7 @@ class ChatFragment : Fragment() {
     private fun addMessage(messageType: Int, message: String) {
         val key = databaseReference.child("users").child(user!!.uid).child("messages").push().key
         val model = MessageModel(messageType.toLong(), message, Timestamp(System.currentTimeMillis()), key)
-        databaseReference.child("users").child(user!!.uid).child("messages").child(key).setValue(model)
+        databaseReference.child("users").child(user !!.uid).child("messages").child(key).setValue(model)
     }
 
     private fun defaultContext() {

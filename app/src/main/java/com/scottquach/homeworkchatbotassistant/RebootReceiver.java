@@ -13,6 +13,6 @@ public class RebootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         NotifyClassEndManager manager = new NotifyClassEndManager(context);
-        manager.startManaging();
+        manager.startManaging(System.currentTimeMillis());
     }
 }

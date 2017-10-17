@@ -31,6 +31,7 @@
         android:layout_marginStart="8dp"
         android:background="@drawable/chatbox_background"
         android:minHeight="48dp"
+        android:elevation="1dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +57,7 @@
             android:layout_gravity="end"
             android:background="@android:color/transparent"
             android:clickable="true"
-            android:text="Send" />
+            android:text="@string/send" />
     </LinearLayout>
 
     <TextView
@@ -69,6 +70,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
 </android.support.constraint.ConstraintLayout>

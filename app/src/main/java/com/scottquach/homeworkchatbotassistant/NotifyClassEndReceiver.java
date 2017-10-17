@@ -20,16 +20,15 @@ public class NotifyClassEndReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Timber.d("ON RECEIVE WAS CALLED");
+        Timber.d("ON RECEIVE old WAS CALLED");
         if (intent.getExtras() != null) {
-            String className = intent.getExtras().getString("class_name", "class");
-            Timber.d("Class was " + className);
+            String className = intent.getExtras().getString(Constants.CLASS_NAME, "class");
             MessageHandler messageHandler = new MessageHandler(context);
             messageHandler.promptForAssignment(className);
 
             createNotification(context, className);
             NotifyClassEndManager manager = new NotifyClassEndManager(context);
-            manager.startManaging();
+            manager.startManaging(System.currentTimeMillis());
         }
     }
 
