@@ -9,6 +9,7 @@ import android.os.PersistableBundle
 import android.support.annotation.RequiresApi
 
 import com.scottquach.homeworkchatbotassistant.Constants
+import com.scottquach.homeworkchatbotassistant.jobs.JobNotifyAssignmentDue
 import com.scottquach.homeworkchatbotassistant.jobs.JobNotifyClassEnd
 
 import timber.log.Timber
@@ -37,15 +38,27 @@ object JobSchedulerUtil {
                 .setOverrideDeadline(overrideDelay)
                 .setExtras(bundle)
                 .build())
-        Timber.d("Job scheduled")
+        Timber.d("Class end scheduled")
         Timber.d("minlatency was $minimumLatency override delay was $overrideDelay")
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun scheduleAssignmentManagerJob(context: Context, userAssignment: String) {
+    fun scheduleAssignmentManagerJob(context: Context, userAssignment: String, userClass: String,
+                                     minimumDelay: Long, overrideDelay: Long) {
         val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         val bundle = PersistableBundle()
         bundle.putString(Constants.USER_ASSIGNMENT, userAssignment)
+        bundle.putString(Constants.USER_CLASS, userClass)
+
+        jobScheduler.schedule(JobInfo.Builder(System.currentTimeMillis().toInt(),
+                ComponentName(context, JobNotifyAssignmentDue::class.java))
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .setMinimumLatency(minimumDelay)
+                .setOverrideDeadline(overrideDelay)
+                .build())
+
+        Timber.d("Assignment due scheduled")
     }
 
     /**

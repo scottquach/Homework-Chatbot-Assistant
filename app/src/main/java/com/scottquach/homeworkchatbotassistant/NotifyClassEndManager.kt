@@ -190,17 +190,16 @@ class NotifyClassEndManager(var context: Context) {
             Timber.d("Occurs on today, not adding any days")
         }
 
-        alarm.add(Calendar.MINUTE, -2)
-        val minimumLatency = (alarm.timeInMillis - previousEndTime.timeInMillis) as Long
-        alarm.add(Calendar.MINUTE, 4)
-        val overrideDeadline = (alarm.timeInMillis - previousEndTime.timeInMillis) as Long
-        alarm.add(Calendar.MINUTE, -2)
-
-
         Timber.d("added days is $daysFromNow selected class is $model")
         Timber.d(alarm.timeInMillis.toString())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            alarm.add(Calendar.MINUTE, -2)
+            val minimumLatency = (alarm.timeInMillis - previousEndTime.timeInMillis) as Long
+            alarm.add(Calendar.MINUTE, 4)
+            val overrideDeadline = (alarm.timeInMillis - previousEndTime.timeInMillis) as Long
+            alarm.add(Calendar.MINUTE, -2)
+
             Timber.d("was after lallipop")
             JobSchedulerUtil.scheduleClassManagerJob(context, model.title, minimumLatency, overrideDeadline,
                     alarm.timeInMillis)

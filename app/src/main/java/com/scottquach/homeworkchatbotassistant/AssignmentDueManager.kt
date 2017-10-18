@@ -4,8 +4,11 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.widget.Toast
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
+import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
 import timber.log.Timber
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -36,18 +39,33 @@ class AssignmentDueManager(var context: Context) {
         val alarm = Calendar.getInstance()
         alarm.time = dueDate
         alarm.add(Calendar.DAY_OF_MONTH, -1)
-        alarm.set(Calendar.HOUR_OF_DAY, 5)
+        alarm.set(Calendar.HOUR_OF_DAY, 17)
         alarm.set(Calendar.MINUTE, 0)
 
-        val intent = Intent(context, AssignmentDueReceiver::class.java)
-        intent.setClass(context, AssignmentDueReceiver::class.java)
-        intent.putExtra("assignment_name", model.title)
-        val pendingIntent = PendingIntent.getBroadcast(context, System.currentTimeMillis().toInt(),
-                intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        Timber.d("Assignment Notify is " + alarm.timeInMillis)
 
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            alarm.add(Calendar.MINUTE, -30)
+            val minimumDelay = alarm.timeInMillis - System.currentTimeMillis()
+            alarm.add(Calendar.MINUTE, 60)
+            val overrideDelay = alarm.timeInMillis - System.currentTimeMillis()
 
-        Timber.d("Homework alarm set for " + alarm)
+
+            JobSchedulerUtil.scheduleAssignmentManagerJob(context, model.title, model.userClass,
+                    minimumDelay, overrideDelay)
+        } else {
+            val intent = Intent(context, AssignmentDueReceiver::class.java)
+            intent.setClass(context, AssignmentDueReceiver::class.java)
+            intent.putExtra(Constants.USER_ASSIGNMENT, model.title)
+            val pendingIntent = PendingIntent.getBroadcast(context, System.currentTimeMillis().toInt(),
+                    intent, PendingIntent.FLAG_CANCEL_CURRENT)
+
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+
+            Timber.d("Homework alarm set for " + alarm)
+        }
+
+
     }
 }

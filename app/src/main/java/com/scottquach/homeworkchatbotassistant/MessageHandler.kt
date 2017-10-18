@@ -162,5 +162,4 @@ class MessageHandler(val context: Context) {
     private fun getMessageKey() = databaseReference.child("users").child(user!!.uid).child("messages").push().key
 
     private fun getAssignmentKey() = databaseReference.child("users").child(user!!.uid).child("assignments").push().key
-
 }

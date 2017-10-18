@@ -163,17 +163,17 @@ class ChatFragment : Fragment() {
             Constants.ACTION_ASSIGNMENT_SPECIFIC_CLASS -> {
                 Timber.d("Action was specific class")
                 val params = result.parameters
-                val date = params["date"]!!.asString
-                val assignment = params["assignment-official"]!!.asString
-                val userClass = params["class"]!!.asString
+                val date = params["date"]!!.asString.trim()
+                val assignment = params["assignment-official"]!!.asString.trim()
+                val userClass = params["class"]!!.asString.trim()
 
                 messageHandler.confirmNewAssignmentSpecificClass(assignment, userClass, date)
             }
             Constants.ACTION_ASSIGNMENT_PROMPTED_CLASS -> {
                 Timber.d("Action was prompted class")
                 val params = result.parameters
-                val date = params["date"]!!.asString
-                val assignment = params["assignment-official"]!!.asString
+                val date = params["date"]!!.asString.trim()
+                val assignment = params["assignment-official"]!!.asString.trim()
                 Timber.d("Received words were $date $assignment")
                 messageHandler.confirmNewAssignment(assignment, classContext, date)
 //                defaultContext()
