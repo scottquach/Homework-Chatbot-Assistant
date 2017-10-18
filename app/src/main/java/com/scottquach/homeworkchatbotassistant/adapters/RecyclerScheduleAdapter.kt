@@ -4,14 +4,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.scottquach.homeworkchatbotassistant.AlertDialogFragment
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import kotlinx.android.synthetic.main.row_class.view.*
-import timber.log.Timber
 
 /**
  * Created by Scott Quach on 9/13/2017.

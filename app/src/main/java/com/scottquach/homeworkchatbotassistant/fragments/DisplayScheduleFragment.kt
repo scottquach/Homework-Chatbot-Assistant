@@ -3,7 +3,6 @@ package com.scottquach.homeworkchatbotassistant.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -14,7 +13,6 @@ import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.scottquach.homeworkchatbotassistant.AlertDialogFragment
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerScheduleAdapter

@@ -1,17 +1,12 @@
-package com.scottquach.homeworkchatbotassistant
+package com.scottquach.homeworkchatbotassistant.fragments
 
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import com.scottquach.homeworkchatbotassistant.Constants
 
 /**
  * A default AlertDialog subclass
@@ -43,21 +38,26 @@ class AlertDialogFragment : DialogFragment() {
         val message = arguments.getString(Constants.ALERT_MESSAGE)
         val positiveString = arguments.getString(Constants.ALERT_POSITIVE)
         val negativeString = arguments.getString(Constants.ALERT_NEGATIVE)
+        val haveNegative = arguments.getBoolean(Constants.ALERT_HAVE_NEGATIVE)
 
-        return AlertDialog.Builder(context)
+        val builder =  AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(positiveString, object : DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
-                        listener?.onAlertPositiveClicked()
+                        listener?.onAlertPositiveClicked(dialog)
                     }
                 })
-                .setNegativeButton(negativeString, object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        listener?.onAlertNegativeClicked()
-                    }
-                })
-                .create()
+
+        if (haveNegative) {
+            builder.setNegativeButton(negativeString, object : DialogInterface.OnClickListener {
+                override fun onClick(p0: DialogInterface?, p1: Int) {
+                    listener?.onAlertNegativeClicked(dialog)
+                }
+            })
+        }
+
+        return builder.create()
     }
 
     /**
@@ -67,8 +67,8 @@ class AlertDialogFragment : DialogFragment() {
      * activity.
      */
     interface AlertDialogInterface {
-        fun onAlertPositiveClicked()
-        fun onAlertNegativeClicked()
+        fun onAlertPositiveClicked(dialog: Dialog)
+        fun onAlertNegativeClicked(dialog: Dialog)
     }
 
     companion object {
@@ -81,7 +81,7 @@ class AlertDialogFragment : DialogFragment() {
          */
         // TODO: Rename and change types and number of parameters
         fun newInstance(title: String = "Alert", message: String = "", positiveString: String = "Yes",
-                        negativeString: String = "No"): AlertDialogFragment {
+                        negativeString: String = "No", haveNegative: Boolean = true): AlertDialogFragment {
 
             val fragment = AlertDialogFragment()
             val args = Bundle()
@@ -89,6 +89,7 @@ class AlertDialogFragment : DialogFragment() {
             args.putString(Constants.ALERT_MESSAGE, message)
             args.putString(Constants.ALERT_POSITIVE, positiveString)
             args.putString(Constants.ALERT_NEGATIVE, negativeString)
+            args.putBoolean(Constants.ALERT_HAVE_NEGATIVE, haveNegative)
             fragment.arguments = args
             return fragment
         }

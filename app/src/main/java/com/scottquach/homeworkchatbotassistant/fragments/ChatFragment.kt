@@ -27,6 +27,7 @@ import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerChatAdapter
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils
+import com.scottquach.homeworkchatbotassistant.utils.NetworkUtils
 import kotlinx.android.synthetic.main.fragment_chat.*
 import timber.log.Timber
 import java.sql.Timestamp
@@ -53,7 +54,9 @@ class ChatFragment : Fragment() {
 
     private var listener: ChatFragment.ChatInterface? = null
 
-    interface ChatInterface {}
+    interface ChatInterface {
+        fun  notifyNoInternetConnection()
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -72,14 +75,16 @@ class ChatFragment : Fragment() {
         recycler = recycler_messages
 
         button_send.setOnClickListener {
-            if(edit_input.text.isNotEmpty()) {
-                AnimationUtils.textFade(button_send, getString(R.string.send),
-                        resources.getInteger(android.R.integer.config_shortAnimTime))
-                val text = edit_input.text.toString().trim()
-                addMessage(MessageType.SENT, text)
-                DoTextRequestTask().execute(text)
-                edit_input.setText("")
-            }
+            if (NetworkUtils.isConnected(context)) {
+                if (edit_input.text.isNotEmpty()) {
+                    AnimationUtils.textFade(button_send, getString(R.string.send),
+                            resources.getInteger(android.R.integer.config_shortAnimTime))
+                    val text = edit_input.text.toString().trim()
+                    addMessage(MessageType.SENT, text)
+                    DoTextRequestTask().execute(text)
+                    edit_input.setText("")
+                }
+            } else listener?.notifyNoInternetConnection()
         }
     }
 

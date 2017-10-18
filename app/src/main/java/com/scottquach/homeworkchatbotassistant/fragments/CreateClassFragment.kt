@@ -12,6 +12,7 @@ import android.widget.Toast
 import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
+import com.scottquach.homeworkchatbotassistant.utils.NetworkUtils
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import kotlinx.android.synthetic.main.fragment_create_class.*
 import timber.log.Timber
@@ -26,6 +27,7 @@ class CreateClassFragment : Fragment() {
     interface CreateClassInterface {
         fun addClass(newClass: ClassModel)
         fun switchToDisplayFragment()
+        fun notifyNoInternetConnection()
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -37,13 +39,15 @@ class CreateClassFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         floating_confirm.setOnClickListener {
-            if (isRequiredFieldsFilled()) {
-                var newClass = createNewClassModel()
-                listener?.let {
-                    it.addClass(newClass)
-                    it.switchToDisplayFragment()
-                }
-            } else Toast.makeText(context, "Missing required fields", Toast.LENGTH_SHORT).show()
+            if (NetworkUtils.isConnected(context)) {
+                if (isRequiredFieldsFilled()) {
+                    var newClass = createNewClassModel()
+                    listener?.let {
+                        it.addClass(newClass)
+                        it.switchToDisplayFragment()
+                    }
+                } else Toast.makeText(context, "Missing required fields", Toast.LENGTH_SHORT).show()
+            } else listener?.notifyNoInternetConnection()
         }
 
         floating_cancel.setOnClickListener {

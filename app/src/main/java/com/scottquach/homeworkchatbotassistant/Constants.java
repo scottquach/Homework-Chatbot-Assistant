@@ -23,6 +23,7 @@ public class Constants {
     public static final String ALERT_MESSAGE = "alert_message";
     public static final String ALERT_POSITIVE = "alert_positive";
     public static final String ALERT_NEGATIVE = "alert_negative";
+    public static final String ALERT_HAVE_NEGATIVE = "alert_have_negative";
 
     public static final int JOB_CLASS_MANAGER = 1998;
     public static final String CLASS_NAME = "class_name";
