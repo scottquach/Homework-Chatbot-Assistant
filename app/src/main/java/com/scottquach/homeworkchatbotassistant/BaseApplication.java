@@ -3,9 +3,11 @@ package com.scottquach.homeworkchatbotassistant;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 /**
@@ -26,6 +28,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         instance = this;
         Timber.plant(new MyDebugTree());
 
