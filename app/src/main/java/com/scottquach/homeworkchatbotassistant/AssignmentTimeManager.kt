@@ -14,7 +14,8 @@ import java.util.*
  */
 class AssignmentTimeManager {
 
-    private var userAssignments: MutableList<AssignmentModel> = Database.getAssignments().toMutableList()
+    private var userAssignments: MutableList<AssignmentModel> = BaseApplication.getInstance().database
+            .getAssignments().toMutableList()
 
     /**
      * Returns the model of the next assignment that is due, does not include overdue assignments.
@@ -24,7 +25,6 @@ class AssignmentTimeManager {
      * @return iteratedAssignment
      */
     fun getNextAssignment(context: Context): AssignmentModel {
-        Timber.d("Assignments were $userAssignments")
         val futureAssignments = userAssignments.filter {
             StringUtils.convertStringToCalendar(context, it.dueDate).after(Calendar.getInstance())
         }

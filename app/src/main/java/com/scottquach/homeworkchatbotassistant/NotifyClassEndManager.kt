@@ -30,9 +30,6 @@ import java.util.*
 
 class NotifyClassEndManager(var context: Context) {
 
-    private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
-    private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-
     private lateinit var userClasses: MutableList<ClassModel>
 
     private var daysFromNow: Int = 0
@@ -51,33 +48,9 @@ class NotifyClassEndManager(var context: Context) {
         //If this wasn't called by a end class time job, just use current time
         previousEndTime.timeInMillis = specificEndTime
         Timber.d("Previous end time is ${previousEndTime.timeInMillis}")
-
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Timber.d("onDataChange called from homework manager")
-                loadData(dataSnapshot)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Timber.e(databaseError.toString())
-            }
-        })
-    }
-
-    /**
-     * loads the users classes from the Firebase Database and stores them in a mutableList
-     */
-    private fun loadData(dataSnapshot: DataSnapshot) {
-        for (ds in dataSnapshot.child("users").child(user?.uid).child("classes").children) {
-            var model = ClassModel()
-            model.title = ds.child("title").value as String
-            model.timeEnd = TimeModel(ds.child("timeEnd").child("timeEndHour").value as Long,
-                    ds.child("timeEnd").child("timeEndMinute").value as Long)
-            ds.child("days").children.mapTo(model.days) { (it.value as Long).toInt() }
-            userClasses.add(model)
-        }
-        Timber.d("original classes" + userClasses.toString())
+        userClasses = BaseApplication.getInstance().database.getClasses().toMutableList()
         determineNextAlarm()
+
     }
 
     private fun determineNextAlarm() {

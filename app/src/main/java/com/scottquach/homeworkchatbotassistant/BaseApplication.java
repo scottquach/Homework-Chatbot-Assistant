@@ -19,6 +19,8 @@ public class BaseApplication extends Application {
         return instance;
     }
 
+    public Database database;
+
     public BaseApplication() {}
 
     @Override
@@ -27,7 +29,7 @@ public class BaseApplication extends Application {
         instance = this;
         Timber.plant(new MyDebugTree());
 
-        Database database = new Database();
+        database = new Database();
     }
 
     public SharedPreferences getSharePref() {

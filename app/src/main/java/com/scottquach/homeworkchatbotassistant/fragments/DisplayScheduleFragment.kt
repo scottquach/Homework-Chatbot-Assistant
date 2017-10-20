@@ -13,10 +13,9 @@ import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
-import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
+import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerScheduleAdapter
-import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import kotlinx.android.synthetic.main.fragment_display_schedule.*
@@ -64,38 +63,12 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
 
         scheduleRecycler = recycler_schedule
 
-        loadData()
+        userClasses = BaseApplication.getInstance().database.getClasses().toMutableList()
+        setupRecyclerView()
 
         floating_create_class.setOnClickListener {
             listener?.switchToCreateFragment()
         }
-    }
-
-    private fun loadData() {
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                compileData(dataSnapshot)
-            }
-
-            override fun onCancelled(p0: DatabaseError?) {
-                Timber.d(p0?.message)
-            }
-        })
-    }
-
-    fun compileData(dataSnapshot: DataSnapshot) {
-        userClasses.clear()
-        for (ds in dataSnapshot.child("users").child(user?.uid).child("classes").children) {
-            var classModel = ClassModel()
-            classModel.title = ds.child("title").value as String
-            classModel.timeEnd = TimeModel(ds.child("timeEnd").child("timeEndHour").value as Long,
-                    ds.child("timeEnd").child("timeEndMinute").value as Long)
-            var days = mutableListOf<Int>()
-            dataSnapshot.child("users").child(user!!.uid).child("classes").child(classModel.title).child("days").children.mapTo(days) { (it.value as Long).toInt() }
-            classModel.days = days
-            userClasses.add(classModel)
-        }
-        setupRecyclerView()
     }
 
     private fun setupRecyclerView() {

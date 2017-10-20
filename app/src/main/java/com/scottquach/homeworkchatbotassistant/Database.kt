@@ -7,6 +7,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
+import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import timber.log.Timber
 
 /**
@@ -17,8 +18,11 @@ class Database {
     private val databaseReference = FirebaseDatabase.getInstance().reference
     private val user = FirebaseAuth.getInstance().currentUser
 
+    private val userClasses = mutableListOf<ClassModel>()
+    private val userAssignments = mutableListOf<AssignmentModel>()
+
     init {
-        databaseReference.addValueEventListener(object: ValueEventListener{
+        databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 Timber.e("Database could not load dataSnapshot")
             }
@@ -30,6 +34,9 @@ class Database {
     }
 
     fun compileData(dataSnapshot: DataSnapshot) {
+        userClasses.clear()
+        userAssignments.clear()
+
         Timber.d("Compiling data")
         for (ds in dataSnapshot.child("users").child(user!!.uid).child("assignments").children) {
             val model = AssignmentModel()
@@ -42,21 +49,33 @@ class Database {
             userAssignments.add(model)
         }
 
+        for (ds in dataSnapshot.child("users").child(user!!.uid).child("classes").children) {
+            val model = ClassModel()
+            model.title = ds.child("title").value as String
+            model.timeEnd = TimeModel(ds.child("timeEnd").child("timeEndHour").value as Long,
+                    ds.child("timeEnd").child("timeEndMinute").value as Long)
+            ds.child("days").children.mapTo(model.days) { (it.value as Long).toInt() }
 
+            userClasses.add(model)
+        }
     }
 
-    companion object {
+    /**
+     * Returns a copy of user assignments
+     */
+    fun getAssignments(): List<AssignmentModel> {
+        val copy = mutableListOf<AssignmentModel>()
+        copy.addAll(userAssignments)
+        return copy
+    }
 
-        private val userClasses = mutableListOf<ClassModel>()
-        private val userAssignments = mutableListOf<AssignmentModel>()
-
-        fun getAssignments(): List<AssignmentModel> {
-            return userAssignments.toList()
-        }
-
-//        fun getClasses(): List<ClassModel> {
-//
-//        }
+    /**
+     * Returns a copy of user classes
+     */
+    fun getClasses(): List<ClassModel> {
+        val copy = mutableListOf<ClassModel>()
+        copy.addAll(userClasses)
+        return copy
     }
 
 
