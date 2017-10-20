@@ -178,7 +178,11 @@ class ChatFragment : Fragment() {
                 messageHandler.confirmNewAssignment(assignment, classContext, date)
 //                defaultContext()
             }
+            Constants.ACTION_OVERDUE_ASSIGNMENTS -> {
+                messageHandler.getOverdueAssignments(context)
+            }
             Constants.ACTION_NEXT_ASSIGNMENT -> {
+                messageHandler.getNextAssignment(context)
             }
             Constants.ACTION_REQUEST_HELP -> {
                 messageHandler.receiveHelp()

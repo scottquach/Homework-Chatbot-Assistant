@@ -30,10 +30,10 @@ import java.util.*
 
 class NotifyClassEndManager(var context: Context) {
 
-    private var databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
-    private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
+    private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
-    private var userClasses: MutableList<ClassModel> = mutableListOf()
+    private lateinit var userClasses: MutableList<ClassModel>
 
     private var daysFromNow: Int = 0
 

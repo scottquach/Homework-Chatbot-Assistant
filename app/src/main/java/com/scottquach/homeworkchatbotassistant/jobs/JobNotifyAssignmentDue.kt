@@ -25,7 +25,7 @@ class JobNotifyAssignmentDue : JobService() {
 
         val handler = MessageHandler(this)
         handler.assignmentDueReminder(userAssignment)
-        return false
+        return true
     }
 
     override fun onStartJob(jobParameters: JobParameters?): Boolean {

@@ -26,6 +26,8 @@ public class BaseApplication extends Application {
         super.onCreate();
         instance = this;
         Timber.plant(new MyDebugTree());
+
+        Database database = new Database();
     }
 
     public SharedPreferences getSharePref() {

@@ -14,6 +14,8 @@ import java.util.ArrayList
 
 /**
  * Created by Scott Quach on 9/15/2017.
+ *
+ * Responsible for sending out custom 'RECEIVE' messages (messages that the user receives)
  */
 
 class MessageHandler(val context: Context) {
@@ -46,7 +48,7 @@ class MessageHandler(val context: Context) {
         val model4 = createSentMessage(message4)
 
         val message5 = "Assignment \"Study the integral test\" for Calculus III by 2017-10-13 saved"
-        val model5 =  createReceivedMessage(message5)
+        val model5 = createReceivedMessage(message5)
 
         val message6 = "Research machine learning for research writing by October 4th"
         val model6 = createSentMessage(message6)
@@ -103,7 +105,7 @@ class MessageHandler(val context: Context) {
     }
 
     fun confirmNewAssignmentSpecificClass(assignment: String, userClass: String, dueDate: String) {
-        databaseReference.addListenerForSingleValueEvent(object: ValueEventListener {
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot?) {
                 var classMatch = false
                 for (ds in dataSnapshot!!.child("users").child(user!!.uid).child("classes").children) {
@@ -113,10 +115,11 @@ class MessageHandler(val context: Context) {
                         break
                     }
                 }
-                if(!classMatch) {
+                if (!classMatch) {
                     promptCouldntFindClass(userClass)
                 }
             }
+
             override fun onCancelled(p0: DatabaseError?) {
                 Timber.e("Error loading data " + p0.toString())
             }
@@ -126,11 +129,7 @@ class MessageHandler(val context: Context) {
     fun confirmNewAssignment(assignment: String, userClass: String,
                              dueDate: String) {
 
-        val model = MessageModel()
-        model.message = "Assignment \"$assignment\" for $userClass on $dueDate saved"
-        model.type = MessageType.RECEIVED.toLong()
-        model.key = getMessageKey()
-        model.timestamp = Timestamp(System.currentTimeMillis())
+        val model = createReceivedMessage("Assignment \"$assignment\" for $userClass on $dueDate saved")
 
         val assignmentKey = getAssignmentKey()
         val assignmentModel = AssignmentModel(assignment, userClass, 0, dueDate, assignmentKey)
@@ -141,7 +140,48 @@ class MessageHandler(val context: Context) {
         saveMessagesToDatabase(listOf(model))
     }
 
-    private fun createSentMessage(message: String) : MessageModel {
+    /**
+     * Creates a message model that specifies the next due assignment and saves it to the database,
+     * has a default message if no upcoming assignments
+     */
+    fun getNextAssignment(context: Context) {
+        val assignmentManager = AssignmentTimeManager()
+        val nextAssignment = assignmentManager.getNextAssignment(context)
+
+        if (nextAssignment.key == "empty") {
+            val messageModel = createReceivedMessage("You don't have any upcoming assignments")
+            saveMessagesToDatabase(listOf(messageModel))
+        } else {
+            val messageModel = createReceivedMessage("Next assignment is \"${nextAssignment.title}\"")
+            saveMessagesToDatabase(listOf(messageModel))
+        }
+    }
+
+    /**
+     * Creates message models that specify overdue assignments and saves it to the database,
+     * has a default message if no overdue assignments
+     */
+    fun getOverdueAssignments(context: Context) {
+        val assignmentManager = AssignmentTimeManager()
+        val overdueAssignments = assignmentManager.getOverdueAssignments(context)
+
+        if (overdueAssignments.isEmpty()) {
+            val messageModel = createReceivedMessage("You have no overdue assignments!")
+            saveMessagesToDatabase(listOf(messageModel))
+        } else {
+            val messages = mutableListOf<MessageModel>()
+            var overdueNumber = 1
+            for (assignment in overdueAssignments) {
+                val messageModel = createReceivedMessage("$overdueNumber. \"${assignment.title}\"")
+                overdueNumber++
+                messages.add(messageModel)
+            }
+
+            saveMessagesToDatabase(messages)
+        }
+    }
+
+    private fun createSentMessage(message: String): MessageModel {
         val model = MessageModel()
         model.message = message
         model.type = MessageType.SENT.toLong()
@@ -150,7 +190,7 @@ class MessageHandler(val context: Context) {
         return model
     }
 
-    private fun createReceivedMessage(message: String) : MessageModel {
+    private fun createReceivedMessage(message: String): MessageModel {
         val model = MessageModel()
         model.message = message
         model.type = MessageType.RECEIVED.toLong()

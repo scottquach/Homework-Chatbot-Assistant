@@ -1,7 +1,12 @@
 package com.scottquach.homeworkchatbotassistant.utils
 
+import android.content.Context
+import android.widget.Toast
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import timber.log.Timber
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by Scott Quach on 9/28/2017.
@@ -47,6 +52,22 @@ class StringUtils {
                     (model.timeEndHour).toString() + ":0" + model.timeEndMinute + " AM"
                 }
             }
+        }
+
+        fun convertStringToCalendar(context: Context, stringDate: String): Calendar {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+            var convertedDate: Date? = null
+            try {
+                convertedDate = dateFormat.parse(stringDate)
+            } catch (e: ParseException) {
+                Timber.e(e, "couldn't convert string date")
+                Toast.makeText(context, "Couldn't set reminder", Toast.LENGTH_SHORT).show()
+            }
+            Timber.d("converted date is " + convertedDate)
+
+            val calendar = Calendar.getInstance()
+            calendar.time = convertedDate
+            return calendar
         }
     }
 }

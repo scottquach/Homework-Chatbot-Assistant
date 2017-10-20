@@ -76,16 +76,6 @@ class MainActivity : AppCompatActivity(), AIListener, NavigationFragment.Navigat
                     R.id.fragment_container_main, fragment, false, false)
         }
 
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Timber.d("Retrieved DataSnapshot")
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Timber.d("error retrieving data" + databaseError.toString())
-            }
-        })
-
         toolbar.findViewById<View>(R.id.toolbar_menu_icon).setOnClickListener { openNavigation() }
 
         findViewById<View>(R.id.activity_container_main).setOnTouchListener(object : SwipeGestureListener(this) {

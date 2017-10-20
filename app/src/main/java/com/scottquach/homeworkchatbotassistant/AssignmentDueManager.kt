@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi
 import android.widget.Toast
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
+import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import timber.log.Timber
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -20,24 +21,14 @@ import java.util.*
 
 class AssignmentDueManager(var context: Context) {
 
-    private fun convertStringToDate(stringDate: String): Date? {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        var convertedDate: Date? = null
-        try {
-            convertedDate = dateFormat.parse(stringDate)
-        } catch (e: ParseException) {
-            Timber.e(e, "couldn't convert string date")
-            Toast.makeText(context, "Couldn't set reminder", Toast.LENGTH_SHORT).show()
-        }
-        Timber.d("converted date is " + convertedDate)
-        return convertedDate
-    }
-
+    /**
+     * Gets the due date for assignment and configures minimumDelay and overrideDelay for when
+     * scheduling the job to notify the user. User will be notify the day before assignment is due
+     * roughly around 5pm. Calls a job if above api 21, else uses alarm manager
+     */
     fun startNextAlarm(model: AssignmentModel) {
-        val dueDate = convertStringToDate(model.dueDate)
 
-        val alarm = Calendar.getInstance()
-        alarm.time = dueDate
+        val alarm = StringUtils.convertStringToCalendar(context, model.dueDate)
         alarm.add(Calendar.DAY_OF_MONTH, -1)
         alarm.set(Calendar.HOUR_OF_DAY, 17)
         alarm.set(Calendar.MINUTE, 0)
