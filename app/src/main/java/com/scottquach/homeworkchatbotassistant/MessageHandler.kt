@@ -152,7 +152,7 @@ class MessageHandler(val context: Context) {
             val messageModel = createReceivedMessage("You don't have any upcoming assignments")
             saveMessagesToDatabase(listOf(messageModel))
         } else {
-            val messageModel = createReceivedMessage("Next assignment is \"${nextAssignment.title}\"")
+            val messageModel = createReceivedMessage("Next assignment is \"${nextAssignment.title}\" for ${nextAssignment.userClass}")
             saveMessagesToDatabase(listOf(messageModel))
         }
     }

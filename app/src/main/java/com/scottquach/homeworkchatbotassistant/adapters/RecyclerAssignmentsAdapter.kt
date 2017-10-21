@@ -43,9 +43,9 @@ class RecyclerAssignmentsAdapter(private var userAssignments:MutableList<Assignm
         }
     }
 
-    public fun removeItem(position: Int) {
+    fun removeItem(position: Int) {
         userAssignments.removeAt(position)
-        notifyItemChanged(position)
+        notifyItemRemoved(position)
     }
 
     class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
