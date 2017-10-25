@@ -16,10 +16,11 @@ class AssignmentDueReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.extras != null) {
             val userAssignment = intent.extras.getString(Constants.USER_ASSIGNMENT)
+            val userClass = intent.extras.getString(Constants.USER_CLASS)
             createNotification(context, userAssignment)
 
             val handler = MessageHandler(context)
-            handler.assignmentDueReminder(userAssignment)
+            handler.assignmentDueReminder(userAssignment, userClass)
         }
     }
 

@@ -10,16 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.scottquach.homeworkchatbotassistant.*
 
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerAssignmentsAdapter
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import kotlinx.android.synthetic.main.fragment_display_assignments.*
-import timber.log.Timber
 
 class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.AssignmentAdapterInterface {
 
@@ -63,7 +59,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
     }
 
     private fun setupRecyclerView() {
-            assignmentsAdapter = RecyclerAssignmentsAdapter(userAssignments, this@DisplayAssignmentsFragment)
+            assignmentsAdapter = RecyclerAssignmentsAdapter(context, userAssignments, this@DisplayAssignmentsFragment)
             assignmentsRecycler?.apply {
                 adapter = this@DisplayAssignmentsFragment.assignmentsAdapter
                 layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)

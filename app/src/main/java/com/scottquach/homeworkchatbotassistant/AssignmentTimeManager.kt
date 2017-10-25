@@ -67,14 +67,16 @@ class AssignmentTimeManager {
         return overdueAssignments.toList()
     }
 
-    /**
-     * Returns true if the parameter AssignmentModel has a due date that occurs before the current
-     * time, false if it doesn't
-     *
-     * @param context, model
-     */
-    fun isOverdueAssignment(context: Context, model: AssignmentModel): Boolean {
-        val currentTime = Calendar.getInstance()
-        return StringUtils.convertStringToCalendar(context, model.dueDate).before(currentTime)
+    companion object {
+        /**
+         * Returns true if the parameter AssignmentModel has a due date that occurs before the current
+         * time, false if it doesn't
+         *
+         * @param context, model
+         */
+        fun isOverdueAssignment(context: Context, model: AssignmentModel): Boolean {
+            val currentTime = Calendar.getInstance()
+            return StringUtils.convertStringToCalendar(context, model.dueDate).before(currentTime)
+        }
     }
 }

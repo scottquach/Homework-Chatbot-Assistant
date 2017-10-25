@@ -7,10 +7,8 @@ import com.google.firebase.database.*
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import timber.log.Timber
-import java.sql.Time
 
 import java.sql.Timestamp
-import java.util.ArrayList
 
 /**
  * Created by Scott Quach on 9/15/2017.
@@ -72,9 +70,9 @@ class MessageHandler(val context: Context) {
         saveMessagesToDatabase(messagesModels)
     }
 
-    fun assignmentDueReminder(assignmentName: String) {
+    fun assignmentDueReminder(userAssignment: String, userClass: String) {
         val model = MessageModel()
-        model.message = "\"$assignmentName\" is due tomorrow"
+        model.message = "\"$userAssignment\" is due tomorrow for $userClass"
         model.type = MessageType.RECEIVED.toLong()
         model.key = getMessageKey()
         model.timestamp = Timestamp(System.currentTimeMillis())

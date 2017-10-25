@@ -42,6 +42,10 @@ object JobSchedulerUtil {
         Timber.d("minlatency was $minimumLatency override delay was $overrideDelay")
     }
 
+    /**
+     * Schedules a job that will notify the user when an assignment is due. User is notified 1 day
+     * before the assignment is due around 5pm
+     */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun scheduleAssignmentManagerJob(context: Context, userAssignment: String, userClass: String,
                                      minimumDelay: Long, overrideDelay: Long) {
@@ -50,12 +54,15 @@ object JobSchedulerUtil {
         bundle.putString(Constants.USER_ASSIGNMENT, userAssignment)
         bundle.putString(Constants.USER_CLASS, userClass)
 
+        Timber.d("Assignment is $userAssignment")
+
         jobScheduler.schedule(JobInfo.Builder(System.currentTimeMillis().toInt(),
                 ComponentName(context, JobNotifyAssignmentDue::class.java))
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .setMinimumLatency(minimumDelay)
                 .setOverrideDeadline(overrideDelay)
+                .setExtras(bundle)
                 .build())
 
         Timber.d("Assignment due scheduled")

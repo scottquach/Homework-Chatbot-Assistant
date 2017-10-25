@@ -16,29 +16,34 @@ import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
 
 /**
  * Created by Scott Quach on 10/16/2017.
+ *
+ * Job that notifies the user through notification and in app message about upcoming assignment
+ * due dates
  */
 class JobNotifyAssignmentDue : JobService() {
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onStopJob(jobParameters: JobParameters?): Boolean {
-        val userAssignment = jobParameters?.extras!!.getString(Constants.USER_ASSIGNMENT)
-        createNotification(this, userAssignment)
+        return false
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onStartJob(jobParameters: JobParameters): Boolean {
+        val userAssignment = jobParameters.extras.getString(Constants.USER_ASSIGNMENT)
+        val userClass = jobParameters.extras.getString(Constants.USER_CLASS)
+
+        createNotification(this, userAssignment, userClass)
 
         val handler = MessageHandler(this)
-        handler.assignmentDueReminder(userAssignment)
+        handler.assignmentDueReminder(userAssignment, userClass)
         return true
     }
 
-    override fun onStartJob(jobParameters: JobParameters?): Boolean {
-        return true
-    }
-
-    private fun createNotification(context: Context, userAssignment: String) {
+    private fun createNotification(context: Context, userAssignment: String, userClass: String) {
         val intent = Intent(context, SignInActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val builder = NotificationCompat.Builder(context, "app_channel")
                 .setContentTitle("Homework Tracker")
-                .setContentText("\"$userAssignment\" is due tomorrow")
+                .setContentText("\"$userAssignment\" is due tomorrow for $userClass")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
@@ -46,9 +51,5 @@ class JobNotifyAssignmentDue : JobService() {
         val notification = builder.build()
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(1012, notification)
-
-
     }
-
-
 }
