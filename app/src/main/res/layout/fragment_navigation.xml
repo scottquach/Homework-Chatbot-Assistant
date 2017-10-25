@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/open_sans_light"
             android:text="@string/classes"
             android:textColor="@color/primaryTextColor"
             android:textSize="34sp" />
@@ -80,6 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/open_sans_light"
             android:text="@string/assignments"
             android:textColor="@color/primaryTextColor"
             android:textSize="34sp" />
@@ -112,6 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/open_sans_light"
             android:text="@string/chat"
             android:textColor="@color/primaryTextColor"
             android:textSize="34sp" />

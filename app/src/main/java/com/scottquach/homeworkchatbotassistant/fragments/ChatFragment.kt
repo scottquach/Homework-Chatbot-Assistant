@@ -76,9 +76,9 @@ class ChatFragment : Fragment() {
 
         button_send.setOnClickListener {
             if (NetworkUtils.isConnected(context)) {
+                AnimationUtils.shrinkGrow(button_send,
+                        resources.getInteger(android.R.integer.config_shortAnimTime))
                 if (edit_input.text.isNotEmpty()) {
-                    AnimationUtils.textFade(button_send, getString(R.string.send),
-                            resources.getInteger(android.R.integer.config_shortAnimTime))
                     val text = edit_input.text.toString().trim()
                     addMessage(MessageType.SENT, text)
                     DoTextRequestTask().execute(text)
