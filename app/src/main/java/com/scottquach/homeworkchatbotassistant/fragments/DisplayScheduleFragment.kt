@@ -1,9 +1,6 @@
 package com.scottquach.homeworkchatbotassistant.fragments
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -11,16 +8,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.*
-import com.scottquach.homeworkchatbotassistant.AlertDialogFragment
-import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
+import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerScheduleAdapter
-import com.scottquach.homeworkchatbotassistant.inflate
+import com.scottquach.homeworkchatbotassistant.contracts.DisplayScheduleContract
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
-import com.scottquach.homeworkchatbotassistant.models.TimeModel
+import com.scottquach.homeworkchatbotassistant.presenters.DisplaySchedulePresenter
 import kotlinx.android.synthetic.main.fragment_display_schedule.*
 import timber.log.Timber
 
@@ -28,21 +21,37 @@ import timber.log.Timber
  * Handles displaying user classes to the user and editing options.
  * Activity must implement ScheduleDisplayListener to handle fragment transitions
  */
-class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdapterInterface {
+class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdapterInterface,
+        DisplayScheduleContract.View {
+    override fun textNoAssignmentSetVisible() {
+        text_no_classes.visibility = View.VISIBLE
+    }
+
+    override fun textNoAssignmentSetInvisible() {
+        text_no_classes.visibility = View.INVISIBLE
+    }
+
+    override fun removeClass(position: Int) {
+        scheduleAdapter?.removeItem(position)
+    }
+
+    override fun addData(data: List<ClassModel>) {
+        scheduleAdapter?.add(data)
+        scheduleAdapter?.notifyDataSetChanged()
+    }
 
     private var listener: ScheduleDisplayInterface? = null
 
-    private lateinit var databaseReference: DatabaseReference
-    private var user: FirebaseUser? = null
-    private var userClasses = mutableListOf<ClassModel>()
-
     private var scheduleRecycler: RecyclerView? = null
     private var scheduleAdapter: RecyclerScheduleAdapter? = null
+
+    private lateinit var presenter: DisplaySchedulePresenter
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         if (context is ScheduleDisplayInterface) {
             listener = context
+            presenter = DisplaySchedulePresenter(this)
         } else {
             throw RuntimeException(context!!.toString() + " must implement ScheduleDisplayInterface")
         }
@@ -60,64 +69,17 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        databaseReference = FirebaseDatabase.getInstance().reference
-        user = FirebaseAuth.getInstance().currentUser
-
         scheduleRecycler = recycler_schedule
-
-        loadData()
-
-        floating_create_class.setOnClickListener {
-            listener?.switchToCreateFragment()
-        }
-    }
-
-    private fun loadData() {
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                compileData(dataSnapshot)
-            }
-
-            override fun onCancelled(p0: DatabaseError?) {
-                Timber.d(p0?.message)
-            }
-        })
-    }
-
-    fun compileData(dataSnapshot: DataSnapshot) {
-        userClasses.clear()
-        for (ds in dataSnapshot.child("users").child(user?.uid).child("classes").children) {
-            var classModel = ClassModel()
-            classModel.title = ds.child("title").value as String
-            classModel.timeEnd = TimeModel(ds.child("timeEnd").child("timeEndHour").value as Long,
-                    ds.child("timeEnd").child("timeEndMinute").value as Long)
-            var days = mutableListOf<Int>()
-            dataSnapshot.child("users").child(user!!.uid).child("classes").child(classModel.title).child("days").children.mapTo(days) { (it.value as Long).toInt() }
-            classModel.days = days
-            userClasses.add(classModel)
-        }
-        setupRecyclerView()
-    }
-
-    private fun setupRecyclerView() {
-        Timber.d("adapter was null")
-        scheduleAdapter = RecyclerScheduleAdapter(userClasses, this@DisplayScheduleFragment)
+        scheduleAdapter = RecyclerScheduleAdapter(this@DisplayScheduleFragment)
         scheduleRecycler?.apply {
             adapter = scheduleAdapter
             layoutManager = LinearLayoutManager(context)
         }
 
-        toggleNoClassLabel()
-    }
+        presenter.loadData()
 
-    /**
-     * Displays a label marking that the user has no classes, if they do
-     * it makes it invisible
-     */
-    private fun toggleNoClassLabel() {
-        if (text_no_classes?.visibility == View.VISIBLE && !userClasses.isEmpty()) {
-            text_no_classes?.visibility = View.INVISIBLE
+        floating_create_class.setOnClickListener {
+            listener?.switchToCreateFragment()
         }
     }
 
@@ -126,36 +88,6 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
     }
 
     override fun deleteClass(model: ClassModel, position: Int) {
-
-        AlertDialog.Builder(context)
-                .setTitle("Are you sure?")
-                .setPositiveButton("Delete", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-                        databaseReference.child("users").child(user!!.uid).child("classes").child(model.title).removeValue()
-                        //Delete the assignments for corresponding class
-                        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                dataSnapshot.child("users").child(user!!.uid).child("assignments").children
-                                        .filter { it.child("userClass").value as String == model.title }
-                                        .forEach { databaseReference.child("users").child(user!!.uid).child("assignments").child(it.key).removeValue() }
-                                val manager = NotifyClassEndManager(context)
-                                manager.startManaging()
-                            }
-
-                            override fun onCancelled(p0: DatabaseError?) {
-                                Timber.e("Error loading data " + p0.toString())
-                            }
-                        })
-                        scheduleAdapter?.removeItem(position)
-                    }
-                })
-                .setNegativeButton("Cancel", object : DialogInterface.OnClickListener {
-                    override fun onClick(p0: DialogInterface?, p1: Int) {
-
-                    }
-                })
-                .create().show()
-
-
+        presenter.deleteClass(context, model, position)
     }
 }

@@ -30,82 +30,74 @@ import java.util.*
 
 class NotifyClassEndManager(var context: Context) {
 
-    private var databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
-    private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    private lateinit var userClasses: MutableList<ClassModel>
 
-    private var userClasses: MutableList<ClassModel> = mutableListOf()
+    private var daysFromNow: Int = 0
 
-    private var daysFromNow: Int = -1
+    private var occursOnDay = true
 
-    fun startManaging() {
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Timber.d("onDataChange called from homework manager")
-                loadData(dataSnapshot)
-            }
+    /**
+    This is the specific end time for the class that just ended and called startManaging in order
+    to schedule the job for next class. This is needed instead of System.currentTimeMillis() because
+    the job scheduler has a time variation that means that this job may have not been called at the
+    exact class end time but instead a few minutes before and after.
+     */
+    private val previousEndTime = Calendar.getInstance()
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                Timber.e(databaseError.toString())
-            }
-        })
+    fun startManaging(specificEndTime: Long = System.currentTimeMillis()) {
+        //If this wasn't called by a end class time job, just use current time
+        previousEndTime.timeInMillis = specificEndTime
+        Timber.d("Previous end time is ${previousEndTime.timeInMillis}")
+        userClasses = BaseApplication.getInstance().database.getClasses().toMutableList()
+        determineNextAlarm()
+
     }
 
     private fun determineNextAlarm() {
         if (userClasses.isNotEmpty()) {
-            val calendar = Calendar.getInstance()
-            val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-            val classesOnDay = getNextClassesByDay(currentDay)
-            Timber.d("current day is " + currentDay)
-            var nextClass = getNextClassOfDay(classesOnDay, TimeModel(calendar.get(Calendar.HOUR_OF_DAY).toLong(), calendar.get(Calendar.MINUTE).toLong()))
+            val classesOnDay = getNextClassesByDay(previousEndTime.get(Calendar.DAY_OF_WEEK))
+            Timber.d("current day is " + previousEndTime.get(Calendar.DAY_OF_WEEK))
+
+            val nextClass = getNextClassOfDay(classesOnDay, TimeModel(previousEndTime.get(Calendar.HOUR_OF_DAY).toLong(),
+                    previousEndTime.get(Calendar.MINUTE).toLong()))
 
             startNextAlarm(nextClass)
         }
     }
 
-    /**
-     * loads the users classes from the Firebase Database and stores them in a mutableList
-     */
-    private fun loadData(dataSnapshot: DataSnapshot) {
-        for (ds in dataSnapshot.child("users").child(user?.uid).child("classes").children) {
-            var model = ClassModel()
-            model.title = ds.child("title").value as String
-            model.timeEnd = TimeModel(ds.child("timeEnd").child("timeEndHour").value as Long,
-                    ds.child("timeEnd").child("timeEndMinute").value as Long)
-            ds.child("days").children.mapTo(model.days) { (it.value as Long).toInt() }
-            userClasses.add(model)
-        }
-        Timber.d("original classes" + userClasses.toString())
-        determineNextAlarm()
-    }
 
     /**
-     * Returns a list of class models that occur on a specific day
+     * Returns a list of class models that occur on a specific day, if there are no classes on the
+     * specified day, it returns classes for the next day that has a class
      *
      * @param Day of the week as an Int, occursOnDay - set false if you want to get a class
      * that occurs after the specified day(such as a weekend from Friday to Monday)
      */
     private fun getNextClassesByDay(specifiedDay: Int): MutableList<ClassModel> {
         var iteratedDay = specifiedDay
-        //Make sure days from now is reset
-        daysFromNow = 0
-        Timber.d(userClasses.toString())
-        var classesOnDay = emptyList<ClassModel>().toMutableList()
-        do {
-            classesOnDay = userClasses
+        Timber.d("iterated day $iteratedDay" + userClasses.toString())
+
+        //Loads classes that occur on iteratedDay
+        fun loadClassesOnDay(): MutableList<ClassModel> {
+            return userClasses
                     .filter { it.days.contains(iteratedDay) }
                     .toMutableList()
+        }
+
+        var classesOnDay = loadClassesOnDay()
+        while (classesOnDay.isEmpty()) {
+            occursOnDay = false
             if (iteratedDay < 7) {
                 iteratedDay++
-                Timber.d("iterated up")
             } else {
                 iteratedDay = 1
-                Timber.d("iterator reset")
             }
-            Timber.d("loop was called")
             daysFromNow++
+            classesOnDay = loadClassesOnDay()
+            Timber.d("iterated")
+        }
 
-        } while (classesOnDay.isEmpty())
-        Timber.d(classesOnDay.toString())
+        Timber.d("proecessed classes on day iterated day $iteratedDay daysFromNOw $daysFromNow " + classesOnDay.toString())
         return classesOnDay
     }
 
@@ -126,12 +118,17 @@ class NotifyClassEndManager(var context: Context) {
                 .sortedBy { it.timeEnd.timeEndHour }
         Timber.d(nextClasses.toString())
 
-        //This reloads the list of nextClasses if no more will occur today after current time
+        Timber.d("current time is " + currentTime)
+
+//        This reloads the list of nextClasses for tomorrow or following days since no classes occur
+//        today after current time
         if (nextClasses.isEmpty()) {
+            occursOnDay = false
+            daysFromNow++
             Timber.d("classes was empty, occurs on another day")
             Timber.d(classesOnDay.toString())
             //Reload class of the day, except day is tomorrow
-            var classesNextDay = getNextClassesByDay((Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1))
+            var classesNextDay = getNextClassesByDay(previousEndTime.get(Calendar.DAY_OF_WEEK) + 1)
             nextClasses = classesNextDay
                     .sortedBy { it.timeEnd.timeEndHour }
         }
@@ -149,15 +146,6 @@ class NotifyClassEndManager(var context: Context) {
         }
     }
 
-    private fun isAlarmBeforeNow(alarm: Calendar): Boolean {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = System.currentTimeMillis()
-        //May sometimes say alarm is after based on seconds not minutes, this fixes that
-        calendar.add(Calendar.MINUTE, 1)
-
-        return alarm.before(calendar)
-    }
-
     /**
      * Initializes the next alarm. Adds time if the next class occurs multiple days in the future
      *
@@ -168,37 +156,34 @@ class NotifyClassEndManager(var context: Context) {
         alarm.set(Calendar.HOUR_OF_DAY, model.timeEnd.timeEndHour.toInt())
         alarm.set(Calendar.MINUTE, model.timeEnd.timeEndMinute.toInt())
 
-        if (isAlarmBeforeNow(alarm)) {
-            Timber.d("Alarm is before")
-            alarm.add(Calendar.DAY_OF_MONTH, daysFromNow)
+        if (!occursOnDay) {
+            Timber.d("Doesn't occur today adding days $daysFromNow")
+            alarm.add(Calendar.DAY_OF_WEEK, daysFromNow)
         } else {
-            Timber.d("alarm is after now")
+            Timber.d("Occurs on today, not adding any days")
         }
-
-        alarm.add(Calendar.MINUTE, -3)
-
-        val minimumLatency = alarm.timeInMillis - System.currentTimeMillis()
-        alarm.add(Calendar.MINUTE, 6)
-        val overrideDeadline = alarm.timeInMillis - System.currentTimeMillis()
-
 
         Timber.d("added days is $daysFromNow selected class is $model")
         Timber.d(alarm.timeInMillis.toString())
 
-        var intent = Intent("class_trigger")
-        intent.setClass(context, NotifyClassEndReceiver::class.java)
-        intent.putExtra("class_name", model.title)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            JobSchedulerUtil.scheduleClassManagerJob(context, minimumLatency, overrideDeadline)
+            alarm.add(Calendar.MINUTE, -2)
+            val minimumLatency = (alarm.timeInMillis - previousEndTime.timeInMillis)
+            alarm.add(Calendar.MINUTE, 4)
+            val overrideDeadline = (alarm.timeInMillis - previousEndTime.timeInMillis)
+            alarm.add(Calendar.MINUTE, -2)
+
+            Timber.d("was after lallipop")
+            JobSchedulerUtil.scheduleClassManagerJob(context, model.title, minimumLatency, overrideDeadline,
+                    alarm.timeInMillis)
+        } else {
+            Timber.d("Was before lollipop")
+            val intent = Intent(context, NotifyClassEndReceiver::class.java)
+            intent.putExtra(Constants.CLASS_NAME, model.title)
+            val pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
         }
-//        var pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-//        var alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
-//        } else {
-//            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
-//        }
     }
 
     /**

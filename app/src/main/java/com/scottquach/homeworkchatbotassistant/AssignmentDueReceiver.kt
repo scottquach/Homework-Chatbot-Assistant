@@ -15,19 +15,22 @@ import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
 class AssignmentDueReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.extras != null) {
-            val assignmentName = intent.extras.getString("assignment_name")
+            val userAssignment = intent.extras.getString(Constants.USER_ASSIGNMENT)
+            val userClass = intent.extras.getString(Constants.USER_CLASS)
+            createNotification(context, userAssignment)
 
-            createNotification(context, assignmentName)
+            val handler = MessageHandler(context)
+            handler.assignmentDueReminder(userAssignment, userClass)
         }
     }
 
-    private fun createNotification(context: Context, assignmentName: String) {
+    private fun createNotification(context: Context, userAssignment: String) {
         val intent = Intent(context, SignInActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val builder = NotificationCompat.Builder(context, "app_channel")
                 .setContentTitle("Homework Tracker")
-                .setContentText("\"$assignmentName\" is due tomorrow")
+                .setContentText("\"$userAssignment\" is due tomorrow")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
@@ -36,7 +39,6 @@ class AssignmentDueReceiver : BroadcastReceiver() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(1012, notification)
 
-        val handler = MessageHandler(context)
-        handler.assignmentDueReminder(assignmentName)
+
     }
 }

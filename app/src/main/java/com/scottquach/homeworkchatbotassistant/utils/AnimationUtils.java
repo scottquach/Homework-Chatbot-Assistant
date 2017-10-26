@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -116,6 +117,36 @@ public class AnimationUtils {
 
             }
         });
+    }
+
+    public static void shrinkGrow(final View view, final int animationDuration) {
+        final Animation shrink = new ScaleAnimation(1.0f, 0.0f, 1.0f, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        final Animation grow = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+
+        shrink.setDuration(animationDuration);
+        grow.setDuration(animationDuration);
+
+        view.startAnimation(shrink);
+
+        shrink.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.startAnimation(grow);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
     }
 
 }

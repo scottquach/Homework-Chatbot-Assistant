@@ -2,10 +2,14 @@ package com.scottquach.homeworkchatbotassistant;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 /**
@@ -19,13 +23,18 @@ public class BaseApplication extends Application {
         return instance;
     }
 
+    public Database database;
+
     public BaseApplication() {}
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         instance = this;
         Timber.plant(new MyDebugTree());
+
+        database = new Database();
     }
 
     public SharedPreferences getSharePref() {

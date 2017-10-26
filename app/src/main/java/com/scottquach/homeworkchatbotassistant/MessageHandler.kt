@@ -1,35 +1,74 @@
 package com.scottquach.homeworkchatbotassistant
 
 import android.content.Context
+import android.os.Message
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
+import com.scottquach.homeworkchatbotassistant.presenters.ChatPresenter
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import timber.log.Timber
-import java.sql.Time
 
 import java.sql.Timestamp
-import java.util.ArrayList
 
 /**
  * Created by Scott Quach on 9/15/2017.
+ *
+ * Responsible for sending out custom 'RECEIVE' messages (messages that the user receives)
  */
 
-class MessageHandler(val context: Context) {
+class MessageHandler(val context: Context, val presenter: ChatPresenter? = null) {
 
     private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
     private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    val userMessages = mutableListOf<MessageModel>()
+
 
     private fun saveMessagesToDatabase(messageModels: List<MessageModel>) {
         for (model in messageModels) {
             databaseReference.child("users").child(user!!.uid).child("messages").child(model.key).setValue(model)
+            presenter?.onMessageAdded(model)
         }
     }
 
     private fun updateConvoContext(convoContext: String, classContext: String) {
         databaseReference.child("users").child(user!!.uid).child("contexts").child("conversation").setValue(convoContext)
-        databaseReference.child("users").child(user!!.uid).child("contexts").child("class").setValue(classContext)
+        databaseReference.child("users").child(user.uid).child("contexts").child("class").setValue(classContext)
+    }
+
+    fun addMessage(messageType: Int, message: String) {
+        val key = databaseReference.child("users").child(user!!.uid).child("messages").push().key
+        val model = MessageModel(messageType.toLong(), message, Timestamp(System.currentTimeMillis()), key)
+        saveMessagesToDatabase(listOf(model))
+    }
+
+    fun loadMessages() {
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError?) {
+                    Timber.e("Database could not load dataSnapshot")
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                    for (ds in dataSnapshot.child("users").child(user!!.uid).child("messages").children) {
+                        val messageModel = MessageModel()
+                        messageModel.type = ds.child("type").value as Long
+                        messageModel.message = ds.child("message").value as String
+                        messageModel.timestamp = Timestamp((ds.child("timestamp").child("time").value as Long))
+                        userMessages.add(messageModel)
+                    }
+                    presenter?.messagesLoaded()
+                }
+            })
+    }
+
+    fun getMessages(): List<MessageModel> {
+        val copy = mutableListOf<MessageModel>()
+        copy.addAll(userMessages)
+        return copy
     }
 
     fun receiveWelcomeMessages() {
@@ -46,7 +85,7 @@ class MessageHandler(val context: Context) {
         val model4 = createSentMessage(message4)
 
         val message5 = "Assignment \"Study the integral test\" for Calculus III by 2017-10-13 saved"
-        val model5 =  createReceivedMessage(message5)
+        val model5 = createReceivedMessage(message5)
 
         val message6 = "Research machine learning for research writing by October 4th"
         val model6 = createSentMessage(message6)
@@ -70,9 +109,9 @@ class MessageHandler(val context: Context) {
         saveMessagesToDatabase(messagesModels)
     }
 
-    fun assignmentDueReminder(assignmentName: String) {
+    fun assignmentDueReminder(userAssignment: String, userClass: String) {
         val model = MessageModel()
-        model.message = "\"$assignmentName\" is due tomorrow"
+        model.message = "\"$userAssignment\" is due tomorrow for $userClass"
         model.type = MessageType.RECEIVED.toLong()
         model.key = getMessageKey()
         model.timestamp = Timestamp(System.currentTimeMillis())
@@ -103,7 +142,7 @@ class MessageHandler(val context: Context) {
     }
 
     fun confirmNewAssignmentSpecificClass(assignment: String, userClass: String, dueDate: String) {
-        databaseReference.addListenerForSingleValueEvent(object: ValueEventListener {
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot?) {
                 var classMatch = false
                 for (ds in dataSnapshot!!.child("users").child(user!!.uid).child("classes").children) {
@@ -113,10 +152,11 @@ class MessageHandler(val context: Context) {
                         break
                     }
                 }
-                if(!classMatch) {
+                if (!classMatch) {
                     promptCouldntFindClass(userClass)
                 }
             }
+
             override fun onCancelled(p0: DatabaseError?) {
                 Timber.e("Error loading data " + p0.toString())
             }
@@ -126,11 +166,7 @@ class MessageHandler(val context: Context) {
     fun confirmNewAssignment(assignment: String, userClass: String,
                              dueDate: String) {
 
-        val model = MessageModel()
-        model.message = "Assignment \"$assignment\" for $userClass on $dueDate saved"
-        model.type = MessageType.RECEIVED.toLong()
-        model.key = getMessageKey()
-        model.timestamp = Timestamp(System.currentTimeMillis())
+        val model = createReceivedMessage("Assignment \"$assignment\" for $userClass on $dueDate saved")
 
         val assignmentKey = getAssignmentKey()
         val assignmentModel = AssignmentModel(assignment, userClass, 0, dueDate, assignmentKey)
@@ -141,7 +177,48 @@ class MessageHandler(val context: Context) {
         saveMessagesToDatabase(listOf(model))
     }
 
-    private fun createSentMessage(message: String) : MessageModel {
+    /**
+     * Creates a message model that specifies the next due assignment and saves it to the database,
+     * has a default message if no upcoming assignments
+     */
+    fun getNextAssignment(context: Context) {
+        val assignmentManager = AssignmentTimeManager()
+        val nextAssignment = assignmentManager.getNextAssignment(context)
+
+        if (nextAssignment.key == "empty") {
+            val messageModel = createReceivedMessage("You don't have any upcoming assignments")
+            saveMessagesToDatabase(listOf(messageModel))
+        } else {
+            val messageModel = createReceivedMessage("Next assignment is \"${nextAssignment.title}\" for ${nextAssignment.userClass}")
+            saveMessagesToDatabase(listOf(messageModel))
+        }
+    }
+
+    /**
+     * Creates message models that specify overdue assignments and saves it to the database,
+     * has a default message if no overdue assignments
+     */
+    fun getOverdueAssignments(context: Context) {
+        val assignmentManager = AssignmentTimeManager()
+        val overdueAssignments = assignmentManager.getOverdueAssignments(context)
+
+        if (overdueAssignments.isEmpty()) {
+            val messageModel = createReceivedMessage("You have no overdue assignments!")
+            saveMessagesToDatabase(listOf(messageModel))
+        } else {
+            val messages = mutableListOf<MessageModel>()
+            var overdueNumber = 1
+            for (assignment in overdueAssignments) {
+                val messageModel = createReceivedMessage("$overdueNumber. \"${assignment.title}\"")
+                overdueNumber++
+                messages.add(messageModel)
+            }
+
+            saveMessagesToDatabase(messages)
+        }
+    }
+
+    private fun createSentMessage(message: String): MessageModel {
         val model = MessageModel()
         model.message = message
         model.type = MessageType.SENT.toLong()
@@ -150,7 +227,7 @@ class MessageHandler(val context: Context) {
         return model
     }
 
-    private fun createReceivedMessage(message: String) : MessageModel {
+    private fun createReceivedMessage(message: String): MessageModel {
         val model = MessageModel()
         model.message = message
         model.type = MessageType.RECEIVED.toLong()
@@ -162,5 +239,4 @@ class MessageHandler(val context: Context) {
     private fun getMessageKey() = databaseReference.child("users").child(user!!.uid).child("messages").push().key
 
     private fun getAssignmentKey() = databaseReference.child("users").child(user!!.uid).child("assignments").push().key
-
 }

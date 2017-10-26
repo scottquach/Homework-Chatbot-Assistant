@@ -1,6 +1,7 @@
 package com.scottquach.homeworkchatbotassistant.activities
 
 import android.app.ActivityOptions
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -9,6 +10,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.R
+import com.scottquach.homeworkchatbotassistant.fragments.AlertDialogFragment
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.fragments.CreateClassFragment
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
@@ -18,7 +20,8 @@ import kotlinx.android.synthetic.main.activity_class_schedule.*
 import kotlinx.android.synthetic.main.toolbar_main.*
 
 class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateClassInterface,
-        DisplayScheduleFragment.ScheduleDisplayInterface, NavigationFragment.NavigationFragmentInterface {
+        DisplayScheduleFragment.ScheduleDisplayInterface, NavigationFragment.NavigationFragmentInterface,
+        AlertDialogFragment.AlertDialogInterface {
 
     private var databaseReference = FirebaseDatabase.getInstance().reference
     private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -123,5 +126,19 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
         } else {
             startActivity(Intent(this@ClassScheduleActivity, MainActivity::class.java))
         }
+    }
+
+    override fun notifyNoInternetConnection() {
+        AlertDialogFragment.newInstance(getString(R.string.no_internet_connection),
+                getString(R.string.cannot_create_class_internet_connection), positiveString = "Ok",haveNegative = false)
+                .show(supportFragmentManager, AlertDialogFragment::class.java.name)
+    }
+
+    override fun onAlertPositiveClicked(dialog: Dialog){
+        dialog.dismiss()
+    }
+
+    override fun onAlertNegativeClicked(dialog: Dialog) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

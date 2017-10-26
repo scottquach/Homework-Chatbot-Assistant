@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     tools:context="com.scottquach.homeworkchatbotassistant.fragments.ChatFragment"
     tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="0dp">
+    tools:layout_editor_absoluteY="0dp"
+    android:background="@color/white">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_messages"
@@ -31,6 +32,7 @@
         android:layout_marginStart="8dp"
         android:background="@drawable/chatbox_background"
         android:minHeight="48dp"
+        android:elevation="1dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,17 +48,21 @@
             android:layout_weight="1"
             android:ems="10"
             android:background="@android:color/transparent"
-            android:hint="Say Something"
+            android:hint="@string/chat_box_hint"
             android:inputType="text" />
 
-        <Button
+        <ImageButton
             android:id="@+id/button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="@android:color/transparent"
+            android:layout_marginRight="8dp"
+            android:padding="6dp"
+            android:layout_gravity="end|center"
+            android:src="@drawable/ic_send"
+            android:tint="@color/white"
+            android:background="@drawable/background_send_circle"
             android:clickable="true"
-            android:text="Send" />
+            android:text="@string/send" />
     </LinearLayout>
 
     <TextView
@@ -69,6 +75,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
 </android.support.constraint.ConstraintLayout>

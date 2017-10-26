@@ -110,7 +110,6 @@ public class SignInActivity extends AppCompatActivity{
     private void createUserInDatabase(FirebaseUser user) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
-        databaseReference.child("users").child(user.getUid()).child("name").child(user.getDisplayName()).setValue("true");
         Timber.d("Create user in database called");
     }
 

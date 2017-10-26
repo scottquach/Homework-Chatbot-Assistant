@@ -22,7 +22,7 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
 
         val toolbar = toolbar_main
         setSupportActionBar(toolbar)
-        toolbar_title.text = "Assignments"
+        toolbar_title.text = resources.getString(R.string.assignments)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
         if (savedInstanceState == null) {

@@ -8,5 +8,5 @@ data class AssignmentModel(
         var userClass: String = "",
         var scale: Int = 0,
         var dueDate: String = "",
-        var key: String = ""
+        var key: String = "empty"
 )

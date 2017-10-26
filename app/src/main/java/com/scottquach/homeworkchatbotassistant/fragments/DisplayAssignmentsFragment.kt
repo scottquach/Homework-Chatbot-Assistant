@@ -8,34 +8,41 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
+import com.scottquach.homeworkchatbotassistant.*
 
-import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerAssignmentsAdapter
-import com.scottquach.homeworkchatbotassistant.inflate
+import com.scottquach.homeworkchatbotassistant.contracts.DisplayAssignmentsContract
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
+import com.scottquach.homeworkchatbotassistant.presenters.DisplayAssignmentsPresenter
 import kotlinx.android.synthetic.main.fragment_display_assignments.*
-import timber.log.Timber
 
-class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.AssignmentAdapterInterface {
+class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.AssignmentAdapterInterface,
+    DisplayAssignmentsContract.View{
+    override fun addData(data: List<AssignmentModel>) {
+        for (model in data) {
+            assignmentsAdapter?.add(model)
+        }
+        assignmentsAdapter?.notifyDataSetChanged()
+    }
 
+    override fun removeAssignment(position: Int) {
+        assignmentsAdapter?.removeItem(position)
+    }
+
+    override fun textNoHomeworkSetVisible() {
+        text_no_homework?.visibility = View.VISIBLE
+    }
+
+    override fun textNoHomeworkSetInvisible() {
+        text_no_homework.visibility = View.INVISIBLE
+    }
 
     private var listener: DisplayHomeworkInterface? = null
 
-    private val databaseReference = FirebaseDatabase.getInstance().reference
-    private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-
-    private var userAssignments = mutableListOf<AssignmentModel>()
-
     private var assignmentsRecycler: RecyclerView? = null
-
     private var assignmentsAdapter: RecyclerAssignmentsAdapter? = null
+
+    private lateinit var presenter: DisplayAssignmentsPresenter
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -46,6 +53,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
         super.onAttach(context)
         if (context is DisplayHomeworkInterface) {
             listener = context
+            presenter = DisplayAssignmentsPresenter(this)
         } else {
             throw RuntimeException(context!!.toString() + " must implement DisplayHomeworkInterface")
         }
@@ -59,56 +67,17 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         assignmentsRecycler = recycler_homework
-        loadData()
-    }
-
-    private fun loadData() {
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                Timber.d("Data Changed called")
-                compileData(p0)
-            }
-
-            override fun onCancelled(p0: DatabaseError?) {
-                Timber.e("Database Error " + p0.toString())
-            }
-        })
-    }
-
-
-    private fun compileData(dataSnapshot: DataSnapshot) {
-        userAssignments.clear()
-        for (ds in dataSnapshot.child("users").child(user!!.uid).child("assignments").children) {
-            var model = AssignmentModel()
-            model.title = ds.child("title").value as String
-            model.userClass = ds.child("userClass").value as String
-            model.dueDate = ds.child("dueDate").value as String
-            model.scale = (ds.child("scale").value as Long).toInt()
-            model.key = ds.child("key").value as String
-            Timber.d("assignment model " + model.toString())
-            userAssignments.add(model)
+        assignmentsAdapter = RecyclerAssignmentsAdapter(context, this)
+        assignmentsRecycler?.apply {
+            adapter = this@DisplayAssignmentsFragment.assignmentsAdapter
+            layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
         }
-        setupRecyclerView()
-    }
 
-    private fun setupRecyclerView() {
-            assignmentsAdapter = RecyclerAssignmentsAdapter(userAssignments, this@DisplayAssignmentsFragment)
-            assignmentsRecycler?.apply {
-                adapter = this@DisplayAssignmentsFragment.assignmentsAdapter
-                layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
-            }
-
-        if (text_no_homework?.visibility == View.VISIBLE && !userAssignments.isEmpty()) {
-            text_no_homework?.visibility = View.INVISIBLE
-        }
+        presenter.loadData()
     }
 
     override fun delete(model: AssignmentModel, position: Int) {
-        databaseReference.child("users").child(user!!.uid).child("assignments").child(model.key).removeValue()
-        assignmentsAdapter?.removeItem(position)
-
-        val manager = NotifyClassEndManager(context)
-        manager.startManaging()
+        presenter.deleteAssignment(model, position)
     }
 
     interface DisplayHomeworkInterface {
