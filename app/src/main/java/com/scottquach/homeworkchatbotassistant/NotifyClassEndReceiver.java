@@ -23,7 +23,7 @@ public class NotifyClassEndReceiver extends BroadcastReceiver {
         Timber.d("ON RECEIVE old WAS CALLED");
         if (intent.getExtras() != null) {
             String className = intent.getExtras().getString(Constants.CLASS_NAME, "class");
-            MessageHandler messageHandler = new MessageHandler(context);
+            MessageHandler messageHandler = new MessageHandler(context, null);
             messageHandler.promptForAssignment(className);
 
             createNotification(context, className);

@@ -16,11 +16,12 @@ import timber.log.Timber
 /**
  * Created by Scott Quach on 9/22/2017.
  */
-class RecyclerAssignmentsAdapter(private val context: Context, private var userAssignments: MutableList<AssignmentModel>,
+class RecyclerAssignmentsAdapter(private val context: Context,
                                  fragment: DisplayAssignmentsFragment) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var listener: AssignmentAdapterInterface? = null
+    private var userAssignments = mutableListOf<AssignmentModel>()
 
     private val TYPE_OVERDUE = 0
     private val TYPE_REGULAR = 1
@@ -70,6 +71,10 @@ class RecyclerAssignmentsAdapter(private val context: Context, private var userA
                 listener?.delete(userAssignments[holder.adapterPosition], holder.adapterPosition)
             }
         }
+    }
+
+    fun add(model: AssignmentModel) {
+        userAssignments.add(model)
     }
 
     fun removeItem(position: Int) {

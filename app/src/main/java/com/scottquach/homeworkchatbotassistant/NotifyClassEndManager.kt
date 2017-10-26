@@ -168,9 +168,9 @@ class NotifyClassEndManager(var context: Context) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             alarm.add(Calendar.MINUTE, -2)
-            val minimumLatency = (alarm.timeInMillis - previousEndTime.timeInMillis) as Long
+            val minimumLatency = (alarm.timeInMillis - previousEndTime.timeInMillis)
             alarm.add(Calendar.MINUTE, 4)
-            val overrideDeadline = (alarm.timeInMillis - previousEndTime.timeInMillis) as Long
+            val overrideDeadline = (alarm.timeInMillis - previousEndTime.timeInMillis)
             alarm.add(Calendar.MINUTE, -2)
 
             Timber.d("was after lallipop")

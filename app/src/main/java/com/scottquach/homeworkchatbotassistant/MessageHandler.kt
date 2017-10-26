@@ -1,11 +1,15 @@
 package com.scottquach.homeworkchatbotassistant
 
 import android.content.Context
+import android.os.Message
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
+import com.scottquach.homeworkchatbotassistant.presenters.ChatPresenter
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import timber.log.Timber
 
 import java.sql.Timestamp
@@ -16,20 +20,55 @@ import java.sql.Timestamp
  * Responsible for sending out custom 'RECEIVE' messages (messages that the user receives)
  */
 
-class MessageHandler(val context: Context) {
+class MessageHandler(val context: Context, val presenter: ChatPresenter? = null) {
 
     private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
     private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    val userMessages = mutableListOf<MessageModel>()
+
 
     private fun saveMessagesToDatabase(messageModels: List<MessageModel>) {
         for (model in messageModels) {
             databaseReference.child("users").child(user!!.uid).child("messages").child(model.key).setValue(model)
+            presenter?.onMessageAdded(model)
         }
     }
 
     private fun updateConvoContext(convoContext: String, classContext: String) {
         databaseReference.child("users").child(user!!.uid).child("contexts").child("conversation").setValue(convoContext)
-        databaseReference.child("users").child(user!!.uid).child("contexts").child("class").setValue(classContext)
+        databaseReference.child("users").child(user.uid).child("contexts").child("class").setValue(classContext)
+    }
+
+    fun addMessage(messageType: Int, message: String) {
+        val key = databaseReference.child("users").child(user!!.uid).child("messages").push().key
+        val model = MessageModel(messageType.toLong(), message, Timestamp(System.currentTimeMillis()), key)
+        saveMessagesToDatabase(listOf(model))
+    }
+
+    fun loadMessages() {
+            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError?) {
+                    Timber.e("Database could not load dataSnapshot")
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                    for (ds in dataSnapshot.child("users").child(user!!.uid).child("messages").children) {
+                        val messageModel = MessageModel()
+                        messageModel.type = ds.child("type").value as Long
+                        messageModel.message = ds.child("message").value as String
+                        messageModel.timestamp = Timestamp((ds.child("timestamp").child("time").value as Long))
+                        userMessages.add(messageModel)
+                    }
+                    presenter?.messagesLoaded()
+                }
+            })
+    }
+
+    fun getMessages(): List<MessageModel> {
+        val copy = mutableListOf<MessageModel>()
+        copy.addAll(userMessages)
+        return copy
     }
 
     fun receiveWelcomeMessages() {

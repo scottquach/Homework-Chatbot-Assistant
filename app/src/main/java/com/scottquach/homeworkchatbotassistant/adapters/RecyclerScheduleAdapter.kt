@@ -15,10 +15,11 @@ import kotlinx.android.synthetic.main.row_class.view.*
  * Created by Scott Quach on 9/13/2017.
  */
 
-class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassModel>, val fragment:DisplayScheduleFragment) :
+class RecyclerScheduleAdapter(val fragment:DisplayScheduleFragment) :
         RecyclerView.Adapter<RecyclerScheduleAdapter.ViewHolder>() {
 
     private var listener: ScheduleAdapterInterface? = null
+    private var userClasses = mutableListOf<ClassModel>()
 
     init {
         if (fragment is DisplayScheduleFragment) {
@@ -36,19 +37,24 @@ class RecyclerScheduleAdapter(private var userClassModels: MutableList<ClassMode
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindInformation(userClassModels[holder.adapterPosition])
+        holder.bindInformation(userClasses[holder.adapterPosition])
         holder.itemView.findViewById<ImageView>(R.id.button_class_delete).setOnClickListener {
-            listener?.deleteClass(userClassModels[holder.adapterPosition], holder.adapterPosition)
+            listener?.deleteClass(userClasses[holder.adapterPosition], holder.adapterPosition)
         }
     }
 
-    override fun getItemCount() = userClassModels.size
-
-    public fun removeItem(position: Int) {
-       userClassModels.removeAt(position)
-       notifyItemRemoved(position)
+    fun add(newData: List<ClassModel>) {
+        for (model in newData) {
+            userClasses.add(model)
+        }
     }
 
+    fun removeItem(position: Int) {
+        userClasses.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    override fun getItemCount() = userClasses.size
 
     class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindInformation(model: ClassModel) {
