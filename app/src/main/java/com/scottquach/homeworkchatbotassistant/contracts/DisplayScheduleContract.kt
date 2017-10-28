@@ -13,6 +13,7 @@ interface DisplayScheduleContract {
         fun textNoAssignmentSetInvisible()
         fun removeClass(position: Int)
         fun addData(data: List<ClassModel>)
+        fun notifyNoInternet()
     }
 
     interface Presenter {

@@ -15,19 +15,12 @@ import com.scottquach.homeworkchatbotassistant.fragments.ChatFragment
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import kotlinx.android.synthetic.main.fragment_chat.*
 import timber.log.Timber
-import java.sql.Timestamp
 import java.util.ArrayList
 
 /**
  * Created by Scott Quach on 10/25/2017.
  */
 class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
-
-
-
-    override fun notifyNoInternetConnection() {
-
-    }
 
     private val aiService: AIService
 
@@ -54,6 +47,7 @@ class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
         messageHandler.loadMessages()
 
     }
+
     override fun messagesLoaded() {
         userMessages = messageHandler.getMessages().toMutableList()
         convoContext = BaseApplication.getInstance().database.getConvoContext()
@@ -65,6 +59,7 @@ class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
             view.textNoMessagesSetInvisible()
         } else view.textNoMessagesSetVisible()
     }
+
     override fun onSendMessageButtonClicked() {
         view.animateSendButton()
 

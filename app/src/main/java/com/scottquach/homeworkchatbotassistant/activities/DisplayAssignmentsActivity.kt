@@ -13,8 +13,7 @@ import kotlinx.android.synthetic.main.activity_display_homework.*
 import kotlinx.android.synthetic.main.toolbar_main.*
 import timber.log.Timber
 
-class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.NavigationFragmentInterface,
-        DisplayAssignmentsFragment.DisplayHomeworkInterface {
+class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.NavigationFragmentInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

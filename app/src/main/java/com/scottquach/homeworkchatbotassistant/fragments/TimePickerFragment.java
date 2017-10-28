@@ -51,7 +51,6 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-
         ((CreateClassFragment) getTargetFragment()).setEndTime(tag, new TimeModel((long) hour,(long) minute));
     }
 }

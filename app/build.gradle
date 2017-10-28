@@ -80,6 +80,10 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true;
     }
+
+    compile('com.mikepenz:materialdrawer:5.9.5@aar') {
+        transitive = true
+    }
 }
 
 apply plugin: 'kotlin-android-extensions'

@@ -1,15 +1,12 @@
 package com.scottquach.homeworkchatbotassistant
 
 import android.content.Context
-import android.os.Message
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import com.scottquach.homeworkchatbotassistant.presenters.ChatPresenter
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import timber.log.Timber
 
 import java.sql.Timestamp
@@ -46,23 +43,22 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
     }
 
     fun loadMessages() {
-            databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onCancelled(p0: DatabaseError?) {
-                    Timber.e("Database could not load dataSnapshot")
-                }
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                Timber.e("Database could not load dataSnapshot")
+            }
 
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                    for (ds in dataSnapshot.child("users").child(user!!.uid).child("messages").children) {
-                        val messageModel = MessageModel()
-                        messageModel.type = ds.child("type").value as Long
-                        messageModel.message = ds.child("message").value as String
-                        messageModel.timestamp = Timestamp((ds.child("timestamp").child("time").value as Long))
-                        userMessages.add(messageModel)
-                    }
-                    presenter?.messagesLoaded()
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.child("users").child(user!!.uid).child("messages").children) {
+                    val messageModel = MessageModel()
+                    messageModel.type = ds.child("type").value as Long
+                    messageModel.message = ds.child("message").value as String
+                    messageModel.timestamp = Timestamp((ds.child("timestamp").child("time").value as Long))
+                    userMessages.add(messageModel)
                 }
-            })
+                presenter?.messagesLoaded()
+            }
+        })
     }
 
     fun getMessages(): List<MessageModel> {

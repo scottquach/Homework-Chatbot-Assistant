@@ -9,23 +9,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.scottquach.homeworkchatbotassistant.*
+import com.scottquach.homeworkchatbotassistant.contracts.CreateClassContract
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
+import com.scottquach.homeworkchatbotassistant.presenters.CreateClassPresenter
 import com.scottquach.homeworkchatbotassistant.utils.NetworkUtils
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import kotlinx.android.synthetic.main.fragment_create_class.*
 import timber.log.Timber
 
-class CreateClassFragment : Fragment() {
+class CreateClassFragment : Fragment(), CreateClassContract.View {
 
     private var listener: CreateClassInterface? = null
 
-    private var timeEnd: TimeModel? = null
-    private var selectedDays: MutableList<Int> = emptyList<Int>().toMutableList()
+    private lateinit var presenter: CreateClassPresenter
 
     interface CreateClassInterface {
-        fun addClass(newClass: ClassModel)
         fun switchToDisplayFragment()
         fun notifyNoInternetConnection()
     }
@@ -39,15 +42,7 @@ class CreateClassFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         floating_confirm.setOnClickListener {
-            if (NetworkUtils.isConnected(context)) {
-                if (isRequiredFieldsFilled()) {
-                    var newClass = createNewClassModel()
-                    listener?.let {
-                        it.addClass(newClass)
-                        it.switchToDisplayFragment()
-                    }
-                } else Toast.makeText(context, "Missing required fields", Toast.LENGTH_SHORT).show()
-            } else listener?.notifyNoInternetConnection()
+            presenter.onCreateClassAttempt()
         }
 
         floating_cancel.setOnClickListener {
@@ -55,13 +50,11 @@ class CreateClassFragment : Fragment() {
         }
 
         button_change_end_time.setOnClickListener {
-            var fragment = TimePickerFragment.newInstance(Constants.TIME_PICKER_END)
-            fragment.setTargetFragment(this, Constants.TIME_PICKER_END)
-            fragment.show(fragmentManager, "timePicker")
+            presenter.onPickEndTime()
         }
 
         button_day_picker.setOnClickListener {
-            showDayPickerDialog()
+            presenter.onPickDay()
         }
     }
 
@@ -69,6 +62,7 @@ class CreateClassFragment : Fragment() {
         super.onAttach(context)
         if (context is CreateClassInterface) {
             listener = context
+            presenter = CreateClassPresenter(this)
         } else {
             throw RuntimeException(context!!.toString() + " must implement ScheduleDisplayInterface")
         }
@@ -79,62 +73,61 @@ class CreateClassFragment : Fragment() {
         listener = null
     }
 
-    private fun createNewClassModel(): ClassModel {
-        var newClassModel = ClassModel()
-        newClassModel.title = edit_title.text.toString().trim()
-        newClassModel.timeEnd = this.timeEnd!!
-        newClassModel.days = selectedDays
-        return newClassModel
+
+    override fun updateDayOfWeekView(message: String) {
+        text_day_display.text = message
     }
 
-    fun setEndTime(tag: Int, time: TimeModel) {
-        timeEnd = null
-        Timber.d("set time was called " + tag)
-        text_end_time.text = StringUtils.getTimeString(time)
-        timeEnd = time
+    override fun updateEndTimeView(message: String) {
+        text_end_time.text = message
+    }
+
+    override fun showEndTimePicker() {
+        val fragment = TimePickerFragment.newInstance(Constants.TIME_PICKER_END)
+        fragment.setTargetFragment(this, Constants.TIME_PICKER_END)
+        fragment.show(fragmentManager, "timePicker")
     }
 
     /**
      * Allows users to choose what day they want a class to occur from Sunday to Saturday
      */
-    private fun showDayPickerDialog() {
-        selectedDays.clear()
+    override fun showDayPicker() {
         val items: Array<String> = resources.getStringArray(R.array.days_of_week)
 
-        val dialog = AlertDialog.Builder(context)
-                .setTitle("Days class occurs")
+        AlertDialog.Builder(context)
+                .setTitle(getString(R.string.select_class_days_dialog_title))
                 .setMultiChoiceItems(items, null, { dialogInterface: DialogInterface?, index: Int, isChecked: Boolean ->
-                    if (isChecked) {
-                        selectedDays.add(index)
-                    } else if (selectedDays.contains(index)) {
-                        selectedDays.remove(index)
-                    }
-                    Timber.d(selectedDays.toString())
+                    presenter.onToggleDayPicked(isChecked, index)
                 })
                 .setPositiveButton(getString(R.string.set), { dialogInterface, i ->
-                    convertToDayFormat()
-                    text_day_display.text = StringUtils.getDaysOfWeek(selectedDays)
+                    presenter.setDaysOfWeek()
                 })
-                .setNegativeButton(getString(R.string.cancel), { dialogInterface, i ->  })
+                .setNegativeButton(getString(R.string.cancel), { dialogInterface, i -> })
                 .create().show()
     }
 
-    /**
-     * converts the selectedDay array into a format that starts
-     * with 1 being Sunday instead of 0
-     */
-    private fun convertToDayFormat() {
-        for (i in selectedDays.indices) {
-            selectedDays[i] = selectedDays[i] + 1
-        }
-        Timber.d("converted array " + selectedDays)
+    override fun notifyNoInternet() {
+        AlertDialogFragment.newInstance(getString(R.string.no_internet_connection),
+                getString(R.string.cannot_send_messages_internet_connection), positiveString = getString(R.string.ok), haveNegative = false)
+                .show(fragmentManager, AlertDialogFragment::class.java.name)
+    }
+
+    override fun notifyClassCreated() {
+        Toast.makeText(context, getString(R.string.class_created), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun notifyMissingRequiredFields() {
+        Toast.makeText(context, getString(R.string.missing_required_fields), Toast.LENGTH_SHORT).show()
+    }
+
+    fun returnToScheduleView() {
+        listener?.switchToDisplayFragment()
     }
 
     /**
-     * Checks whether all input fields are filled before attempting to
-     * create a new class
+     * Called through the time picker fragment
      */
-    private fun isRequiredFieldsFilled(): Boolean {
-        return (!edit_title.text.isEmpty() && timeEnd != null && selectedDays.isNotEmpty())
+    fun setEndTime(tag: Int, time: TimeModel) {
+        presenter.setEndTime(time)
     }
 }

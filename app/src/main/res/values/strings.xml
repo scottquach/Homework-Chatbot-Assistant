@@ -33,4 +33,11 @@
     <string name="cannot_send_messages_internet_connection">Cannot send messages while you are not connected to the internet</string>
     <string name="cannot_create_class_internet_connection">Cannot create classes while you are not connected to the internet</string>
     <string name="chat_box_hint">Say Something...</string>
+    <string name="create_class_title_hint">Tap here to change title</string>
+    <string name="select_class_days_dialog_title">Select Days Class Occurs</string>
+    <string name="ok">Ok</string>
+    <string name="class_created">Class Created</string>
+    <string name="missing_required_fields">Missing required fields</string>
+    <string name="delete">Delete</string>
+    <string name="are_you_sure">Are you sure?</string>
 </resources>

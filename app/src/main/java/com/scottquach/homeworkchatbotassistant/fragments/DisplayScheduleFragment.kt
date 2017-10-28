@@ -15,7 +15,6 @@ import com.scottquach.homeworkchatbotassistant.contracts.DisplayScheduleContract
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.presenters.DisplaySchedulePresenter
 import kotlinx.android.synthetic.main.fragment_display_schedule.*
-import timber.log.Timber
 
 /**
  * Handles displaying user classes to the user and editing options.
@@ -23,6 +22,7 @@ import timber.log.Timber
  */
 class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdapterInterface,
         DisplayScheduleContract.View {
+
     override fun textNoAssignmentSetVisible() {
         text_no_classes.visibility = View.VISIBLE
     }
@@ -89,5 +89,14 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
 
     override fun deleteClass(model: ClassModel, position: Int) {
         presenter.deleteClass(context, model, position)
+    }
+
+    /**
+     * Alerts the user that they cannot proceed until a stable internet connection is established
+     */
+    override fun notifyNoInternet() {
+        AlertDialogFragment.newInstance(getString(R.string.no_internet_connection),
+                getString(R.string.cannot_send_messages_internet_connection), positiveString = "Ok",haveNegative = false)
+                .show(fragmentManager, AlertDialogFragment::class.java.name)
     }
 }

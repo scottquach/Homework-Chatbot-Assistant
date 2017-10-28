@@ -8,10 +8,11 @@ import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 interface DisplayAssignmentsContract {
 
     interface View {
-        fun textNoHomeworkSetVisible()
-        fun textNoHomeworkSetInvisible()
+        fun toggleNoHomeworkLabelsVisible()
+        fun toggleNoHomeworkLabelsInvisible()
         fun removeAssignment(position: Int)
         fun addData(data: List<AssignmentModel>)
+        fun notifyNoInternet()
     }
 
     interface Presenter {

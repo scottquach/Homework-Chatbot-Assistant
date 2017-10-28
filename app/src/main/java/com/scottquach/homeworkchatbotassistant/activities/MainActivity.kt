@@ -18,31 +18,43 @@ import android.widget.TextView
 import android.widget.Toast
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.scottquach.homeworkchatbotassistant.BaseApplication
 import com.scottquach.homeworkchatbotassistant.Constants
 import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.MessageHandler
-import com.scottquach.homeworkchatbotassistant.SwipeGestureListener
-import com.scottquach.homeworkchatbotassistant.fragments.ChatFragment
-import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
 import com.scottquach.homeworkchatbotassistant.R
 
-import ai.api.AIListener
-import ai.api.model.AIError
-import ai.api.model.AIResponse
 import android.app.Dialog
+import com.mikepenz.materialdrawer.AccountHeaderBuilder
+import com.mikepenz.materialdrawer.Drawer
+import com.mikepenz.materialdrawer.DrawerBuilder
+import com.mikepenz.materialdrawer.model.DividerDrawerItem
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
+import com.scottquach.homeworkchatbotassistant.fragments.*
 import timber.log.Timber
 
-import com.scottquach.homeworkchatbotassistant.fragments.AlertDialogFragment
 import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils
+import kotlinx.android.synthetic.main.toolbar_main.view.*
 
 
-class MainActivity : AppCompatActivity(), AIListener, NavigationFragment.NavigationFragmentInterface,
-        ChatFragment.ChatInterface, AlertDialogFragment.AlertDialogInterface {
+class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDisplayInterface
+        , AlertDialogFragment.AlertDialogInterface, CreateClassFragment.CreateClassInterface {
+
+    override fun switchToDisplayFragment() {
+        val fragment = DisplayScheduleFragment()
+        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_main, fragment, canGoBack = false)
+    }
+
+
+    override fun switchToCreateFragment() {
+        val fragment = CreateClassFragment()
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_main, fragment, true, true)
+    }
+
 
     private val databaseReference = FirebaseDatabase.getInstance().reference
     private val user = FirebaseAuth.getInstance().currentUser
@@ -57,6 +69,7 @@ class MainActivity : AppCompatActivity(), AIListener, NavigationFragment.Navigat
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
+        createDrawer()
 
         if (BaseApplication.getInstance().isFirstOpen) {
             Timber.d("first open")
@@ -75,63 +88,11 @@ class MainActivity : AppCompatActivity(), AIListener, NavigationFragment.Navigat
             supportFragmentManager.changeFragmentRightAnimated(
                     R.id.fragment_container_main, fragment, false, false)
         }
-
-        toolbar.findViewById<View>(R.id.toolbar_menu_icon).setOnClickListener { openNavigation() }
-
-        findViewById<View>(R.id.activity_container_main).setOnTouchListener(object : SwipeGestureListener(this) {
-            override fun onSwipeRight() {
-                val fragment = supportFragmentManager.findFragmentByTag(NavigationFragment::class.java.name) as NavigationFragment
-                if (fragment == null || !fragment.isVisible) {
-                    openNavigation()
-                }
-            }
-
-            override fun onSwipeLeft() {
-                val fragment = supportFragmentManager.findFragmentByTag(ChatFragment::class.java.name) as ChatFragment
-                if (fragment == null || !fragment.isVisible) {
-                    startMainActivity()
-                }
-            }
-        })
     }
 
     override fun onResume() {
         super.onResume()
-
         requestPermissions()
-    }
-
-    override fun onResult(response: AIResponse) {
-        Log.d("stuff", "on response was called")
-        val result = response.result
-        // Get parameters
-        var parameterString = ""
-        if (result.parameters != null && !result.parameters.isEmpty()) {
-            for ((key, value) in result.parameters) {
-                parameterString += "($key, $value) "
-            }
-        }
-    }
-
-    override fun onError(error: AIError) {
-        Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show()
-        Timber.e(error.toString())
-    }
-
-    override fun onAudioLevel(level: Float) {
-
-    }
-
-    override fun onListeningStarted() {
-
-    }
-
-    override fun onListeningCanceled() {
-
-    }
-
-    override fun onListeningFinished() {
-
     }
 
     private fun requestPermissions() {
@@ -140,63 +101,133 @@ class MainActivity : AppCompatActivity(), AIListener, NavigationFragment.Navigat
         }
     }
 
-    private fun openNavigation() {
-        val view = this.currentFocus
-        if (view != null) {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
+    private fun createDrawer() {
+        val toolbar = findViewById<View>(R.id.toolbar_main) as Toolbar
 
-        val toolbarTitle = findViewById<View>(R.id.toolbar_title) as TextView
-        AnimationUtils.textFade(toolbarTitle, getString(R.string.navigation),
-                resources.getInteger(android.R.integer.config_shortAnimTime))
-        val toolbarIcon = findViewById<View>(R.id.toolbar_menu_icon) as ImageView
-        AnimationUtils.fadeOut(toolbarIcon, resources.getInteger(android.R.integer.config_shortAnimTime))
+        val classesItem = PrimaryDrawerItem().withIdentifier(1).withName(R.string.classes)
+                .withIcon(R.drawable.ic_class).withIconColor(resources.getColor(R.color.darkGrey))
+                .withIconTintingEnabled(true)
+        val assignmentsItem = PrimaryDrawerItem().withIdentifier(2).withName(R.string.assignments)
+                .withIcon(R.drawable.ic_homework_simple).withIconColor(resources.getColor(R.color.darkGrey))
+                .withIconTintingEnabled(true)
+        val chatItem = PrimaryDrawerItem().withIdentifier(3).withName(R.string.chat)
+                .withIcon(R.drawable.ic_chat).withIconColor(resources.getColor(R.color.darkGrey))
+                .withIconTintingEnabled(true)
+        val settingsItem = SecondaryDrawerItem().withIdentifier(4).withName(R.string.settings)
+                .withIcon(R.drawable.ic_settings).withIconColor(resources.getColor(R.color.darkGrey))
+                .withIconTintingEnabled(true)
 
-        val fragment = NavigationFragment()
-        supportFragmentManager.changeFragmentLeftAnimated(
-                R.id.fragment_container_main, fragment, true, true)
+
+        val header = AccountHeaderBuilder().withActivity(this)
+                .withHeaderBackground(R.drawable.background_gradient_blue)
+                .addProfiles(
+                        ProfileDrawerItem().withName(R.string.app_name).withIcon(R.mipmap.ic_launcher)
+                )
+                .withPaddingBelowHeader(true)
+                .withSelectionListEnabled(false)
+                .build()
+
+        val drawer = DrawerBuilder().withActivity(this)
+                .withToolbar(toolbar)
+                .withSliderBackgroundColor(resources.getColor(R.color.darkWhite))
+                .withAccountHeader(header)
+                .withCloseOnClick(true)
+                .addDrawerItems(
+                        classesItem,
+                        DividerDrawerItem(),
+                        assignmentsItem,
+                        DividerDrawerItem(),
+                        chatItem,
+                        DividerDrawerItem(),
+                        settingsItem
+                )
+                .withOnDrawerItemClickListener(object: Drawer.OnDrawerItemClickListener{
+                    override fun onItemClick(view: View?, position: Int, drawerItem: IDrawerItem<*, *>?): Boolean {
+                        when(drawerItem) {
+                            classesItem -> {
+                                val fragment = DisplayScheduleFragment()
+                                supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_main, fragment, canGoBack = false)
+                                AnimationUtils.textFade(toolbar.toolbar_title, getString(R.string.classes),
+                                        resources.getInteger(android.R.integer.config_shortAnimTime))
+                            }
+                            assignmentsItem -> {
+                                val fragment = DisplayAssignmentsFragment()
+                                supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_main,
+                                        fragment, false, false)
+                                AnimationUtils.textFade(toolbar.toolbar_title, getString(R.string.assignments),
+                                        resources.getInteger(android.R.integer.config_shortAnimTime))
+                            }
+                            chatItem -> {
+                                val fragment = ChatFragment()
+                                supportFragmentManager.changeFragmentRightAnimated(
+                                        R.id.fragment_container_main, fragment, false, false)
+                                AnimationUtils.textFade(toolbar.toolbar_title, getString(R.string.chat),
+                                        resources.getInteger(android.R.integer.config_shortAnimTime))}
+                        }
+                        return true
+                    }
+
+                })
+                .build()
     }
 
-    override fun startClassScheduleActivity() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            val sharedView = this@MainActivity.findViewById<View>(R.id.toolbar_main)
-            val transitionName = getString(R.string.transition_tooblar)
-            val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@MainActivity, sharedView, transitionName)
-            startActivity(Intent(this@MainActivity, ClassScheduleActivity::class.java),
-                    transitionActivityOptions.toBundle())
-        } else {
-            startActivity(Intent(this@MainActivity, ClassScheduleActivity::class.java))
-        }
-    }
+//    private fun openNavigation() {
+//        val view = this.currentFocus
+//        if (view != null) {
+//            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//            imm.hideSoftInputFromWindow(view.windowToken, 0)
+//        }
+//
+//        val toolbarTitle = findViewById<View>(R.id.toolbar_title) as TextView
+//        AnimationUtils.textFade(toolbarTitle, getString(R.string.navigation),
+//                resources.getInteger(android.R.integer.config_shortAnimTime))
+//        val toolbarIcon = findViewById<View>(R.id.toolbar_menu_icon) as ImageView
+//        AnimationUtils.fadeOut(toolbarIcon, resources.getInteger(android.R.integer.config_shortAnimTime))
+//
+//        val fragment = NavigationFragment()
+//        supportFragmentManager.changeFragmentLeftAnimated(
+//                R.id.fragment_container_main, fragment, true, true)
+//    }
 
-    override fun startDisplayHomeworkActivity() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            val sharedView = this@MainActivity.findViewById<View>(R.id.toolbar_main)
-            val transitionName = getString(R.string.transition_tooblar)
-            val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@MainActivity, sharedView, transitionName)
-            startActivity(Intent(this@MainActivity, DisplayAssignmentsActivity::class.java),
-                    transitionActivityOptions.toBundle())
-        } else {
-            startActivity(Intent(this@MainActivity, DisplayAssignmentsActivity::class.java))
-        }
-    }
-
-    override fun startMainActivity() {
-        val toolbarTitle = findViewById<View>(R.id.toolbar_title) as TextView
-        AnimationUtils.textFade(toolbarTitle, getString(R.string.chat),
-                resources.getInteger(android.R.integer.config_shortAnimTime))
-        val toolbarIcon = findViewById<View>(R.id.toolbar_menu_icon) as ImageView
-        AnimationUtils.fadeIn(toolbarIcon, resources.getInteger(android.R.integer.config_shortAnimTime))
-
-        val fragment = ChatFragment()
-        supportFragmentManager.changeFragmentRightAnimated(
-                R.id.fragment_container_main, fragment, false, true)
-    }
+//    override fun startClassScheduleActivity() {
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//            val sharedView = this@MainActivity.findViewById<View>(R.id.toolbar_main)
+//            val transitionName = getString(R.string.transition_tooblar)
+//            val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@MainActivity, sharedView, transitionName)
+//            startActivity(Intent(this@MainActivity, ClassScheduleActivity::class.java),
+//                    transitionActivityOptions.toBundle())
+//        } else {
+//            startActivity(Intent(this@MainActivity, ClassScheduleActivity::class.java))
+//        }
+//    }
+//
+//    override fun startDisplayHomeworkActivity() {
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//            val sharedView = this@MainActivity.findViewById<View>(R.id.toolbar_main)
+//            val transitionName = getString(R.string.transition_tooblar)
+//            val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@MainActivity, sharedView, transitionName)
+//            startActivity(Intent(this@MainActivity, DisplayAssignmentsActivity::class.java),
+//                    transitionActivityOptions.toBundle())
+//        } else {
+//            startActivity(Intent(this@MainActivity, DisplayAssignmentsActivity::class.java))
+//        }
+//    }
+//
+//    override fun startMainActivity() {
+//        val toolbarTitle = findViewById<View>(R.id.toolbar_title) as TextView
+//        AnimationUtils.textFade(toolbarTitle, getString(R.string.chat),
+//                resources.getInteger(android.R.integer.config_shortAnimTime))
+//        val toolbarIcon = findViewById<View>(R.id.toolbar_menu_icon) as ImageView
+//        AnimationUtils.fadeIn(toolbarIcon, resources.getInteger(android.R.integer.config_shortAnimTime))
+//
+//        val fragment = ChatFragment()
+//        supportFragmentManager.changeFragmentRightAnimated(
+//                R.id.fragment_container_main, fragment, false, true)
+//    }
 
     override fun notifyNoInternetConnection() {
         AlertDialogFragment.newInstance(getString(R.string.no_internet_connection),
-                getString(R.string.cannot_send_messages_internet_connection), positiveString = "Ok",haveNegative = false)
+                getString(R.string.cannot_send_messages_internet_connection), positiveString = getString(R.string.ok),haveNegative = false)
                 .show(supportFragmentManager, AlertDialogFragment::class.java.name)
     }
 
