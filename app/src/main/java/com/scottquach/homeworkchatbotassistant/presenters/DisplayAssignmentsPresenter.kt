@@ -18,21 +18,29 @@ class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : Displa
 
     private lateinit var userAssignments: MutableList<AssignmentModel>
 
+    /**
+     * Deletes the assignment from the database and notifies the view of it's deletion. Toggles
+     * whether or not there are any assignments labels
+     */
     override fun deleteAssignment(model: AssignmentModel, position: Int) {
         databaseReference.child("users").child(user!!.uid).child("assignments").child(model.key).removeValue()
         view.removeAssignment(position)
         userAssignments.removeAt(position)
 
         if (userAssignments.size > 0) {
-            view.textNoHomeworkSetInvisible()
-        } else view.textNoHomeworkSetVisible()
+            view.toggleNoHomeworkLabelsInvisible()
+        } else view.toggleNoHomeworkLabelsVisible()
     }
 
+    /**
+     * Loads data from the database and pushes it to the view to be displayed. Toggles the no homework labels
+     * depending on data retrieved
+     */
     override fun loadData() {
         userAssignments = BaseApplication.getInstance().database.getAssignments().toMutableList()
         view.addData(userAssignments)
         if (userAssignments.size > 0) {
-            view.textNoHomeworkSetInvisible()
-        } else view.textNoHomeworkSetVisible()
+            view.toggleNoHomeworkLabelsInvisible()
+        } else view.toggleNoHomeworkLabelsVisible()
     }
 }

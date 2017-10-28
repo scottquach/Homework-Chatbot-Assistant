@@ -14,6 +14,7 @@ interface ChatContract {
         fun updateMessages(model: MessageModel)
         fun animateSendButton()
         fun scrollToBottom()
+        fun notifyNoInternet()
     }
 
     interface Presenter {
@@ -23,6 +24,5 @@ interface ChatContract {
         fun onMessageAdded(model: MessageModel)
         fun setDefaultContext()
         fun onSendMessageButtonClicked()
-        fun notifyNoInternetConnection()
     }
 }

@@ -7,10 +7,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
-import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import timber.log.Timber
-import java.sql.Timestamp
 
 /**
  * Created by Scott Quach on 10/19/2017.
@@ -22,7 +20,6 @@ class Database {
 
     private val userClasses = mutableListOf<ClassModel>()
     private val userAssignments = mutableListOf<AssignmentModel>()
-    private val userMessages = mutableListOf<MessageModel>()
 
     private var convoContext: String = ""
     private var classContext: String = ""
@@ -65,14 +62,6 @@ class Database {
             userClasses.add(model)
         }
 
-        for (ds in dataSnapshot.child("users").child(user!!.uid).child("messages").children) {
-            val messageModel = MessageModel()
-            messageModel.type = ds.child("type").value as Long
-            messageModel.message = ds.child("message").value as String
-            messageModel.timestamp = Timestamp((ds.child("timestamp").child("time").value as Long))
-            userMessages.add(messageModel)
-        }
-
         convoContext = dataSnapshot.child("users").child(user.uid).child("contexts").child("conversation").value as String
         classContext = dataSnapshot.child("users").child(user.uid).child("contexts").child("class").value as String
     }
@@ -92,15 +81,6 @@ class Database {
     fun getClasses(): List<ClassModel> {
         val copy = mutableListOf<ClassModel>()
         copy.addAll(userClasses)
-        return copy
-    }
-
-    /**
-     * Returns a copy of user messages
-     */
-    fun getMessages(): List<MessageModel> {
-        val copy = mutableListOf<MessageModel>()
-        copy.addAll(userMessages)
         return copy
     }
 

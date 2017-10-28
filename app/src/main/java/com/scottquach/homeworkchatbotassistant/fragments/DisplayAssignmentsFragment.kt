@@ -17,7 +17,8 @@ import com.scottquach.homeworkchatbotassistant.presenters.DisplayAssignmentsPres
 import kotlinx.android.synthetic.main.fragment_display_assignments.*
 
 class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.AssignmentAdapterInterface,
-    DisplayAssignmentsContract.View{
+        DisplayAssignmentsContract.View {
+
     override fun addData(data: List<AssignmentModel>) {
         for (model in data) {
             assignmentsAdapter?.add(model)
@@ -29,15 +30,15 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
         assignmentsAdapter?.removeItem(position)
     }
 
-    override fun textNoHomeworkSetVisible() {
-        text_no_homework?.visibility = View.VISIBLE
+    override fun toggleNoHomeworkLabelsVisible() {
+        text_no_homework.visibility = View.VISIBLE
+        image_no_homework.visibility = View.VISIBLE
     }
 
-    override fun textNoHomeworkSetInvisible() {
+    override fun toggleNoHomeworkLabelsInvisible() {
         text_no_homework.visibility = View.INVISIBLE
+        image_no_homework.visibility = View.INVISIBLE
     }
-
-    private var listener: DisplayHomeworkInterface? = null
 
     private var assignmentsRecycler: RecyclerView? = null
     private var assignmentsAdapter: RecyclerAssignmentsAdapter? = null
@@ -51,17 +52,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is DisplayHomeworkInterface) {
-            listener = context
-            presenter = DisplayAssignmentsPresenter(this)
-        } else {
-            throw RuntimeException(context!!.toString() + " must implement DisplayHomeworkInterface")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
+        presenter = DisplayAssignmentsPresenter(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -70,7 +61,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
         assignmentsAdapter = RecyclerAssignmentsAdapter(context, this)
         assignmentsRecycler?.apply {
             adapter = this@DisplayAssignmentsFragment.assignmentsAdapter
-            layoutManager = LinearLayoutManager(this@DisplayAssignmentsFragment.context)
+            layoutManager = LinearLayoutManager(context)
         }
 
         presenter.loadData()
@@ -80,6 +71,13 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
         presenter.deleteAssignment(model, position)
     }
 
-    interface DisplayHomeworkInterface {
+    /**
+     * Notifies the user that they cannot proceed until a stable internet connection is established
+     */
+    override fun notifyNoInternet() {
+        AlertDialogFragment.newInstance(getString(R.string.no_internet_connection),
+                getString(R.string.cannot_send_messages_internet_connection), positiveString = "Ok",haveNegative = false)
+                .show(fragmentManager, AlertDialogFragment::class.java.name)
     }
+
 }

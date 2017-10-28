@@ -23,9 +23,6 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
         DisplayScheduleFragment.ScheduleDisplayInterface, NavigationFragment.NavigationFragmentInterface,
         AlertDialogFragment.AlertDialogInterface {
 
-    private var databaseReference = FirebaseDatabase.getInstance().reference
-    private var user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_class_schedule)
@@ -81,14 +78,6 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
         AnimationUtils.fadeOut(toolbar_menu_icon, resources.getInteger(android.R.integer.config_shortAnimTime))
         val fragment = NavigationFragment()
         supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_class, fragment, false, true)
-    }
-
-    override fun addClass(newClass: ClassModel) {
-        user?.let {
-            databaseReference.child("users").child(user?.uid).child("classes").child(newClass.title).setValue(newClass)
-        }
-        val manager = NotifyClassEndManager(this@ClassScheduleActivity)
-        manager.startManaging()
     }
 
     override fun switchToCreateFragment() {

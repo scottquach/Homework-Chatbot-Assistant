@@ -18,7 +18,7 @@
         android:background="@android:color/transparent"
         android:fontFamily="@font/open_sans_bold"
         android:gravity="top|start"
-        android:hint="Tap here to change title"
+        android:hint="@string/create_class_title_hint"
         android:inputType="textMultiLine"
         android:maxLines="4"
         android:minLines="1"

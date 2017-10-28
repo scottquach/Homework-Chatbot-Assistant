@@ -10,6 +10,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.scottquach.homeworkchatbotassistant.BaseApplication
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
+import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.contracts.DisplayScheduleContract
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
@@ -26,6 +27,9 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
 
     private lateinit var userClasses: MutableList<ClassModel>
 
+    /**
+     * Retrieves data from Database and pushes it to the view to be displayed
+     */
     override fun loadData() {
         userClasses = BaseApplication.getInstance().database.getClasses().toMutableList()
         view.addData(userClasses)
@@ -35,11 +39,15 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
         } else view.textNoAssignmentSetVisible()
     }
 
+    /**
+     * Shows an alert dialog to confirm deletion before deleting the item. Notifies the View
+     * of the items deletion
+     */
     override fun deleteClass(context: Context, model: ClassModel, position: Int) {
 
         AlertDialog.Builder(context)
-                .setTitle("Are you sure?")
-                .setPositiveButton("Delete", object : DialogInterface.OnClickListener {
+                .setTitle(context.getString(R.string.are_you_sure))
+                .setPositiveButton(context.getString(R.string.delete), object : DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
                         databaseReference.child("users").child(user!!.uid).child("classes").child(model.title).removeValue()
                         //Delete the assignments for corresponding class
@@ -60,7 +68,7 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
                         userClasses.removeAt(position)
                     }
                 })
-                .setNegativeButton("Cancel", object : DialogInterface.OnClickListener {
+                .setNegativeButton(context.getString(R.string.cancel), object : DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
 
                     }
