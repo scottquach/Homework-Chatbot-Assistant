@@ -1,8 +1,6 @@
 package com.scottquach.homeworkchatbotassistant.activities
 
 import android.Manifest
-import android.app.ActivityOptions
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
@@ -10,12 +8,8 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -26,6 +20,8 @@ import com.scottquach.homeworkchatbotassistant.MessageHandler
 import com.scottquach.homeworkchatbotassistant.R
 
 import android.app.Dialog
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.DrawerBuilder
@@ -55,9 +51,10 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
         supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_main, fragment, true, true)
     }
 
-
     private val databaseReference = FirebaseDatabase.getInstance().reference
     private val user = FirebaseAuth.getInstance().currentUser
+
+    private lateinit var drawer: Drawer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,7 +124,7 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                 .withSelectionListEnabled(false)
                 .build()
 
-        val drawer = DrawerBuilder().withActivity(this)
+        drawer = DrawerBuilder().withActivity(this)
                 .withToolbar(toolbar)
                 .withSliderBackgroundColor(resources.getColor(R.color.darkWhite))
                 .withAccountHeader(header)
@@ -141,14 +138,15 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                         DividerDrawerItem(),
                         settingsItem
                 )
-                .withOnDrawerItemClickListener(object: Drawer.OnDrawerItemClickListener{
+                .withOnDrawerItemClickListener(object : Drawer.OnDrawerItemClickListener {
                     override fun onItemClick(view: View?, position: Int, drawerItem: IDrawerItem<*, *>?): Boolean {
-                        when(drawerItem) {
+                        when (drawerItem) {
                             classesItem -> {
                                 val fragment = DisplayScheduleFragment()
                                 supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_main, fragment, canGoBack = false)
                                 AnimationUtils.textFade(toolbar.toolbar_title, getString(R.string.classes),
                                         resources.getInteger(android.R.integer.config_shortAnimTime))
+                                closeDrawer()
                             }
                             assignmentsItem -> {
                                 val fragment = DisplayAssignmentsFragment()
@@ -156,19 +154,34 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                                         fragment, false, false)
                                 AnimationUtils.textFade(toolbar.toolbar_title, getString(R.string.assignments),
                                         resources.getInteger(android.R.integer.config_shortAnimTime))
+                                closeDrawer()
                             }
                             chatItem -> {
                                 val fragment = ChatFragment()
                                 supportFragmentManager.changeFragmentRightAnimated(
                                         R.id.fragment_container_main, fragment, false, false)
                                 AnimationUtils.textFade(toolbar.toolbar_title, getString(R.string.chat),
-                                        resources.getInteger(android.R.integer.config_shortAnimTime))}
+                                        resources.getInteger(android.R.integer.config_shortAnimTime))
+                                closeDrawer()
+                            }
+                            settingsItem -> {
+                                startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+                            }
                         }
                         return true
                     }
 
                 })
                 .build()
+    }
+
+    fun closeDrawer() {
+        drawer.closeDrawer()
+        val view = this.getCurrentFocus()
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 //    private fun openNavigation() {
@@ -227,7 +240,7 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
 
     override fun notifyNoInternetConnection() {
         AlertDialogFragment.newInstance(getString(R.string.no_internet_connection),
-                getString(R.string.cannot_send_messages_internet_connection), positiveString = getString(R.string.ok),haveNegative = false)
+                getString(R.string.cannot_send_messages_internet_connection), positiveString = getString(R.string.ok), haveNegative = false)
                 .show(supportFragmentManager, AlertDialogFragment::class.java.name)
     }
 
