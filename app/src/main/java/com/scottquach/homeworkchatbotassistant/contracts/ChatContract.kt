@@ -24,5 +24,6 @@ interface ChatContract {
         fun onMessageAdded(model: MessageModel)
         fun setDefaultContext()
         fun onSendMessageButtonClicked()
+        fun addMessage(message: String)
     }
 }

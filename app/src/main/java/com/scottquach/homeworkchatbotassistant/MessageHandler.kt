@@ -1,6 +1,7 @@
 package com.scottquach.homeworkchatbotassistant
 
 import android.content.Context
+import android.os.Handler
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -27,7 +28,13 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
     private fun saveMessagesToDatabase(messageModels: List<MessageModel>) {
         for (model in messageModels) {
             databaseReference.child("users").child(user!!.uid).child("messages").child(model.key).setValue(model)
-            presenter?.onMessageAdded(model)
+
+            if (model.type.toInt() == MessageType.RECEIVED) {
+                val handler = Handler()
+                handler.postDelayed(Runnable {
+                    presenter?.onMessageAdded(model)
+                }, 500)
+            } else presenter?.onMessageAdded(model)
         }
     }
 
