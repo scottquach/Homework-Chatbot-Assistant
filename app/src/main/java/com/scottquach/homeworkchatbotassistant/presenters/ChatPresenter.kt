@@ -22,6 +22,7 @@ import java.util.ArrayList
  */
 class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
 
+
     private val aiService: AIService
 
     private lateinit var userMessages: MutableList<MessageModel>
@@ -45,7 +46,6 @@ class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
 
     override fun loadData() {
         messageHandler.loadMessages()
-
     }
 
     override fun messagesLoaded() {
@@ -72,6 +72,11 @@ class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
     override fun onMessageAdded(model: MessageModel) {
         view.updateMessages(model)
         view.scrollToBottom()
+    }
+
+    override fun addMessage(message: String) {
+        messageHandler.addMessage(MessageType.SENT, message)
+        DoTextRequestTask().execute(message)
     }
 
     override fun determineResponseActions(result: Result) {

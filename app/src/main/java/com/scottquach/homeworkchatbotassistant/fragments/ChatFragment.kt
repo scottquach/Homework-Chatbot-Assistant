@@ -4,7 +4,6 @@ package com.scottquach.homeworkchatbotassistant.fragments
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -13,6 +12,7 @@ import android.view.ViewGroup
 import com.scottquach.homeworkchatbotassistant.*
 
 import com.scottquach.homeworkchatbotassistant.adapters.RecyclerChatAdapter
+import com.scottquach.homeworkchatbotassistant.adapters.RecyclerQuickReplyAdapter
 import com.scottquach.homeworkchatbotassistant.contracts.ChatContract
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import com.scottquach.homeworkchatbotassistant.presenters.ChatPresenter
@@ -20,11 +20,20 @@ import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils
 import com.scottquach.homeworkchatbotassistant.utils.NetworkUtils
 import kotlinx.android.synthetic.main.fragment_chat.*
 
-class ChatFragment : Fragment(), ChatContract.View {
+class ChatFragment : Fragment(), ChatContract.View, RecyclerQuickReplyAdapter.QuickReplyInterface {
+    override fun onQuickReply(reply: String) {
+        if (NetworkUtils.isConnected(context)) {
+            AnimationUtils.fadeOutFadeIn(recycler_quick_reply,
+                    resources.getInteger(android.R.integer.config_shortAnimTime))
+            presenter.addMessage(reply)
+        } else notifyNoInternet()
+    }
 
-    private lateinit var recycler: RecyclerView
-    private lateinit var adapter: RecyclerChatAdapter
+    private lateinit var messageRecycler: RecyclerView
+    private lateinit var messageAdapter: RecyclerChatAdapter
 
+    private lateinit var quickReplyRecycler: RecyclerView
+    private lateinit var quickReplyAdapter: RecyclerQuickReplyAdapter
 
     private lateinit var presenter: ChatPresenter
 
@@ -35,14 +44,25 @@ class ChatFragment : Fragment(), ChatContract.View {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        recycler = recycler_messages
-        adapter = RecyclerChatAdapter(context)
-        val manager = LinearLayoutManager(context)
-        manager.stackFromEnd = true
-        recycler.apply {
-            adapter = this@ChatFragment.adapter
-            layoutManager = manager
+        messageRecycler = recycler_messages
+        messageAdapter = RecyclerChatAdapter(context)
+        val messagesManager = LinearLayoutManager(context)
+        messagesManager.stackFromEnd = true
+        messageRecycler.apply {
+            adapter = this@ChatFragment.messageAdapter
+            layoutManager = messagesManager
         }
+
+        quickReplyRecycler = recycler_quick_reply
+        quickReplyAdapter = RecyclerQuickReplyAdapter(this)
+        val quickReplyManager = LinearLayoutManager(context)
+        quickReplyManager.orientation = LinearLayoutManager.HORIZONTAL
+        quickReplyManager.stackFromEnd = true
+        quickReplyRecycler.apply {
+            adapter = this@ChatFragment.quickReplyAdapter
+            layoutManager = quickReplyManager
+        }
+
 
         presenter.loadData()
 
@@ -57,7 +77,7 @@ class ChatFragment : Fragment(), ChatContract.View {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-            presenter = ChatPresenter(this)
+        presenter = ChatPresenter(this)
     }
 
     override fun textNoMessagesSetVisible() {
@@ -69,12 +89,12 @@ class ChatFragment : Fragment(), ChatContract.View {
     }
 
     override fun addData(data: List<MessageModel>) {
-        adapter.addData(data)
-        adapter.notifyDataSetChanged()
+        messageAdapter.addData(data)
+        messageAdapter.notifyDataSetChanged()
     }
 
     override fun updateMessages(model: MessageModel) {
-        adapter.addMessage(model)
+        messageAdapter.addMessage(model)
     }
 
     override fun animateSendButton() {
@@ -83,7 +103,7 @@ class ChatFragment : Fragment(), ChatContract.View {
     }
 
     override fun scrollToBottom() {
-        recycler.scrollToPosition(adapter.itemCount - 1)
+        messageRecycler.scrollToPosition(messageAdapter.itemCount - 1)
     }
 
     /**
@@ -91,7 +111,7 @@ class ChatFragment : Fragment(), ChatContract.View {
      */
     override fun notifyNoInternet() {
         AlertDialogFragment.newInstance(getString(R.string.no_internet_connection),
-                getString(R.string.cannot_send_messages_internet_connection), positiveString = "Ok",haveNegative = false)
+                getString(R.string.cannot_send_messages_internet_connection), positiveString = "Ok", haveNegative = false)
                 .show(fragmentManager, AlertDialogFragment::class.java.name)
     }
 

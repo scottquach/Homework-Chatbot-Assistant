@@ -5,10 +5,14 @@ package com.scottquach.homeworkchatbotassistant.contracts
  */
 interface SettingsContract {
     interface View {
+        fun navigateToSignInActivity()
+        fun navigateBack()
+        fun toast(message: String)
 
     }
 
     interface Presenter {
         fun signOutUser()
+        fun onBackButton()
     }
 }

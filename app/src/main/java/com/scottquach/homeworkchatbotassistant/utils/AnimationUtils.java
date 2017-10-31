@@ -47,7 +47,6 @@ public class AnimationUtils {
 //    }
 
     public static void textFade(final TextView view, final String newText, final int animationDuration) {
-
         final Animation fadeOut = new AlphaAnimation(1.0f, 0.0f);
         fadeOut.setDuration(animationDuration);
 
@@ -146,7 +145,32 @@ public class AnimationUtils {
 
             }
         });
+    }
 
+    public static void fadeOutFadeIn(final View view, final int animationDuration) {
+        final Animation fadeOut = new AlphaAnimation(1.0f, 0.0f);
+        fadeOut.setDuration(animationDuration);
+        final Animation fadeIn = new AlphaAnimation(0.0f, 1.0f);
+        fadeIn.setDuration(animationDuration);
+
+        view.startAnimation(fadeOut);
+
+        fadeOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.startAnimation(fadeIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
 }

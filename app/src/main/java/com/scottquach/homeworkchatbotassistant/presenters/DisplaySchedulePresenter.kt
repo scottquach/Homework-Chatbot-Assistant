@@ -66,6 +66,10 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
                         })
                         view.removeClass(position)
                         userClasses.removeAt(position)
+
+                        if (userClasses.size > 0){
+                            view.textNoAssignmentSetInvisible()
+                        } else view.textNoAssignmentSetVisible()
                     }
                 })
                 .setNegativeButton(context.getString(R.string.cancel), object : DialogInterface.OnClickListener {
@@ -74,10 +78,6 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
                     }
                 })
                 .create().show()
-
-        if (userClasses.size > 0){
-            view.textNoAssignmentSetInvisible()
-        } else view.textNoAssignmentSetVisible()
     }
 
 }
