@@ -104,15 +104,19 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
         val classesItem = PrimaryDrawerItem().withIdentifier(1).withName(R.string.classes)
                 .withIcon(R.drawable.ic_class).withIconColor(resources.getColor(R.color.darkGrey))
                 .withIconTintingEnabled(true)
+                .withSelectedColor(resources.getColor(R.color.lightGrey))
         val assignmentsItem = PrimaryDrawerItem().withIdentifier(2).withName(R.string.assignments)
                 .withIcon(R.drawable.ic_homework_simple).withIconColor(resources.getColor(R.color.darkGrey))
                 .withIconTintingEnabled(true)
+                .withSelectedColor(resources.getColor(R.color.lightGrey))
         val chatItem = PrimaryDrawerItem().withIdentifier(3).withName(R.string.chat)
                 .withIcon(R.drawable.ic_chat).withIconColor(resources.getColor(R.color.darkGrey))
                 .withIconTintingEnabled(true)
+                .withSelectedColor(resources.getColor(R.color.lightGrey))
         val settingsItem = SecondaryDrawerItem().withIdentifier(4).withName(R.string.settings)
                 .withIcon(R.drawable.ic_settings).withIconColor(resources.getColor(R.color.darkGrey))
                 .withIconTintingEnabled(true)
+                .withSelectedColor(resources.getColor(R.color.lightGrey))
 
 
         val header = AccountHeaderBuilder().withActivity(this)
@@ -173,6 +177,8 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
 
                 })
                 .build()
+
+//        drawer.setSelection(3)
     }
 
     fun closeDrawer() {
