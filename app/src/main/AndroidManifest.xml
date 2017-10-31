@@ -17,8 +17,6 @@
         <activity android:name=".activities.ClassScheduleActivity" />
         <activity android:name=".activities.SignInActivity"></activity>
 
-
-
         <activity android:name=".activities.DisplayAssignmentsActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.IntroActivity">

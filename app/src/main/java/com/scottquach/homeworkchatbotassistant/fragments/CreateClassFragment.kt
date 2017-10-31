@@ -75,11 +75,11 @@ class CreateClassFragment : Fragment(), CreateClassContract.View {
 
 
     override fun updateDayOfWeekView(message: String) {
-        text_day_display.text = message
+        button_day_picker.text = message
     }
 
     override fun updateEndTimeView(message: String) {
-        text_end_time.text = message
+        button_change_end_time.text = message
     }
 
     override fun showEndTimePicker() {
