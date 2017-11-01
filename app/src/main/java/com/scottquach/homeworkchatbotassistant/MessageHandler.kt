@@ -68,12 +68,21 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
         })
     }
 
+    /**
+     * Retrieve a copy of the list of user messages
+     *
+     * @return copy
+     */
     fun getMessages(): List<MessageModel> {
         val copy = mutableListOf<MessageModel>()
         copy.addAll(userMessages)
         return copy
     }
 
+    /**
+     * Create and push the messages shown when the user opens the chat for the
+     * first time
+     */
     fun receiveWelcomeMessages() {
         val message1 = "Provide homework for Calculus III"
         val model1 = createReceivedMessage(message1)
@@ -185,7 +194,7 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
      * has a default message if no upcoming assignments
      */
     fun getNextAssignment(context: Context) {
-        val assignmentManager = AssignmentTimeManager()
+        val assignmentManager = AssignmentDatabaseManager()
         val nextAssignment = assignmentManager.getNextAssignment(context)
 
         if (nextAssignment.key == "empty") {
@@ -202,7 +211,7 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
      * has a default message if no overdue assignments
      */
     fun getOverdueAssignments(context: Context) {
-        val assignmentManager = AssignmentTimeManager()
+        val assignmentManager = AssignmentDatabaseManager()
         val overdueAssignments = assignmentManager.getOverdueAssignments(context)
 
         if (overdueAssignments.isEmpty()) {
@@ -210,13 +219,42 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
             saveMessagesToDatabase(listOf(messageModel))
         } else {
             val messages = mutableListOf<MessageModel>()
-            var overdueNumber = 1
+            var assignmentNumber = 1
             for (assignment in overdueAssignments) {
-                val messageModel = createReceivedMessage("$overdueNumber. \"${assignment.title}\"")
-                overdueNumber++
+                val messageModel = createReceivedMessage("$assignmentNumber. \"${assignment.title}\"")
+                assignmentNumber++
                 messages.add(messageModel)
             }
 
+            saveMessagesToDatabase(messages)
+        }
+    }
+
+    /**
+     * Creates message models that specify what assignments are currently not finished, this
+     * includes assignments that overdue (specially labeled). If there are not assignments currently
+     * available a default message is displayed
+     */
+    fun getCurrentAssignments(context: Context) {
+        val assignmentmanager = AssignmentDatabaseManager()
+        val userAssignments = assignmentmanager.getCurrentAssignments(context)
+
+        if (userAssignments.isEmpty()) {
+            val messageModel = createReceivedMessage("You currently have no assignments!")
+            saveMessagesToDatabase(listOf(messageModel))
+        } else {
+            val messages = mutableListOf<MessageModel>()
+            var assignmentNumber = 1
+            for (assignment in userAssignments) {
+
+                if (AssignmentDatabaseManager.isOverdueAssignment(context, assignment)){
+                    val messageModel = createReceivedMessage("$assignmentNumber. \"${assignment.title}\" (Overdue)")
+                    messages.add(messageModel)
+                } else {
+                    val messageModel = createReceivedMessage("$assignmentNumber. \"${assignment.title}\"")
+                    messages.add(messageModel)
+                }
+            }
             saveMessagesToDatabase(messages)
         }
     }

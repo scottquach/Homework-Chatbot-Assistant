@@ -12,7 +12,7 @@ import java.util.*
  * Responsible for containing helper methods that involve retrieving assignments based on time,
  * such as retrieving overdue assignments or the next upcoming assignment
  */
-class AssignmentTimeManager {
+class AssignmentDatabaseManager {
 
     private var userAssignments: MutableList<AssignmentModel> = BaseApplication.getInstance().database
             .getAssignments().toMutableList()
@@ -66,6 +66,16 @@ class AssignmentTimeManager {
 
         return overdueAssignments.toList()
     }
+
+    /**
+     * Returns a copy of all user assignments as a list
+     */
+    fun getCurrentAssignments(context: Context): List<AssignmentModel> {
+        val copy = mutableListOf<AssignmentModel>()
+        copy.addAll(userAssignments)
+        return copy;
+    }
+
 
     companion object {
         /**
