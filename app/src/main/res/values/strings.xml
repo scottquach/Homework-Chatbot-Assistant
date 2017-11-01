@@ -41,4 +41,7 @@
     <string name="delete">Delete</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="signed_out">Signed Out</string>
+    <string name="feedback">Feedback</string>
+    <string name="designed_and_created_by">Designed and Created by Scott Quach</string>
+    <string name="translated_by">Translated by Joe Villegas</string>
 </resources>
