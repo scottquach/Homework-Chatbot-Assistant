@@ -28,7 +28,7 @@ class StringUtils {
                     2 -> displayString += "M"
                     3 -> displayString += "T"
                     4 -> displayString += "W"
-                    5 -> displayString += "T"
+                    5 -> displayString += "Th"
                     6 -> displayString += "F"
                     7 -> displayString += "S"
                 }
