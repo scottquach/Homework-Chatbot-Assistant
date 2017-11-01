@@ -16,7 +16,7 @@ class EmailHandler(val context: Context) {
         val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                 "mailto", "chuckglobal@gmail.com", null))
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Homework Assistant Feedback")
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Type Feedback Below")
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi Scott, here is my feedback on your app: \n \n")
 
         try {
             context.startActivity(Intent.createChooser(emailIntent, "Select client to email feedback:"))
