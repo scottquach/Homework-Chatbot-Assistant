@@ -4,14 +4,12 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
 import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils
 import kotlinx.android.synthetic.main.activity_display_homework.*
 import kotlinx.android.synthetic.main.toolbar_main.*
-import timber.log.Timber
 
 class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.NavigationFragmentInterface {
 
@@ -63,7 +61,7 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
 
     override fun startClassScheduleActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            val transitionName = getString(R.string.transition_tooblar)
+            val transitionName = getString(R.string.transition_toolbar)
             val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@DisplayAssignmentsActivity, toolbar_main, transitionName)
             startActivity(Intent(this@DisplayAssignmentsActivity, ClassScheduleActivity::class.java),
                     transitionActivityOptions.toBundle())
@@ -83,7 +81,7 @@ class DisplayAssignmentsActivity : AppCompatActivity(), NavigationFragment.Navig
 
     override fun startMainActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            val transitionName = getString(R.string.transition_tooblar)
+            val transitionName = getString(R.string.transition_toolbar)
             val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@DisplayAssignmentsActivity, toolbar_main, transitionName)
             startActivity(Intent(this@DisplayAssignmentsActivity, MainActivity::class.java),
                     transitionActivityOptions.toBundle())

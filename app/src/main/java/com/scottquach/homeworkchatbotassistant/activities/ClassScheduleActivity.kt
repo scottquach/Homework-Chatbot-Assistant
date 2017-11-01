@@ -5,13 +5,9 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.*
 import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.fragments.AlertDialogFragment
-import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.fragments.CreateClassFragment
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.fragments.NavigationFragment
@@ -96,7 +92,7 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
 
     override fun startDisplayHomeworkActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            val transitionName = getString(R.string.transition_tooblar)
+            val transitionName = getString(R.string.transition_toolbar)
             val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@ClassScheduleActivity, toolbar_main, transitionName)
             startActivity(Intent(this@ClassScheduleActivity, DisplayAssignmentsActivity::class.java),
                     transitionActivityOptions.toBundle())
@@ -108,7 +104,7 @@ class ClassScheduleActivity : AppCompatActivity(), CreateClassFragment.CreateCla
 
     override fun startMainActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            val transitionName = getString(R.string.transition_tooblar)
+            val transitionName = getString(R.string.transition_toolbar)
             val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@ClassScheduleActivity, toolbar_main, transitionName)
             startActivity(Intent(this@ClassScheduleActivity, MainActivity::class.java),
                     transitionActivityOptions.toBundle())

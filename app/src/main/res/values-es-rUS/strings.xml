@@ -31,7 +31,7 @@
         <item>Sabado</item>
     </string-array>
 
-    <string name="transition_tooblar">transition_toolbar</string>
+    <string name="transition_toolbar">transition_toolbar</string>
     <string name="send">Enviar</string>
     <string name="no_internet_connection">Falta connecion a red</string>
     <string name="cannot_send_messages_internet_connection">Mensajes no pueden ser enviados sin connecion</string>
