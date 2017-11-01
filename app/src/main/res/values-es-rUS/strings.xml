@@ -25,17 +25,6 @@
         <item>Domingo</item>
         <item>Lunes</item>
         <item>Martes</item>
-        2:30 PM	All files are up-to-date
-
-        2:33 PM	Gradle sync started
-
-        2:33 PM	Project setup started
-
-        2:33 PM	Gradle sync finished in 13s 10ms
-
-        2:33 PM	Executing tasks: [:app:generateDebugSources, :app:generateDebugAndroidTestSources, :app:mockableAndroidJar]
-
-        2:34 PM	Gradle build finished in 36s 618ms
         <item>Miercoles</item>
         <item>Jueves</item>
         <item>Viernes</item>
