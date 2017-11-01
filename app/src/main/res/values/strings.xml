@@ -41,4 +41,15 @@
     <string name="delete">Delete</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="signed_out">Signed Out</string>
+
+
+    <string name="intro_card1">Welcome</string>
+    <string name="intro_welcome">Organize your homework through the most natural way possible: Chat</string>
+    <string name="intro_card2">Natural Language</string>
+    <string name="intro_natural_language">Powered by powerful machine learning and NLP algorithms for constant improvement</string>
+    <string name="intro_card3">Set your classes</string>
+    <string name="intro_set_classes">Remember to set your classes and I\'ll remind you to give me your homework!</string>
+    <string name="intro_card4">Provide Homework</string>
+    <string name="intro_provide_homework">Once prompted, enter homework by replying. For example, \"Finish reading chapter 8 by next Monday\"</string>
+    <string name="intro_start">Let\'s Get Started</string>
 </resources>

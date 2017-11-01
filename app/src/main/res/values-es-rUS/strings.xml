@@ -25,6 +25,17 @@
         <item>Domingo</item>
         <item>Lunes</item>
         <item>Martes</item>
+        2:30 PM	All files are up-to-date
+
+        2:33 PM	Gradle sync started
+
+        2:33 PM	Project setup started
+
+        2:33 PM	Gradle sync finished in 13s 10ms
+
+        2:33 PM	Executing tasks: [:app:generateDebugSources, :app:generateDebugAndroidTestSources, :app:mockableAndroidJar]
+
+        2:34 PM	Gradle build finished in 36s 618ms
         <item>Miercoles</item>
         <item>Jueves</item>
         <item>Viernes</item>
@@ -44,4 +55,14 @@
     <string name="missing_required_fields">Falta campos requeridos</string>
     <string name="delete">Borrar</string>
     <string name="are_you_sure">¿Estas seguro?</string>
+
+    <string name="intro_card1">Bienvenido</string>
+    <string name="intro_welcome">Organiza tu taeras con la forma mas natural: Communicacion.</string>
+    <string name="intro_card2">Natural Language</string>
+    <string name="intro_natural_language">Powered by powerful machine learning and NLP algorithms for constant improvement</string>
+    <string name="intro_card3">Designar sus clases</string>
+    <string name="intro_set_classes">Remember to set your classes and I\'ll remind you to give me your homework!</string>
+    <string name="intro_card4">Poner taeras</string>
+    <string name="intro_provide_homework">Once prompted, enter homework by replying. For example, \"Finish reading chapter 8 by next Monday\"</string>
+    <string name="intro_start">Vamanos</string>
 </resources>

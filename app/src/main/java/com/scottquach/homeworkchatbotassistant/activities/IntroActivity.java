@@ -17,32 +17,32 @@ public class IntroActivity extends AhoyOnboarderActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AhoyOnboarderCard ahoyOnboarderCard1 = new AhoyOnboarderCard("Welcome",
-                "Organize your homework through the most natural way possible, chat" , R.drawable.ic_homework);
+        AhoyOnboarderCard ahoyOnboarderCard1 = new AhoyOnboarderCard(getString(R.string.intro_card1),
+                getString(R.string.intro_welcome) , R.drawable.ic_homework);
         ahoyOnboarderCard1.setBackgroundColor(R.color.black_transparent);
         ahoyOnboarderCard1.setTitleColor(R.color.white);
         ahoyOnboarderCard1.setDescriptionColor(R.color.grey_200);
         ahoyOnboarderCard1.setTitleTextSize(dpToPixels(10, this));
         ahoyOnboarderCard1.setDescriptionTextSize(dpToPixels(8, this));
 
-        AhoyOnboarderCard ahoyOnboarderCard2 = new AhoyOnboarderCard("Natural Language",
-                "Powered by powerful machine learning and NLP algorithms for constant improvement", R.drawable.ic_think);
+        AhoyOnboarderCard ahoyOnboarderCard2 = new AhoyOnboarderCard(getString(R.string.intro_card2),
+                getString(R.string.intro_natural_language), R.drawable.ic_think);
         ahoyOnboarderCard1.setBackgroundColor(R.color.black_transparent);
         ahoyOnboarderCard1.setTitleColor(R.color.white);
         ahoyOnboarderCard1.setDescriptionColor(R.color.grey_200);
         ahoyOnboarderCard1.setTitleTextSize(dpToPixels(10, this));
         ahoyOnboarderCard1.setDescriptionTextSize(dpToPixels(8, this));
 
-        AhoyOnboarderCard ahoyOnboarderCard3 = new AhoyOnboarderCard("Set your classes",
-                "Remember to set your classes and I'll remind you to give me your homework!", R.drawable.ic_blackboard);
+        AhoyOnboarderCard ahoyOnboarderCard3 = new AhoyOnboarderCard(getString(R.string.intro_card3),
+                getString(R.string.intro_set_classes), R.drawable.ic_blackboard);
         ahoyOnboarderCard1.setBackgroundColor(R.color.black_transparent);
         ahoyOnboarderCard1.setTitleColor(R.color.white);
         ahoyOnboarderCard1.setDescriptionColor(R.color.grey_200);
         ahoyOnboarderCard1.setTitleTextSize(dpToPixels(10, this));
         ahoyOnboarderCard1.setDescriptionTextSize(dpToPixels(8, this));
 
-        AhoyOnboarderCard ahoyOnboarderCard4 = new AhoyOnboarderCard("Provide Homework",
-                "Once prompted, enter homework by replying. For example, \"Finish reading chapter 8 by next Monday\"", R.drawable.ic_chat);
+        AhoyOnboarderCard ahoyOnboarderCard4 = new AhoyOnboarderCard(getString(R.string.intro_card4),
+                getString(R.string.intro_provide_homework), R.drawable.ic_chat);
         ahoyOnboarderCard1.setBackgroundColor(R.color.black_transparent);
         ahoyOnboarderCard1.setTitleColor(R.color.white);
         ahoyOnboarderCard1.setDescriptionColor(R.color.grey_200);
@@ -60,7 +60,7 @@ public class IntroActivity extends AhoyOnboarderActivity {
         setActiveIndicatorColor(R.color.white);
 
         setGradientBackground();
-        setFinishButtonTitle("Let's Get Started");
+        setFinishButtonTitle(R.string.intro_start);
     }
 
     @Override
