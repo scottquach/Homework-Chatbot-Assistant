@@ -44,6 +44,9 @@
     <string name="missing_required_fields">Falta campos requeridos</string>
     <string name="delete">Borrar</string>
     <string name="are_you_sure">¿Estas seguro?</string>
+    <string name="feedback">Feedback</string>
+    <string name="designed_and_created_by">Creado por Scott Quach</string>
+    <string name="translated_by">Espanol transliteracion por Joe Villegas</string>
 
     <string name="intro_card1">Bienvenido</string>
     <string name="intro_welcome">Organiza tu taeras con la forma mas natural: Communicacion.</string>
