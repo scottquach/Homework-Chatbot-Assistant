@@ -117,6 +117,11 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                 .withIcon(R.drawable.ic_settings).withIconColor(resources.getColor(R.color.darkGrey))
                 .withIconTintingEnabled(true)
                 .withSelectedColor(resources.getColor(R.color.lightGrey))
+        val feedbackItem = SecondaryDrawerItem().withIdentifier(5).withName(getString(R.string.feedback))
+                .withIcon(R.drawable.ic_feedback).withIconColor(resources.getColor(R.color.darkGrey))
+                .withIconTintingEnabled(true)
+                .withSelectedColor(resources.getColor(R.color.lightGrey))
+                .withSelectable(false)
 
 
         val header = AccountHeaderBuilder().withActivity(this)
@@ -140,7 +145,8 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                         DividerDrawerItem(),
                         chatItem,
                         DividerDrawerItem(),
-                        settingsItem
+                        settingsItem,
+                        feedbackItem
                 )
                 .withOnDrawerItemClickListener(object : Drawer.OnDrawerItemClickListener {
                     override fun onItemClick(view: View?, position: Int, drawerItem: IDrawerItem<*, *>?): Boolean {
@@ -171,6 +177,9 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                             settingsItem -> {
                                 startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
                             }
+                            feedbackItem -> {
+                                EmailHandler(this@MainActivity).sendFeedbackEmail()
+                            }
                         }
                         return true
                     }
@@ -178,7 +187,7 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                 })
                 .build()
 
-//        drawer.setSelection(3)
+        drawer.deselect()
     }
 
     fun closeDrawer() {

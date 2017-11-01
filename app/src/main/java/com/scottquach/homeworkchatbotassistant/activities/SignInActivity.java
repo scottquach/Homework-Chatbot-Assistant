@@ -32,7 +32,6 @@ public class SignInActivity extends AppCompatActivity{
     private FirebaseAuth firebaseAuth;
     private static final int RC_SIGN_IN = 9001;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +80,12 @@ public class SignInActivity extends AppCompatActivity{
                 Timber.d("Signed in successfully");
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+                Toast.makeText(this, "Signed in successful", Toast.LENGTH_SHORT).show();
             } else {
                 Timber.d("Signed in failed");
+                Timber.d(result.getStatus().getStatusMessage());
+                if (result.getStatus().hasResolution()) Timber.d(result.getStatus().getResolution().toString());
+                Toast.makeText(this, "Sign in failed", Toast.LENGTH_SHORT).show();
             }
         }
     }
