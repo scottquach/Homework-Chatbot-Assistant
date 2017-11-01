@@ -8,9 +8,11 @@
         android:id="@+id/text_reply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
         android:padding="8dp"
         android:text="Temporary Text"
+        android:fontFamily="@font/lato"
         android:textColor="@color/secondaryTextColor"
         android:background="@drawable/quick_reply_background"/>
 

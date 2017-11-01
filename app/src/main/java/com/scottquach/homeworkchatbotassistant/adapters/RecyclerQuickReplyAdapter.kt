@@ -13,7 +13,9 @@ import kotlinx.android.synthetic.main.quick_reply.view.*
  */
 class RecyclerQuickReplyAdapter(val fragment: ChatFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val quickReplies = mutableListOf<String>("What should I work on next?", "What's overdue?")
+    private val quickReplies = mutableListOf<String>(fragment.context.getString(R.string.quick_reply_next_assignment),
+            fragment.context.getString(R.string.quick_reply_overdue),
+            fragment.context.getString(R.string.quick_reply_current_assignments))
 
     private var listener: QuickReplyInterface? = null
 

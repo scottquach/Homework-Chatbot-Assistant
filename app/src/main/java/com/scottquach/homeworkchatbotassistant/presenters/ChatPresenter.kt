@@ -121,6 +121,9 @@ class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
             Constants.ACTION_CURRENT_ASSIGNMENTS -> {
                 messageHandler.getCurrentAssignments(view.context)
             }
+            Constants.ACTION_EXAMPLE -> {
+                messageHandler.getExamples(view.context)
+            }
             else -> {
                 val textResponse = result.fulfillment.speech
                 messageHandler.addMessage(MessageType.RECEIVED, textResponse)

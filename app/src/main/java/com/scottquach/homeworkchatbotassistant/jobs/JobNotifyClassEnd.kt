@@ -56,7 +56,7 @@ class JobNotifyClassEnd : JobService() {
 
         val builder = NotificationCompat.Builder(context, "app_channel")
                 .setContentTitle("Homework Tracker")
-                .setContentText("do you have any homework for " + userClass)
+                .setContentText("Give me homework for" + userClass)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

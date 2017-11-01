@@ -123,7 +123,6 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                 .withSelectedColor(resources.getColor(R.color.lightGrey))
                 .withSelectable(false)
 
-
         val header = AccountHeaderBuilder().withActivity(this)
                 .withHeaderBackground(R.drawable.background_gradient_blue)
                 .addProfiles(
