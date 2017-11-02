@@ -72,9 +72,6 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
             Timber.d("first open")
             val handler = MessageHandler(this)
             handler.receiveWelcomeMessages()
-            databaseReference.child("users").child(user!!.uid).child("contexts").child("conversation")
-                    .setValue(Constants.CONETEXT_DEFAULT)
-            databaseReference.child("users").child(user.uid).child("contexts").child("class").setValue("default")
             BaseApplication.getInstance().sharePref.edit().putBoolean("first_open", false).apply()
         } else {
             Timber.d("Wasn't first open")
@@ -117,7 +114,11 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                 .withIcon(R.drawable.ic_settings).withIconColor(resources.getColor(R.color.darkGrey))
                 .withIconTintingEnabled(true)
                 .withSelectedColor(resources.getColor(R.color.lightGrey))
-
+        val feedbackItem = SecondaryDrawerItem().withIdentifier(5).withName(getString(R.string.feedback))
+                .withIcon(R.drawable.ic_feedback).withIconColor(resources.getColor(R.color.darkGrey))
+                .withIconTintingEnabled(true)
+                .withSelectedColor(resources.getColor(R.color.lightGrey))
+                .withSelectable(false)
 
         val header = AccountHeaderBuilder().withActivity(this)
                 .withHeaderBackground(R.drawable.background_gradient_blue)
@@ -140,7 +141,8 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                         DividerDrawerItem(),
                         chatItem,
                         DividerDrawerItem(),
-                        settingsItem
+                        settingsItem,
+                        feedbackItem
                 )
                 .withOnDrawerItemClickListener(object : Drawer.OnDrawerItemClickListener {
                     override fun onItemClick(view: View?, position: Int, drawerItem: IDrawerItem<*, *>?): Boolean {
@@ -171,6 +173,9 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                             settingsItem -> {
                                 startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
                             }
+                            feedbackItem -> {
+                                EmailHandler(this@MainActivity).sendFeedbackEmail()
+                            }
                         }
                         return true
                     }
@@ -178,7 +183,7 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                 })
                 .build()
 
-//        drawer.setSelection(3)
+        drawer.deselect()
     }
 
     fun closeDrawer() {
@@ -189,60 +194,6 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
-
-//    private fun openNavigation() {
-//        val view = this.currentFocus
-//        if (view != null) {
-//            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//            imm.hideSoftInputFromWindow(view.windowToken, 0)
-//        }
-//
-//        val toolbarTitle = findViewById<View>(R.id.toolbar_title) as TextView
-//        AnimationUtils.textFade(toolbarTitle, getString(R.string.navigation),
-//                resources.getInteger(android.R.integer.config_shortAnimTime))
-//        val toolbarIcon = findViewById<View>(R.id.toolbar_menu_icon) as ImageView
-//        AnimationUtils.fadeOut(toolbarIcon, resources.getInteger(android.R.integer.config_shortAnimTime))
-//
-//        val fragment = NavigationFragment()
-//        supportFragmentManager.changeFragmentLeftAnimated(
-//                R.id.fragment_container_main, fragment, true, true)
-//    }
-
-//    override fun startClassScheduleActivity() {
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-//            val sharedView = this@MainActivity.findViewById<View>(R.id.toolbar_main)
-//            val transitionName = getString(R.string.transition_tooblar)
-//            val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@MainActivity, sharedView, transitionName)
-//            startActivity(Intent(this@MainActivity, ClassScheduleActivity::class.java),
-//                    transitionActivityOptions.toBundle())
-//        } else {
-//            startActivity(Intent(this@MainActivity, ClassScheduleActivity::class.java))
-//        }
-//    }
-//
-//    override fun startDisplayHomeworkActivity() {
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-//            val sharedView = this@MainActivity.findViewById<View>(R.id.toolbar_main)
-//            val transitionName = getString(R.string.transition_tooblar)
-//            val transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(this@MainActivity, sharedView, transitionName)
-//            startActivity(Intent(this@MainActivity, DisplayAssignmentsActivity::class.java),
-//                    transitionActivityOptions.toBundle())
-//        } else {
-//            startActivity(Intent(this@MainActivity, DisplayAssignmentsActivity::class.java))
-//        }
-//    }
-//
-//    override fun startMainActivity() {
-//        val toolbarTitle = findViewById<View>(R.id.toolbar_title) as TextView
-//        AnimationUtils.textFade(toolbarTitle, getString(R.string.chat),
-//                resources.getInteger(android.R.integer.config_shortAnimTime))
-//        val toolbarIcon = findViewById<View>(R.id.toolbar_menu_icon) as ImageView
-//        AnimationUtils.fadeIn(toolbarIcon, resources.getInteger(android.R.integer.config_shortAnimTime))
-//
-//        val fragment = ChatFragment()
-//        supportFragmentManager.changeFragmentRightAnimated(
-//                R.id.fragment_container_main, fragment, false, true)
-//    }
 
     override fun notifyNoInternetConnection() {
         AlertDialogFragment.newInstance(getString(R.string.no_internet_connection),

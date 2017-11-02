@@ -1,6 +1,7 @@
-package com.scottquach.homeworkchatbotassistant
+package com.scottquach.homeworkchatbotassistant.database
 
 import android.content.Context
+import com.scottquach.homeworkchatbotassistant.BaseApplication
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import timber.log.Timber
@@ -12,7 +13,7 @@ import java.util.*
  * Responsible for containing helper methods that involve retrieving assignments based on time,
  * such as retrieving overdue assignments or the next upcoming assignment
  */
-class AssignmentTimeManager {
+class AssignmentDatabaseManager : BaseDatabase() {
 
     private var userAssignments: MutableList<AssignmentModel> = BaseApplication.getInstance().database
             .getAssignments().toMutableList()
@@ -65,6 +66,24 @@ class AssignmentTimeManager {
         }
 
         return overdueAssignments.toList()
+    }
+
+    /**
+     * Returns a copy of all user assignments as a list
+     * @return copy
+     */
+    fun getCurrentAssignments(context: Context): List<AssignmentModel> {
+        val copy = mutableListOf<AssignmentModel>()
+        copy.addAll(userAssignments)
+        return copy
+    }
+
+    /**
+     * Number of assignments completed are kept track for future user profile summaries, this
+     * increments the number of completed assignments and is called when an assignment is deleted.
+     */
+    fun addToNumberOfCompletedAssignments(context: Context) {
+
     }
 
     companion object {

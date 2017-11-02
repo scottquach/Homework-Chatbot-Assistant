@@ -14,7 +14,7 @@
         android:layout_marginLeft="32dp"
         android:layout_marginRight="64dp"
         android:background="@drawable/message_received_background"
-        android:fontFamily="sans-serif"
+        android:fontFamily="@font/lato"
         android:padding="12dp"
         android:text="testing testing testing test "
         android:textColor="@color/primaryTextColor"

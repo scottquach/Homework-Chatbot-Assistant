@@ -22,7 +22,7 @@ interface ChatContract {
         fun messagesLoaded()
         fun determineResponseActions(result: Result)
         fun onMessageAdded(model: MessageModel)
-        fun setDefaultContext()
+//        fun setDefaultContext()
         fun onSendMessageButtonClicked()
         fun addMessage(message: String)
     }

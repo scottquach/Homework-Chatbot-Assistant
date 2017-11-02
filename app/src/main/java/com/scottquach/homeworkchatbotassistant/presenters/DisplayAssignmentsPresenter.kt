@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.scottquach.homeworkchatbotassistant.BaseApplication
 import com.scottquach.homeworkchatbotassistant.contracts.DisplayAssignmentsContract
+import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 
@@ -15,6 +16,10 @@ class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : Displa
 
     private val databaseReference = FirebaseDatabase.getInstance().reference
     private val user = FirebaseAuth.getInstance().currentUser
+
+    private val database by lazy {
+        AssignmentDatabaseManager()
+    }
 
     private lateinit var userAssignments: MutableList<AssignmentModel>
 

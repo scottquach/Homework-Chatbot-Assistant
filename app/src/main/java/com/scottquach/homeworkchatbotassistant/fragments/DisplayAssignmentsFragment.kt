@@ -19,27 +19,6 @@ import kotlinx.android.synthetic.main.fragment_display_assignments.*
 class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.AssignmentAdapterInterface,
         DisplayAssignmentsContract.View {
 
-    override fun addData(data: List<AssignmentModel>) {
-        for (model in data) {
-            assignmentsAdapter?.add(model)
-        }
-        assignmentsAdapter?.notifyDataSetChanged()
-    }
-
-    override fun removeAssignment(position: Int) {
-        assignmentsAdapter?.removeItem(position)
-    }
-
-    override fun toggleNoHomeworkLabelsVisible() {
-        text_no_homework.visibility = View.VISIBLE
-        image_no_homework.visibility = View.VISIBLE
-    }
-
-    override fun toggleNoHomeworkLabelsInvisible() {
-        text_no_homework.visibility = View.INVISIBLE
-        image_no_homework.visibility = View.INVISIBLE
-    }
-
     private var assignmentsRecycler: RecyclerView? = null
     private var assignmentsAdapter: RecyclerAssignmentsAdapter? = null
 
@@ -64,11 +43,37 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
             layoutManager = LinearLayoutManager(context)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         presenter.loadData()
     }
 
     override fun delete(model: AssignmentModel, position: Int) {
         presenter.deleteAssignment(model, position)
+    }
+
+
+    override fun addData(data: List<AssignmentModel>) {
+        for (model in data) {
+            assignmentsAdapter?.add(model)
+        }
+        assignmentsAdapter?.notifyDataSetChanged()
+    }
+
+    override fun removeAssignment(position: Int) {
+        assignmentsAdapter?.removeItem(position)
+    }
+
+    override fun toggleNoHomeworkLabelsVisible() {
+        text_no_homework.visibility = View.VISIBLE
+        image_no_homework.visibility = View.VISIBLE
+    }
+
+    override fun toggleNoHomeworkLabelsInvisible() {
+        text_no_homework.visibility = View.INVISIBLE
+        image_no_homework.visibility = View.INVISIBLE
     }
 
     /**
