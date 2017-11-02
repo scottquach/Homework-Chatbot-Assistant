@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- strings.xml for Spanish (US) Translation; By Joe Villegas -->
+
+<resources>
+    <string name="app_name">Asistente de Taeras</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cancel">Cancelar</string>
+    <string name="set">Asignar</string>
+    <string name="classes">Clases</string>
+    <string name="homework">Taera</string>
+    <string name="chat">Charla</string>
+    <string name="loading_messages">Cargando Mensajes</string>
+    <string name="no_classes">No hay clases</string>
+    <string name="no_homework">No hay taera!</string>
+    <string name="settings">Ajustes</string>
+    <string name="assignments">Asignaciones</string>
+    <string name="sign_in_to_continue">Registrarse para continuar</string>
+    <string name="welcome">Bienvenido</string>
+    <string name="created_by">Creado por Scott Quach</string>
+    <string name="navigation">Navigacion</string>
+    <string-array name="days_of_week">
+        <item>Domingo</item>
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miercoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+        <item>Sabado</item>
+    </string-array>
+
+    <string name="transition_toolbar">transition_toolbar</string>
+    <string name="send">Enviar</string>
+    <string name="no_internet_connection">Falta connecion a red</string>
+    <string name="cannot_send_messages_internet_connection">Mensajes no pueden ser enviados sin connecion</string>
+    <string name="cannot_create_class_internet_connection">Clases no pueden ser creardos sin connecion</string>
+    <string name="chat_box_hint">Dige algo...</string>
+    <string name="create_class_title_hint">Apreta aquí para cambiar titulo</string>
+    <string name="select_class_days_dialog_title">Seleccione qual días se pace la clase</string>
+    <string name="ok">Ok</string>
+    <string name="class_created">Clase creado</string>
+    <string name="missing_required_fields">Falta campos requeridos</string>
+    <string name="delete">Borrar</string>
+    <string name="are_you_sure">¿Estas seguro?</string>
+    <string name="feedback">Feedback</string>
+    <string name="designed_and_created_by">Creado por Scott Quach</string>
+    <string name="translated_by">Espanol transliteracion por Joe Villegas</string>
+
+    <string name="intro_card1">Bienvenido</string>
+    <string name="intro_welcome">Organiza tu taeras con la forma mas natural: Communicacion.</string>
+    <string name="intro_card2">Natural Language</string>
+    <string name="intro_natural_language">Powered by powerful machine learning and NLP algorithms for constant improvement</string>
+    <string name="intro_card3">Designar sus clases</string>
+    <string name="intro_set_classes">Remember to set your classes and I\'ll remind you to give me your homework!</string>
+    <string name="intro_card4">Poner taeras</string>
+    <string name="intro_provide_homework">Once prompted, enter homework by replying. For example, \"Finish reading chapter 8 by next Monday\"</string>
+    <string name="intro_start">Vamanos</string>
+</resources>

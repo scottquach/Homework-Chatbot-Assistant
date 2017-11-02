@@ -13,16 +13,13 @@ import android.widget.Toast
 class EmailHandler(val context: Context) {
 
     fun sendFeedbackEmail() {
-        val emailIntent = Intent(Intent.ACTION_SEND)
-
-        emailIntent.data = Uri.parse("chuckglobal@gmail.com")
-        emailIntent.type = "text/plain"
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("chuckglobal@gmail.com"))
+        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto", "chuckglobal@gmail.com", null))
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Homework Assistant Feedback")
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Type Feedback Below")
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi Scott, here is my feedback on your app: \n \n")
 
         try {
-            context.startActivity(Intent.createChooser(emailIntent, "Send email..."))
+            context.startActivity(Intent.createChooser(emailIntent, "Select client to email feedback:"))
         } catch (e: Exception) {
             Toast.makeText(context, "Error sending feedback email", Toast.LENGTH_SHORT).show()
         }
