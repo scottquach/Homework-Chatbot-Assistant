@@ -14,14 +14,14 @@ class EmailHandler(val context: Context) {
 
     fun sendFeedbackEmail() {
         val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto", "chuckglobal@gmail.com", null))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Homework Assistant Feedback")
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Hi Scott, here is my feedback on your app: \n \n")
+                "mailto", context.getString(R.string.email_email_to), null))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.email_email_subject))
+        emailIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.email_feedback_starting_text))
 
         try {
-            context.startActivity(Intent.createChooser(emailIntent, "Select client to email feedback:"))
+            context.startActivity(Intent.createChooser(emailIntent, context.getString(R.string.email_select_client)))
         } catch (e: Exception) {
-            Toast.makeText(context, "Error sending feedback email", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.email_error_sending), Toast.LENGTH_SHORT).show()
         }
     }
 }

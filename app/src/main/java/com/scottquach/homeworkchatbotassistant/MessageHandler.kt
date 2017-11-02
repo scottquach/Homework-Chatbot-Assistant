@@ -91,6 +91,7 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
                 "organize and assist you in your busy school life"
         val model1 = createReceivedMessage(message1)
 
+        //Don't yell at the user LOL
         val message2 = "If you haven't PLEASE SET YOUR CLASSES, as the app won't function properly " +
                 "without your class information"
         val model2 = createReceivedMessage(message2)
@@ -243,8 +244,8 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
      * available a default message is displayed
      */
     fun getCurrentAssignments(context: Context) {
-        val assignmentmanager = AssignmentDatabaseManager()
-        val userAssignments = assignmentmanager.getCurrentAssignments(context)
+        val assignmentManager = AssignmentDatabaseManager()
+        val userAssignments = assignmentManager.getCurrentAssignments(context)
 
         if (userAssignments.isEmpty()) {
             val messageModel = createReceivedMessage("You currently have no assignments!")

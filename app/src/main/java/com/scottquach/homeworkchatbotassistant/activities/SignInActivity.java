@@ -51,7 +51,7 @@ public class SignInActivity extends AppCompatActivity{
         this.findViewById(R.id.signInButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Timber.d("sign in button clicked");
+                Timber.d("Sign in button clicked");
                 signIn();
             }
         });
@@ -66,7 +66,7 @@ public class SignInActivity extends AppCompatActivity{
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
             Timber.d("Current user is " + currentUser.getDisplayName());
-            Toast.makeText(SignInActivity.this, "Signed in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SignInActivity.this, R.string.signed_in, Toast.LENGTH_SHORT).show();
             startActivity(new Intent(SignInActivity.this, MainActivity.class));
         } else Timber.d("Current user is null");
     }
@@ -80,12 +80,12 @@ public class SignInActivity extends AppCompatActivity{
                 Timber.d("Signed in successfully");
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                Toast.makeText(this, "Signed in successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.sign_in_success, Toast.LENGTH_SHORT).show();
             } else {
                 Timber.d("Signed in failed");
                 Timber.d(result.getStatus().getStatusMessage());
                 if (result.getStatus().hasResolution()) Timber.d(result.getStatus().getResolution().toString());
-                Toast.makeText(this, "Sign in failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.sign_in_failed, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -99,7 +99,7 @@ public class SignInActivity extends AppCompatActivity{
                         if (task.isSuccessful()) {
                             Timber.d("Firebase auth with google successful");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            Toast.makeText(SignInActivity.this, "Signed in", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignInActivity.this, getString(R.string.signed_in), Toast.LENGTH_SHORT).show();
                             createUserInDatabase(user);
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
                             finish();

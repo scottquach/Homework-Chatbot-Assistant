@@ -55,8 +55,8 @@ class JobNotifyClassEnd : JobService() {
         val pendingIntent = PendingIntent.getActivity(context, 102, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val builder = NotificationCompat.Builder(context, "app_channel")
-                .setContentTitle("Homework Tracker")
-                .setContentText("Give me homework for" + userClass)
+                .setContentTitle(getString(R.string.notify_title_homework_tracker))
+                .setContentText(getString(R.string.notify_class_end_text) + userClass)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)

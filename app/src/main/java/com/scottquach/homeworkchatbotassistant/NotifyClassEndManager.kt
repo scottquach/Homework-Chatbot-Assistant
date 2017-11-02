@@ -97,7 +97,7 @@ class NotifyClassEndManager(var context: Context) {
             Timber.d("iterated")
         }
 
-        Timber.d("proecessed classes on day iterated day $iteratedDay daysFromNOw $daysFromNow " + classesOnDay.toString())
+        Timber.d("processed classes on day iterated day $iteratedDay daysFromNow $daysFromNow " + classesOnDay.toString())
         return classesOnDay
     }
 
@@ -163,7 +163,7 @@ class NotifyClassEndManager(var context: Context) {
             Timber.d("Occurs on today, not adding any days")
         }
 
-        Timber.d("added days is $daysFromNow selected class is $model")
+        Timber.d("Added days is $daysFromNow selected class is $model")
         Timber.d(alarm.timeInMillis.toString())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -173,11 +173,11 @@ class NotifyClassEndManager(var context: Context) {
             val overrideDeadline = (alarm.timeInMillis - previousEndTime.timeInMillis)
             alarm.add(Calendar.MINUTE, -2)
 
-            Timber.d("was after lallipop")
+            Timber.d("Was after Lollipop")
             JobSchedulerUtil.scheduleClassManagerJob(context, model.title, minimumLatency, overrideDeadline,
                     alarm.timeInMillis)
         } else {
-            Timber.d("Was before lollipop")
+            Timber.d("Was before Lollipop")
             val intent = Intent(context, NotifyClassEndReceiver::class.java)
             intent.putExtra(Constants.CLASS_NAME, model.title)
             val pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)

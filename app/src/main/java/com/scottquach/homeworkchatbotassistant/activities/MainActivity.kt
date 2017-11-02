@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
 
         val toolbar = findViewById<View>(R.id.toolbar_main) as Toolbar
         val toolbarTitle = findViewById<View>(R.id.toolbar_title) as TextView
-        toolbarTitle.text = "Chat"
+        toolbarTitle.text = getString(R.string.chat)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 

@@ -3,24 +3,65 @@
 <!-- strings.xml for Spanish (US) Translation; By Joe Villegas -->
 
 <resources>
-    <string name="app_name">Asistente de Taeras</string>
+    <string name="app_name">Asistente de Tareas</string>
+
+    <string name="assistant_name">Asistente</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="cancel">Cancelar</string>
-    <string name="set">Asignar</string>
-    <string name="classes">Clases</string>
-    <string name="homework">Taera</string>
-    <string name="chat">Charla</string>
-    <string name="loading_messages">Cargando Mensajes</string>
-    <string name="no_classes">No hay clases</string>
-    <string name="no_homework">No hay taera!</string>
-    <string name="settings">Ajustes</string>
-    <string name="assignments">Asignaciones</string>
-    <string name="sign_in_to_continue">Registrarse para continuar</string>
-    <string name="welcome">Bienvenido</string>
+    <string name="transition_toolbar">transition_toolbar</string>
+
+    <!-- Credits -->
     <string name="created_by">Creado por Scott Quach</string>
+    <string name="designed_and_created_by">Creado por Scott Quach</string>
+    <string name="translated_by">Espanol transliteracion de Joe Villegas</string>
+
+    <!-- IntroActivity Strings -->
+    <string name="intro_card1">Bienvenido</string>
+    <string name="intro_welcome">Organiza tu taeras con la forma mas natural: Communicacion.</string>
+    <string name="intro_card2">Idioma Natural</string>
+    <string name="intro_natural_language">Powered by powerful machine learning and NLP algorithms for constant improvement</string>
+    <string name="intro_card3">Designar sus clases</string>
+    <string name="intro_set_classes">Remember to set your classes and I\'ll remind you to give me your homework!</string>
+    <string name="intro_card4">Poner taeras</string>
+    <string name="intro_provide_homework">Once prompted, enter homework by replying. For example, \"Finish reading chapter 8 by next Monday\"</string>
+    <string name="intro_start">Vamanos</string>
+
+    <!-- Sign-in Strings -->
+    <string name="welcome">Bienvenido</string>
+    <string name="sign_in_to_continue">Registrarse para continuar</string>
+
+    <!-- Non-Specific Button Strings -->
+    <string name="set">Asignar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="send">Enviar</string>
+    <string name="delete">Borrar</string>
+    <string name="ok">Ok</string>
+
+    <!-- Navigation Activity Strings -->
     <string name="navigation">Navigacion</string>
+    <string name="classes">Clases</string>
+    <string name="assignments">Asignaciones</string>
+    <string name="homework">Tarea</string>
+    <string name="chat">Charla</string>
+    <string name="settings">Ajustes</string>
+    <string name="feedback">Observaciones</string>
+
+    <!-- Chat Screen Strings -->
+    <string name="chat_box_hint">Dige algo...</string>
+    <string name="quick_reply_next_assignment">¿Cual proximo trabajo nececito hacer?</string>
+    <string name="quick_reply_overdue">¿Cuales trabajos son atrasados?</string>
+    <string name="quick_reply_current_assignments">¿Cuales tareas tengo?</string>
+
+    <!-- Class Creation Activity Strings -->
+    <string name="create_class_title_hint">Apreta aquí para cambiar el titulo</string>
+    <string name="select_class_days_dialog_title">Seleccione quales días se pace la clase</string>
+    <string name="class_set_days">Decidir dias</string>
+    <string name="class_set_time">Decidir tiempo</string>
+    <string name="class_when_class_ends">TIEMPO SE ACABA LA CLASE</string>
+    <string name="class_days_class_occurs">DIAS SE PACE LA CLASE</string>
+
     <string-array name="days_of_week">
         <item>Domingo</item>
         <item>Lunes</item>
@@ -31,30 +72,35 @@
         <item>Sabado</item>
     </string-array>
 
-    <string name="transition_toolbar">transition_toolbar</string>
-    <string name="send">Enviar</string>
+    <!-- Settings Activity Strings -->
+    <string name="settings_sign_out">Cerrar Session</string>
+
+    <!-- Feedback Activity Strings -->
+    <string name="email_email_to">joevillegasisawesome@gmail.com</string>
+    <string name="email_email_subject">Realimentación para Asistente de Tareas</string>
+    <string name="email_feedback_starting_text">Hola Joe, aqui esta mis observaciones de su app de Scott:
+    </string>
+    <string name="email_select_client">Selectar applicacion para mandar la mensaje de realimentación:</string>
+    <string name="email_error_sending">Error mandando correo electronico</string>
+
+
+    <!-- Toasts n' Stuff -->
+    <string name="loading_messages">Cargando Mensajes</string>
+    <string name="no_classes">No hay clases!</string>
+    <string name="no_homework">No hay taera!</string>
+    <string name="class_created">Clase creado</string>
+    <string name="missing_required_fields">Falta campos requeridos</string>
     <string name="no_internet_connection">Falta connecion a red</string>
     <string name="cannot_send_messages_internet_connection">Mensajes no pueden ser enviados sin connecion</string>
     <string name="cannot_create_class_internet_connection">Clases no pueden ser creardos sin connecion</string>
-    <string name="chat_box_hint">Dige algo...</string>
-    <string name="create_class_title_hint">Apreta aquí para cambiar titulo</string>
-    <string name="select_class_days_dialog_title">Seleccione qual días se pace la clase</string>
-    <string name="ok">Ok</string>
-    <string name="class_created">Clase creado</string>
-    <string name="missing_required_fields">Falta campos requeridos</string>
-    <string name="delete">Borrar</string>
     <string name="are_you_sure">¿Estas seguro?</string>
-    <string name="feedback">Feedback</string>
-    <string name="designed_and_created_by">Creado por Scott Quach</string>
-    <string name="translated_by">Espanol transliteracion por Joe Villegas</string>
+    <string name="signed_in">Registrado</string>
+    <string name="sign_in_success">Registrado</string>
+    <string name="sign_in_failed">Error regristrando</string>
+    <string name="signed_out">Session Cerrado</string>
 
-    <string name="intro_card1">Bienvenido</string>
-    <string name="intro_welcome">Organiza tu taeras con la forma mas natural: Communicacion.</string>
-    <string name="intro_card2">Natural Language</string>
-    <string name="intro_natural_language">Powered by powerful machine learning and NLP algorithms for constant improvement</string>
-    <string name="intro_card3">Designar sus clases</string>
-    <string name="intro_set_classes">Remember to set your classes and I\'ll remind you to give me your homework!</string>
-    <string name="intro_card4">Poner taeras</string>
-    <string name="intro_provide_homework">Once prompted, enter homework by replying. For example, \"Finish reading chapter 8 by next Monday\"</string>
-    <string name="intro_start">Vamanos</string>
+    <!-- Notification Strings -->
+    <string name="notify_title_homework_tracker">Asistente de Tareas</string>
+    <string name="notify_class_end_text">Dame tarea para </string>
+
 </resources>
