@@ -33,7 +33,7 @@ class JobNotifyClassEnd : JobService() {
     }
 
     override fun onStopJob(jobParameters: JobParameters): Boolean {
-        return false
+        return true
     }
 
     private fun notifyUser(jobParameters: JobParameters, userClass: String?) {

@@ -76,11 +76,15 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
             layoutManager = LinearLayoutManager(context)
         }
 
-        presenter.loadData()
 
         floating_create_class.setOnClickListener {
             listener?.switchToCreateFragment()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.loadData()
     }
 
     interface ScheduleDisplayInterface {

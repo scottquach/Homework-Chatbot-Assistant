@@ -5,6 +5,7 @@ import android.os.Handler
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import com.scottquach.homeworkchatbotassistant.presenters.ChatPresenter
@@ -86,18 +87,18 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
      * first time
      */
     fun receiveWelcomeMessages() {
-        val message1 = "Hi there I'm ${context.getString(R.string.assistant_name)}, here to help" +
+        val message1 = "Hi there I'm ${context.getString(R.string.assistant_name)}, here to help " +
                 "organize and assist you in your busy school life"
         val model1 = createReceivedMessage(message1)
 
-        val message2 = "If you haven't PLEASE SET YOUR CLASSES, as the app won't function properly" +
+        val message2 = "If you haven't PLEASE SET YOUR CLASSES, as the app won't function properly " +
                 "without your class information"
         val model2 = createReceivedMessage(message2)
 
-        val message3 = "If you have you have any questions feel free to ask me for help or even examples!"
+        val message3 = "If you have any questions feel free to ask me for help or even examples! "
         val model3 = createReceivedMessage(message3)
 
-        val message4 = "Otherwise welcome and thank you for giving me a try"
+        val message4 = "Otherwise welcome and thank you for giving me a try "
         val model4 = createReceivedMessage(message4)
 
         Timber.d("created welcome message")

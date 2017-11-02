@@ -1,10 +1,11 @@
-package com.scottquach.homeworkchatbotassistant
+package com.scottquach.homeworkchatbotassistant.database
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.scottquach.homeworkchatbotassistant.BaseApplication
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
@@ -62,8 +63,14 @@ class Database {
             userClasses.add(model)
         }
 
-        convoContext = dataSnapshot.child("users").child(user.uid).child("contexts").child("conversation").value as String
-        classContext = dataSnapshot.child("users").child(user.uid).child("contexts").child("class").value as String
+        if (!BaseApplication.getInstance().isFirstOpen) {
+            if (dataSnapshot.child("users").child(user.uid).child("contexts").child("conversation").value != null) {
+                convoContext = dataSnapshot.child("users").child(user.uid).child("contexts").child("conversation").value as String
+            }
+            if (dataSnapshot.child("users").child(user.uid).child("contexts").child("class").value != null) {
+                classContext = dataSnapshot.child("users").child(user.uid).child("contexts").child("class").value as String
+            }
+        }
     }
 
     /**

@@ -81,6 +81,7 @@ class ChatFragment : Fragment(), ChatContract.View, RecyclerQuickReplyAdapter.Qu
     }
 
     override fun textNoMessagesSetVisible() {
+        text_loading_messages.text = getString(R.string.no_messages)
         text_loading_messages.visibility = View.VISIBLE
     }
 

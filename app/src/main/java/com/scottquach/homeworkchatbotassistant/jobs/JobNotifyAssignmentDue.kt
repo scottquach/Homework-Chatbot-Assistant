@@ -22,7 +22,7 @@ import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
  */
 class JobNotifyAssignmentDue : JobService() {
     override fun onStopJob(jobParameters: JobParameters?): Boolean {
-        return false
+        return true
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -34,6 +34,7 @@ class JobNotifyAssignmentDue : JobService() {
 
         val handler = MessageHandler(this)
         handler.assignmentDueReminder(userAssignment, userClass)
+        jobFinished(jobParameters, false)
         return true
     }
 

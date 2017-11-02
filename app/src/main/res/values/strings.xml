@@ -48,4 +48,5 @@
     <string name="quick_reply_next_assignment">What should I work on next?</string>
     <string name="quick_reply_overdue">What\'s overdue?</string>
     <string name="quick_reply_current_assignments">What assignments do I have?</string>
+    <string name="no_messages">No Messages</string>
 </resources>

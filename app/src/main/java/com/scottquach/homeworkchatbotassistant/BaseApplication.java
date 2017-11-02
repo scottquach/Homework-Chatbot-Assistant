@@ -2,12 +2,9 @@ package com.scottquach.homeworkchatbotassistant;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.os.Build;
-import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.scottquach.homeworkchatbotassistant.database.Database;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;

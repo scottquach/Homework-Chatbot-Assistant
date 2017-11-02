@@ -31,9 +31,6 @@ class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
         MessageHandler(view.context, this)
     }
 
-    private val databaseReference = FirebaseDatabase.getInstance().reference
-    private val user = FirebaseAuth.getInstance().currentUser
-
     private lateinit var convoContext: String
     private lateinit var classContext: String
 
@@ -131,10 +128,10 @@ class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
         }
     }
 
-    override fun setDefaultContext() {
-        databaseReference.child("users").child(user!!.uid).child("contexts").child("conversation")
-                .setValue(Constants.CONETEXT_DEFAULT)
-    }
+//    override fun setDefaultContext() {
+//        databaseReference.child("users").child(user!!.uid).child("contexts").child("conversation")
+//                .setValue(Constants.CONETEXT_DEFAULT)
+//    }
 
     internal inner class DoTextRequestTask : AsyncTask<String, Void, AIResponse>() {
         private val exception: Exception? = null

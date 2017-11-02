@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.scottquach.homeworkchatbotassistant.AssignmentDatabaseManager
+import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
 import com.scottquach.homeworkchatbotassistant.inflate
