@@ -11,6 +11,7 @@ interface DisplayAssignmentsContract {
         fun toggleNoHomeworkLabelsVisible()
         fun toggleNoHomeworkLabelsInvisible()
         fun removeAssignment(position: Int)
+        fun resetData()
         fun addData(data: List<AssignmentModel>)
         fun notifyNoInternet()
     }

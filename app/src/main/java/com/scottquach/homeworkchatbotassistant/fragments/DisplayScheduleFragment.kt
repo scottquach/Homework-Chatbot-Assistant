@@ -22,6 +22,9 @@ import kotlinx.android.synthetic.main.fragment_display_schedule.*
  */
 class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdapterInterface,
         DisplayScheduleContract.View {
+    override fun resetData() {
+        scheduleAdapter?.resetData()
+    }
 
     override fun textNoAssignmentSetVisible() {
         text_no_classes.visibility = View.VISIBLE

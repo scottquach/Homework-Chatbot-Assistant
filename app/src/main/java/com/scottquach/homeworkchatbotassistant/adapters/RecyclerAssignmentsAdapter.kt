@@ -81,6 +81,10 @@ class RecyclerAssignmentsAdapter(private val context: Context,
         notifyItemRemoved(position)
     }
 
+    fun resetData(){
+        userAssignments.removeAll(userAssignments)
+    }
+
     class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindInformation(model: AssignmentModel) {

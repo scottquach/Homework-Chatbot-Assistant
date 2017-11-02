@@ -28,10 +28,12 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
     private lateinit var userClasses: MutableList<ClassModel>
 
     /**
-     * Retrieves data from Database and pushes it to the view to be displayed
+     * Retrieves data from Database and pushes it to the view to be displayed. Resets data
+     * before updating to make sure no repeats are shown
      */
     override fun loadData() {
         userClasses = BaseApplication.getInstance().database.getClasses().toMutableList()
+        view.resetData()
         view.addData(userClasses)
 
         if (userClasses.size > 0){

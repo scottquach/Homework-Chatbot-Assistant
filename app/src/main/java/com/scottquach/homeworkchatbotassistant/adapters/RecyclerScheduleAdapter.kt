@@ -54,6 +54,10 @@ class RecyclerScheduleAdapter(val fragment:DisplayScheduleFragment) :
         notifyItemRemoved(position)
     }
 
+    fun resetData() {
+        userClasses.removeAll(userClasses)
+    }
+
     override fun getItemCount() = userClasses.size
 
     class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {

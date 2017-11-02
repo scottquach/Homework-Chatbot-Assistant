@@ -25,10 +25,12 @@ class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : Displa
 
     /**
      * Deletes the assignment from the database and notifies the view of it's deletion. Toggles
-     * whether or not there are any assignments labels
+     * whether or not there are any assignments labels. Resets data before adding assignments to
+     * make sure no repeats are shown
      */
     override fun deleteAssignment(model: AssignmentModel, position: Int) {
         databaseReference.child("users").child(user!!.uid).child("assignments").child(model.key).removeValue()
+        view.resetData()
         view.removeAssignment(position)
         userAssignments.removeAt(position)
 
