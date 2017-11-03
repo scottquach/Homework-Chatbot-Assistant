@@ -43,7 +43,7 @@ class JobNotifyAssignmentDue : JobService() {
         val pendingIntent = PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val builder = NotificationCompat.Builder(context, "app_channel")
-                .setContentTitle(getString(R.string.notify_title_homework_tracker))
+                .setContentTitle(context.getString(R.string.notify_title_homework_tracker))
                 .setContentText("\"$userAssignment\" is due tomorrow for $userClass")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
