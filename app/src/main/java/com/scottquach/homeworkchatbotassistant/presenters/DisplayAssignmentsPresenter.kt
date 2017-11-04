@@ -30,7 +30,6 @@ class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : Displa
      */
     override fun deleteAssignment(model: AssignmentModel, position: Int) {
         databaseReference.child("users").child(user!!.uid).child("assignments").child(model.key).removeValue()
-        view.resetData()
         view.removeAssignment(position)
         userAssignments.removeAt(position)
 
@@ -44,6 +43,7 @@ class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : Displa
      * depending on data retrieved
      */
     override fun loadData() {
+        view.resetData()
         userAssignments = BaseApplication.getInstance().database.getAssignments().toMutableList()
         view.addData(userAssignments)
         if (userAssignments.size > 0) {

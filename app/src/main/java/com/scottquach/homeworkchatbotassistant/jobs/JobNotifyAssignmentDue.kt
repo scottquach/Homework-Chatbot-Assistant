@@ -1,11 +1,14 @@
 package com.scottquach.homeworkchatbotassistant.jobs
 
+import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
@@ -39,18 +42,30 @@ class JobNotifyAssignmentDue : JobService() {
     }
 
     private fun createNotification(context: Context, userAssignment: String, userClass: String) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel("channel_2", "assignment_channel", NotificationManager.IMPORTANCE_DEFAULT)
+            channel.enableLights(true)
+            channel.lightColor = Color.BLUE
+            channel.description = "Homework Assistant"
+            channel.enableVibration(true)
+
+            notificationManager.createNotificationChannel(channel)
+        }
+
         val intent = Intent(context, SignInActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
-        val builder = NotificationCompat.Builder(context, "app_channel")
-                .setContentTitle(getString(R.string.notify_title_homework_tracker))
+        val builder = NotificationCompat.Builder(context, "channel_2")
+                .setContentTitle("Homework Assistant")
                 .setContentText("\"$userAssignment\" is due tomorrow for $userClass")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
+                .setPriority(Notification.PRIORITY_HIGH)
                 .setAutoCancel(true)
 
         val notification = builder.build()
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(1012, notification)
     }
 }

@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.scottquach.homeworkchatbotassistant.database.BaseDatabase
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
@@ -28,9 +29,9 @@ import java.util.*
  * intent for NotifyClassEndReceiver
  */
 
-class NotifyClassEndManager(var context: Context) {
+class NotifyClassEndManager(var context: Context) : BaseDatabase(){
 
-    private lateinit var userClasses: MutableList<ClassModel>
+    private val userClasses = mutableListOf<ClassModel>()
 
     private var daysFromNow: Int = 0
 
@@ -48,9 +49,24 @@ class NotifyClassEndManager(var context: Context) {
         //If this wasn't called by a end class time job, just use current time
         previousEndTime.timeInMillis = specificEndTime
         Timber.d("Previous end time is ${previousEndTime.timeInMillis}")
-        userClasses = BaseApplication.getInstance().database.getClasses().toMutableList()
-        determineNextAlarm()
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                Timber.e("Database could not load dataSnapshot")
+            }
 
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.child("users").child(user!!.uid).child("classes").children) {
+                    val model = ClassModel()
+                    model.title = ds.child("title").value as String
+                    model.timeEnd = TimeModel(ds.child("timeEnd").child("timeEndHour").value as Long,
+                            ds.child("timeEnd").child("timeEndMinute").value as Long)
+                    ds.child("days").children.mapTo(model.days) { (it.value as Long).toInt() }
+
+                    userClasses.add(model)
+                }
+                determineNextAlarm()
+            }
+        })
     }
 
     private fun determineNextAlarm() {
@@ -93,6 +109,7 @@ class NotifyClassEndManager(var context: Context) {
                 iteratedDay = 1
             }
             daysFromNow++
+            Timber.d("Days from noew " + daysFromNow)
             classesOnDay = loadClassesOnDay()
             Timber.d("iterated")
         }
@@ -124,7 +141,6 @@ class NotifyClassEndManager(var context: Context) {
 //        today after current time
         if (nextClasses.isEmpty()) {
             occursOnDay = false
-            daysFromNow++
             Timber.d("classes was empty, occurs on another day")
             Timber.d(classesOnDay.toString())
             //Reload class of the day, except day is tomorrow

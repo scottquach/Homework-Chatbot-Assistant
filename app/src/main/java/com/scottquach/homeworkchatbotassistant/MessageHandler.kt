@@ -41,9 +41,19 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
         }
     }
 
-    private fun updateConvoContext(convoContext: String, classContext: String) {
-        databaseReference.child("users").child(user!!.uid).child("contexts").child("conversation").setValue(convoContext)
-        databaseReference.child("users").child(user.uid).child("contexts").child("class").setValue(classContext)
+    fun updateClassContext(classContext: String) {
+        databaseReference.child("users").child(user!!.uid).child("contexts")
+                .child("class").setValue(classContext)
+    }
+
+    fun updateConversationContext(conversationContext: String) {
+        databaseReference.child("users").child(user!!.uid).child("contexts")
+                .child("conversation").setValue(conversationContext)
+    }
+
+    fun updateAssignmentContext(assignmentContext: String) {
+        databaseReference.child("users").child(user!!.uid).child("contexts")
+                .child("assignment").setValue(assignmentContext)
     }
 
     fun addMessage(messageType: Int, message: String) {
@@ -140,7 +150,8 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
         model.timestamp = Timestamp(System.currentTimeMillis())
 
         saveMessagesToDatabase(listOf(model))
-        updateConvoContext(Constants.CONTEXT_PROMPT_HOMEWORK, userClass)
+        updateConversationContext(Constants.CONTEXT_PROMPT_HOMEWORK)
+        updateClassContext(userClass)
         return listOf(model)
     }
 
@@ -189,7 +200,7 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
         val model = createReceivedMessage("Assignment \"$assignment\" for $userClass on $dueDate saved")
 
         val assignmentKey = getAssignmentKey()
-        val assignmentModel = AssignmentModel(assignment, userClass, 0, dueDate, assignmentKey)
+        val assignmentModel = AssignmentModel(assignment, userClass.capitalize(), 0, dueDate, assignmentKey)
         databaseReference.child("users").child(user!!.uid).child("assignments")
                 .child(assignmentKey).setValue(assignmentModel)
         val assignmentManager = AssignmentDueManager(context)
@@ -209,7 +220,8 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
             val messageModel = createReceivedMessage("You don't have any upcoming assignments")
             saveMessagesToDatabase(listOf(messageModel))
         } else {
-            val messageModel = createReceivedMessage("Next assignment is \"${nextAssignment.title}\" for ${nextAssignment.userClass}")
+            val messageModel = createReceivedMessage("Next assignment is \"${nextAssignment.title}\" for ${nextAssignment.userClass} due " +
+                    "on ${nextAssignment.dueDate}")
             saveMessagesToDatabase(listOf(messageModel))
         }
     }
@@ -262,6 +274,7 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
                     val messageModel = createReceivedMessage("$assignmentNumber. \"${assignment.title}\"")
                     messages.add(messageModel)
                 }
+                assignmentNumber++
             }
             saveMessagesToDatabase(messages)
         }
