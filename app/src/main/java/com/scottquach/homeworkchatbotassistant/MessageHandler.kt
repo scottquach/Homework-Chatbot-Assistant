@@ -16,7 +16,8 @@ import java.sql.Timestamp
 /**
  * Created by Scott Quach on 9/15/2017.
  *
- * Responsible for sending out custom 'RECEIVE' messages (messages that the user receives)
+ * Responsible for handling database changes involving chat messages as well as loading messages
+ * from the database
  */
 
 class MessageHandler(val context: Context, val presenter: ChatPresenter? = null) {
@@ -26,6 +27,11 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
     val userMessages = mutableListOf<MessageModel>()
 
 
+    /**
+     * Adds a list of message models to the database
+     *
+     * @param delayResponse determines whether to delay the response to mimic a more natural experience
+     */
     private fun saveMessagesToDatabase(messageModels: List<MessageModel>, delayResponse: Boolean = true) {
         for (model in messageModels) {
             databaseReference.child("users").child(user!!.uid).child("messages").child(model.key).setValue(model)
@@ -56,6 +62,9 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
                 .child("assignment").setValue(assignmentContext)
     }
 
+    /**
+     * Adds a single message from the message string and messageType
+     */
     fun addMessage(messageType: Int, message: String) {
         val key = databaseReference.child("users").child(user!!.uid).child("messages").push().key
         val model = MessageModel(messageType.toLong(), message, Timestamp(System.currentTimeMillis()), key)
@@ -116,6 +125,9 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
         saveMessagesToDatabase(listOf(model1, model2, model3, model4))
     }
 
+    /**
+     * Creates and pushes default messages that provides the user with a short tutorial for help
+     */
     fun receiveHelp() {
         val stringMessages = arrayOf(
                 "If you haven't done so please specify your classes in the classes tab",
@@ -140,6 +152,8 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
         model.timestamp = Timestamp(System.currentTimeMillis())
 
         saveMessagesToDatabase(listOf(model))
+        updateAssignmentContext(userAssignment)
+        updateClassContext(userClass)
     }
 
     fun promptForAssignment(userClass: String): List<MessageModel> {
@@ -205,7 +219,10 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
                 .child(assignmentKey).setValue(assignmentModel)
         val assignmentManager = AssignmentDueManager(context)
         assignmentManager.startNextAlarm(assignmentModel)
+
         saveMessagesToDatabase(listOf(model))
+        updateAssignmentContext(assignment)
+        updateClassContext(userClass)
     }
 
     /**
@@ -223,6 +240,8 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
             val messageModel = createReceivedMessage("Next assignment is \"${nextAssignment.title}\" for ${nextAssignment.userClass} due " +
                     "on ${nextAssignment.dueDate}")
             saveMessagesToDatabase(listOf(messageModel))
+            updateAssignmentContext(nextAssignment.title)
+            updateClassContext(nextAssignment.userClass)
         }
     }
 

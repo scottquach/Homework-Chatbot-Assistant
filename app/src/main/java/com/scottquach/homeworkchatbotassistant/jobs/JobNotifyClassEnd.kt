@@ -12,7 +12,6 @@ import android.graphics.Color
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
-import android.widget.Toast
 
 import com.scottquach.homeworkchatbotassistant.Constants
 import com.scottquach.homeworkchatbotassistant.MessageHandler
@@ -24,6 +23,8 @@ import timber.log.Timber
 
 /**
  * Created by scott on 10/11/2017.
+ * When called, notifies the user through a notification and in app message to provide homework
+ * for the ending class. Calls the NotifyClassEndManager to schedule the job for the next class
  */
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

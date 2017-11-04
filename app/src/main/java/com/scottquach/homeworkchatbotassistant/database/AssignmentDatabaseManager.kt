@@ -1,6 +1,9 @@
 package com.scottquach.homeworkchatbotassistant.database
 
 import android.content.Context
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.scottquach.homeworkchatbotassistant.BaseApplication
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
@@ -82,8 +85,21 @@ class AssignmentDatabaseManager : BaseDatabase() {
      * Number of assignments completed are kept track for future user profile summaries, this
      * increments the number of completed assignments and is called when an assignment is deleted.
      */
-    fun addToNumberOfCompletedAssignments(context: Context) {
+    fun addToNumberOfCompletedAssignments() {
+        databaseReference.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onCancelled(p0: DatabaseError?) {
+                Timber.e("Could not load data")
+            }
 
+            override fun onDataChange(p0: DataSnapshot) {
+                var totalCount = p0.child("users").child(user!!.uid).child("profile").child("completed_assignments").value as Long
+                if (totalCount != null && totalCount > 0) {
+                    databaseReference.child("users").child(user!!.uid).child("profile").child("completed_assignments").setValue(++totalCount)
+                } else {
+                    databaseReference.child("users").child(user!!.uid).child("profile").child("completed_assignments").setValue(1)
+                }
+            }
+        })
     }
 
     companion object {

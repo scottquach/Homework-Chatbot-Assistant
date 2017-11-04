@@ -7,8 +7,6 @@ import ai.api.model.AIContext
 import ai.api.model.AIResponse
 import ai.api.model.Result
 import android.os.AsyncTask
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.contracts.ChatContract
 import com.scottquach.homeworkchatbotassistant.fragments.ChatFragment
@@ -21,7 +19,6 @@ import java.util.ArrayList
  * Created by Scott Quach on 10/25/2017.
  */
 class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
-
 
     private val aiService: AIService
 
@@ -104,7 +101,6 @@ class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
                 } else {
                     messageHandler.confirmNewAssignment(assignment!!, classContext, date!!)
                 }
-//                defaultContext()
             }
             Constants.ACTION_OVERDUE_ASSIGNMENTS -> {
                 messageHandler.getOverdueAssignments(view.context)
@@ -127,11 +123,6 @@ class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter {
             }
         }
     }
-
-//    override fun setDefaultContext() {
-//        databaseReference.child("users").child(user!!.uid).child("contexts").child("conversation")
-//                .setValue(Constants.CONETEXT_DEFAULT)
-//    }
 
     internal inner class DoTextRequestTask : AsyncTask<String, Void, AIResponse>() {
         private val exception: Exception? = null
