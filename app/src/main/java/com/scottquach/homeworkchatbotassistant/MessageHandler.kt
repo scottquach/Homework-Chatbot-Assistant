@@ -9,6 +9,7 @@ import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManage
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import com.scottquach.homeworkchatbotassistant.presenters.ChatPresenter
+import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import timber.log.Timber
 
 import java.sql.Timestamp
@@ -211,7 +212,8 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
     fun confirmNewAssignment(assignment: String, userClass: String,
                              dueDate: String) {
 
-        val model = createReceivedMessage("Assignment \"$assignment\" for $userClass on $dueDate saved")
+        val model = createReceivedMessage("Assignment \"$assignment\" for $userClass on " +
+                "${StringUtils.convertStoredDateToAmericanDate(dueDate)} saved")
 
         val assignmentKey = getAssignmentKey()
         val assignmentModel = AssignmentModel(assignment, userClass.capitalize(), 0, dueDate, assignmentKey)
@@ -238,7 +240,7 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
             saveMessagesToDatabase(listOf(messageModel))
         } else {
             val messageModel = createReceivedMessage("Next assignment is \"${nextAssignment.title}\" for ${nextAssignment.userClass} due " +
-                    "on ${nextAssignment.dueDate}")
+                    "on ${StringUtils.convertStoredDateToAmericanDate(nextAssignment.dueDate)}")
             saveMessagesToDatabase(listOf(messageModel))
             updateAssignmentContext(nextAssignment.title)
             updateClassContext(nextAssignment.userClass)

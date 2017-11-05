@@ -10,6 +10,7 @@ import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
 import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
+import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import kotlinx.android.synthetic.main.row_assignment.view.*
 
 /**
@@ -91,7 +92,7 @@ class RecyclerAssignmentsAdapter(private val context: Context,
             itemView.apply {
                 text_assignment_title.text = model.title
                 text_assignment_class.text = model.userClass
-                text_assignment_due_date.text = model.dueDate
+                text_assignment_due_date.text = StringUtils.convertStoredDateToAmericanDate(model.dueDate)
             }
         }
     }
@@ -102,7 +103,7 @@ class RecyclerAssignmentsAdapter(private val context: Context,
             itemView.apply {
                 text_assignment_title.text = model.title
                 text_assignment_class.text = model.userClass
-                text_assignment_due_date.text = model.dueDate
+                text_assignment_due_date.text = StringUtils.convertStoredDateToAmericanDate(model.dueDate)
             }
         }
     }

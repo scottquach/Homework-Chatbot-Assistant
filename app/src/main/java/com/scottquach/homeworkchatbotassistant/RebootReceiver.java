@@ -14,5 +14,8 @@ public class RebootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         NotifyClassEndManager manager = new NotifyClassEndManager(context);
         manager.startManaging(System.currentTimeMillis());
+
+
+
     }
 }
