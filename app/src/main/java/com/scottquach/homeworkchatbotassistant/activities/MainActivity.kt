@@ -20,6 +20,7 @@ import com.scottquach.homeworkchatbotassistant.MessageHandler
 import com.scottquach.homeworkchatbotassistant.R
 
 import android.app.Dialog
+import android.app.NotificationManager
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -87,6 +88,8 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
     override fun onResume() {
         super.onResume()
         requestPermissions()
+        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll()
     }
 
     private fun requestPermissions() {

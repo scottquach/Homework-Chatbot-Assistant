@@ -74,8 +74,7 @@
     <!-- Feedback Activity Strings -->
     <string name="email_email_to">chuckglobal@gmail.com</string>
     <string name="email_email_subject">Homework Assistant Feedback</string>
-    <string name="email_feedback_starting_text">Hi Scott, here is my feedback on your app:
-    </string>
+    <string name="email_feedback_starting_text">Type feedback below:</string>
     <string name="email_select_client">Select client to email feedback:</string>
     <string name="email_error_sending">Error sending feedback email</string>
 

@@ -53,8 +53,6 @@ class SettingsActivity : AppCompatActivity(), SettingsContract.View {
             presenter.onBackButton()
         }
 
-
-
 //        val testButton = findViewById<View>(R.id.button_test) as Button
 //        testButton.setOnClickListener {
 //            JobSchedulerUtil.cancelAllJobs(this@SettingsActivity)

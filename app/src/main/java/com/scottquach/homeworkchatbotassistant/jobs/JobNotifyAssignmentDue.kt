@@ -41,7 +41,7 @@ class JobNotifyAssignmentDue : JobService() {
         return true
     }
 
-    private fun createNotification(context: Context, userAssignment: String, userClass: String) {
+     fun createNotification(context: Context, userAssignment: String, userClass: String) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -66,6 +66,6 @@ class JobNotifyAssignmentDue : JobService() {
                 .setAutoCancel(true)
 
         val notification = builder.build()
-        notificationManager.notify(1012, notification)
+        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
     }
 }
