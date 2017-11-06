@@ -9,8 +9,9 @@ import com.scottquach.homeworkchatbotassistant.models.ClassModel
 interface DisplayScheduleContract {
 
     interface View {
-        fun textNoAssignmentSetVisible()
-        fun textNoAssignmentSetInvisible()
+        fun textLabelSetVisible()
+        fun textLabelSetInvisible()
+        fun setTextLabel(message: String)
         fun removeClass(position: Int)
         fun resetData()
         fun addData(data: List<ClassModel>)
@@ -18,7 +19,8 @@ interface DisplayScheduleContract {
     }
 
     interface Presenter {
-        fun loadData()
+        fun requestLoadData()
+        fun onDataLoaded(loadedData: List<ClassModel>)
         fun deleteClass(context: Context, model: ClassModel, position: Int)
     }
 }

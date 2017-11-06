@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.scottquach.homeworkchatbotassistant.BaseApplication
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
+import com.scottquach.homeworkchatbotassistant.presenters.DisplayAssignmentsPresenter
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import timber.log.Timber
 import java.util.*
@@ -16,10 +17,36 @@ import java.util.*
  * Responsible for containing helper methods that involve retrieving assignments based on time,
  * such as retrieving overdue assignments or the next upcoming assignment
  */
-class AssignmentDatabaseManager : BaseDatabase() {
+class AssignmentDatabaseManager(val presenter: DisplayAssignmentsPresenter? = null) : BaseDatabase() {
 
     private var userAssignments: MutableList<AssignmentModel> = BaseApplication.getInstance().database
             .getAssignments().toMutableList()
+
+    /**
+     * Loads data for DisplayAssignmentsPresenter
+     */
+    fun loadData() {
+        databaseReference.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onCancelled(p0: DatabaseError?) {
+                Timber.e("Error loading data")
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                userAssignments.removeAll(userAssignments)
+                for (ds in dataSnapshot.child("users").child(user!!.uid).child("assignments").children) {
+                    val model = AssignmentModel()
+                    model.title = ds.child("title").value as String
+                    model.dueDate = ds.child("dueDate").value as String
+                    model.userClass = ds.child("userClass").value as String
+                    model.scale = (ds.child("scale").value as Long).toInt()
+                    model.key = ds.child("key").value as String
+
+                    userAssignments.add(model)
+                }
+                presenter?.onDataLoaded(userAssignments.toList())
+            }
+        })
+    }
 
     /**
      * Returns the model of the next assignment that is due, does not include overdue assignments.
@@ -92,9 +119,12 @@ class AssignmentDatabaseManager : BaseDatabase() {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                var totalCount = p0.child("users").child(user!!.uid).child("profile").child("completed_assignments").value as Long
-                if (totalCount != null && totalCount > 0) {
-                    databaseReference.child("users").child(user!!.uid).child("profile").child("completed_assignments").setValue(++totalCount)
+                var totalCount = p0.child("users").child(user!!.uid).child("profile").child("completed_assignments").value
+
+                if (totalCount != null) {
+                    if ((totalCount as Long) > 0) {
+                        databaseReference.child("users").child(user!!.uid).child("profile").child("completed_assignments").setValue(++totalCount)
+                    }
                 } else {
                     databaseReference.child("users").child(user!!.uid).child("profile").child("completed_assignments").setValue(1)
                 }

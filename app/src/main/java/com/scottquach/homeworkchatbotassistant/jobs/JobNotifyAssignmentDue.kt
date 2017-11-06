@@ -1,9 +1,6 @@
 package com.scottquach.homeworkchatbotassistant.jobs
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
@@ -51,7 +48,6 @@ class JobNotifyAssignmentDue : JobService() {
             channel.description = "Homework Assistant"
             channel.enableVibration(true)
 
-            notificationManager.createNotificationChannel(channel)
         }
 
         val intent = Intent(context, SignInActivity::class.java)

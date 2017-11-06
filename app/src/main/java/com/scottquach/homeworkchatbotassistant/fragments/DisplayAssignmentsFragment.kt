@@ -50,7 +50,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     override fun onResume() {
         super.onResume()
-        presenter.loadData()
+        presenter.requestLoadData()
     }
 
     override fun delete(model: AssignmentModel, position: Int) {

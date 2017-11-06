@@ -3,7 +3,6 @@
     package="com.scottquach.homeworkchatbotassistant">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -14,10 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.ClassScheduleActivity" />
         <activity android:name=".activities.SignInActivity"></activity>
-
-        <activity android:name=".activities.DisplayAssignmentsActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.IntroActivity">
 

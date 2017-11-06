@@ -22,26 +22,7 @@ import kotlinx.android.synthetic.main.fragment_display_schedule.*
  */
 class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdapterInterface,
         DisplayScheduleContract.View {
-    override fun resetData() {
-        scheduleAdapter?.resetData()
-    }
 
-    override fun textNoAssignmentSetVisible() {
-        text_no_classes.visibility = View.VISIBLE
-    }
-
-    override fun textNoAssignmentSetInvisible() {
-        text_no_classes.visibility = View.INVISIBLE
-    }
-
-    override fun removeClass(position: Int) {
-        scheduleAdapter?.removeItem(position)
-    }
-
-    override fun addData(data: List<ClassModel>) {
-        scheduleAdapter?.add(data)
-        scheduleAdapter?.notifyDataSetChanged()
-    }
 
     private var listener: ScheduleDisplayInterface? = null
 
@@ -87,11 +68,36 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
 
     override fun onResume() {
         super.onResume()
-        presenter.loadData()
+        presenter.requestLoadData()
     }
 
     interface ScheduleDisplayInterface {
         fun switchToCreateFragment()
+    }
+
+    override fun setTextLabel(message: String) {
+        text_label_classes.text = message
+    }
+
+    override fun resetData() {
+        scheduleAdapter?.resetData()
+    }
+
+    override fun textLabelSetVisible() {
+        text_label_classes.visibility = View.VISIBLE
+    }
+
+    override fun textLabelSetInvisible() {
+        text_label_classes.visibility = View.INVISIBLE
+    }
+
+    override fun removeClass(position: Int) {
+        scheduleAdapter?.removeItem(position)
+    }
+
+    override fun addData(data: List<ClassModel>) {
+        scheduleAdapter?.add(data)
+        scheduleAdapter?.notifyDataSetChanged()
     }
 
     override fun deleteClass(model: ClassModel, position: Int) {

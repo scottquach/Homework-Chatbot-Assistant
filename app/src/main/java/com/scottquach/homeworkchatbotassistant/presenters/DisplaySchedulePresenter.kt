@@ -8,10 +8,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.scottquach.homeworkchatbotassistant.BaseApplication
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.contracts.DisplayScheduleContract
+import com.scottquach.homeworkchatbotassistant.database.ClassDatabaseManager
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import timber.log.Timber
@@ -25,20 +25,36 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
     private val databaseReference = FirebaseDatabase.getInstance().reference
     private val user = FirebaseAuth.getInstance().currentUser
 
-    private lateinit var userClasses: MutableList<ClassModel>
+    private val userClasses = mutableListOf<ClassModel>()
+
+    private val database by lazy {
+        ClassDatabaseManager(this)
+    }
 
     /**
      * Retrieves data from Database and pushes it to the view to be displayed. Resets data
      * before updating to make sure no repeats are shown
      */
-    override fun loadData() {
-        userClasses = BaseApplication.getInstance().database.getClasses().toMutableList()
+    override fun requestLoadData() {
         view.resetData()
+        view.setTextLabel("Loading Classes")
+        view.textLabelSetVisible()
+        database.loadData()
+    }
+
+    /**
+     * Called by database when data is loaded
+     */
+    override fun onDataLoaded(loadedData: List<ClassModel>) {
+        userClasses.addAll(loadedData)
         view.addData(userClasses)
 
-        if (userClasses.size > 0){
-            view.textNoAssignmentSetInvisible()
-        } else view.textNoAssignmentSetVisible()
+        if (userClasses.size > 0) {
+            view.textLabelSetInvisible()
+        } else {
+            view.setTextLabel("No Classes")
+            view.textLabelSetVisible()
+        }
     }
 
     /**
@@ -69,9 +85,9 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
                         view.removeClass(position)
                         userClasses.removeAt(position)
 
-                        if (userClasses.size > 0){
-                            view.textNoAssignmentSetInvisible()
-                        } else view.textNoAssignmentSetVisible()
+                        if (userClasses.size > 0) {
+                            view.textLabelSetInvisible()
+                        } else view.textLabelSetVisible()
                     }
                 })
                 .setNegativeButton(context.getString(R.string.cancel), object : DialogInterface.OnClickListener {

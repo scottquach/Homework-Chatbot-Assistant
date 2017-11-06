@@ -14,14 +14,15 @@ import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
  */
 class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : DisplayAssignmentsContract.Presenter {
 
+
     private val databaseReference = FirebaseDatabase.getInstance().reference
     private val user = FirebaseAuth.getInstance().currentUser
 
     private val database by lazy {
-        AssignmentDatabaseManager()
+        AssignmentDatabaseManager(this)
     }
 
-    private lateinit var userAssignments: MutableList<AssignmentModel>
+    private val userAssignments = mutableListOf<AssignmentModel>()
 
     /**
      * Deletes the assignment from the database and notifies the view of it's deletion. Toggles
@@ -33,18 +34,26 @@ class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : Displa
         view.removeAssignment(position)
         userAssignments.removeAt(position)
 
+        database.addToNumberOfCompletedAssignments()
+
         if (userAssignments.size > 0) {
             view.toggleNoHomeworkLabelsInvisible()
         } else view.toggleNoHomeworkLabelsVisible()
     }
 
     /**
-     * Loads data from the database and pushes it to the view to be displayed. Toggles the no homework labels
-     * depending on data retrieved
+     * Calls to the database to start loading data
      */
-    override fun loadData() {
+    override fun requestLoadData() {
+        database.loadData()
+    }
+
+    /**
+     * Called by database once the data is loaded
+     */
+    override fun onDataLoaded(loadedData: List<AssignmentModel>) {
         view.resetData()
-        userAssignments = BaseApplication.getInstance().database.getAssignments().toMutableList()
+        userAssignments.addAll(loadedData)
         view.addData(userAssignments)
         if (userAssignments.size > 0) {
             view.toggleNoHomeworkLabelsInvisible()
