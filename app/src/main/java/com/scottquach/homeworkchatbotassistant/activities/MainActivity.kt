@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
 
         if (BaseApplication.getInstance().isFirstOpen) {
             Timber.d("first open")
-            val handler = MessageHandler(this)
+            val handler = MessageHandler(this, this)
             handler.receiveWelcomeMessages()
             BaseApplication.getInstance().sharePref.edit().putBoolean("first_open", false).apply()
         } else {

@@ -32,7 +32,7 @@ class JobNotifyAssignmentDue : JobService() {
 
         createNotification(this, userAssignment, userClass)
 
-        val handler = MessageHandler(this)
+        val handler = MessageHandler(this, this)
         handler.assignmentDueReminder(userAssignment, userClass)
         jobFinished(jobParameters, false)
         return true

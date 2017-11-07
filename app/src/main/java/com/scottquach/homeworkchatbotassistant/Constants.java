@@ -33,4 +33,8 @@ public class Constants {
     public static final String CLASS_END_TIME = "class_end_time";
     public static final String USER_CLASS = "user_class";
     public static final String USER_ASSIGNMENT = "user_assignment";
+
+
+    //Notifications
+    public static final String RESULT_KEY = "class_end_reply";
 }

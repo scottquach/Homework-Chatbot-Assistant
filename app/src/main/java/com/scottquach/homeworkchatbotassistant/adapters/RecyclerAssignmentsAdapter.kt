@@ -83,7 +83,7 @@ class RecyclerAssignmentsAdapter(private val context: Context,
     }
 
     fun resetData(){
-        userAssignments.removeAll(userAssignments)
+        userAssignments.clear()
     }
 
     class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -1,9 +1,6 @@
 package com.scottquach.homeworkchatbotassistant.jobs
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
@@ -12,11 +9,10 @@ import android.graphics.Color
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.app.RemoteInput
+import com.scottquach.homeworkchatbotassistant.*
+import com.scottquach.homeworkchatbotassistant.receivers.NotificationReplyReceiver
 
-import com.scottquach.homeworkchatbotassistant.Constants
-import com.scottquach.homeworkchatbotassistant.MessageHandler
-import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
-import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
 
 import timber.log.Timber
@@ -44,7 +40,7 @@ class JobNotifyClassEnd : JobService() {
         Timber.d("ON RECEIVE WAS CALLED")
         createNotification(this, userClass!!)
 
-        val messageHandler = MessageHandler(this)
+        val messageHandler = MessageHandler(this, this)
         messageHandler.promptForAssignment(userClass!!)
 
         val manager = NotifyClassEndManager(this)
@@ -53,7 +49,7 @@ class JobNotifyClassEnd : JobService() {
         jobFinished(jobParameters, false)
     }
 
-    private fun createNotification(context: Context, userClass: String) {
+    fun createNotification(context: Context, userClass: String) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -65,6 +61,18 @@ class JobNotifyClassEnd : JobService() {
 
             notificationManager.createNotificationChannel(channel)
         }
+
+        val remoteInput = RemoteInput.Builder(Constants.RESULT_KEY)
+                .setLabel("reply")
+                .build()
+        val replyIntent = Intent(context, NotificationReplyReceiver::class.java)
+        val replyPendingIntent = PendingIntent.getBroadcast(context, 203,
+                replyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val action = NotificationCompat.Action.Builder(R.drawable.ic_send, "reply", replyPendingIntent)
+                .addRemoteInput(remoteInput)
+                .build()
+
+
         Timber.d("showing notification")
         val intent = Intent(context, SignInActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 102, intent, PendingIntent.FLAG_CANCEL_CURRENT)
@@ -76,6 +84,7 @@ class JobNotifyClassEnd : JobService() {
                 .setContentIntent(pendingIntent)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setAutoCancel(true)
+                .addAction(action)
 
         val notification = builder.build()
         notificationManager.notify(1011, notification)

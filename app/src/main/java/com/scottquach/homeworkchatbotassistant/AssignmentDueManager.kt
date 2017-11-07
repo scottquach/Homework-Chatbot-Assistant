@@ -5,14 +5,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.widget.Toast
+import com.scottquach.homeworkchatbotassistant.receivers.AssignmentDueReceiver
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import timber.log.Timber
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**

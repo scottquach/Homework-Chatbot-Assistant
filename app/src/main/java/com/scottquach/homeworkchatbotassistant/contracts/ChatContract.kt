@@ -1,6 +1,5 @@
 package com.scottquach.homeworkchatbotassistant.contracts
 
-import ai.api.model.Result
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 
 /**
@@ -19,9 +18,6 @@ interface ChatContract {
 
     interface Presenter {
         fun loadData()
-        fun messagesLoaded()
-        fun determineResponseActions(result: Result)
-        fun onMessageAdded(model: MessageModel)
 //        fun setDefaultContext()
         fun onSendMessageButtonClicked()
         fun addMessage(message: String)

@@ -1,32 +1,51 @@
 package com.scottquach.homeworkchatbotassistant
 
+import ai.api.AIConfiguration
+import ai.api.RequestExtras
+import ai.api.android.AIService
+import ai.api.model.AIContext
+import ai.api.model.AIResponse
+import ai.api.model.Result
 import android.content.Context
+import android.os.AsyncTask
 import android.os.Handler
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager
+import com.scottquach.homeworkchatbotassistant.database.BaseDatabase
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
-import com.scottquach.homeworkchatbotassistant.presenters.ChatPresenter
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import timber.log.Timber
 
 import java.sql.Timestamp
+import java.util.ArrayList
 
 /**
  * Created by Scott Quach on 9/15/2017.
  *
- * Responsible for handling database changes involving chat messages as well as loading messages
- * from the database
+ * Responsible for pushing new messages to the database, if a presenter is present it also
+ * notifies the presenter of these changes in order to update the UI
  */
 
-class MessageHandler(val context: Context, val presenter: ChatPresenter? = null) {
+class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
 
-    private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
-    private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    val userMessages = mutableListOf<MessageModel>()
+    private val aiService: AIService
 
+    private var listener: CallbackInterface? = null
+
+    interface CallbackInterface {
+        fun messagesCallback(model: MessageModel)
+    }
+
+    init {
+        if (caller is CallbackInterface) {
+            listener = caller as CallbackInterface
+        }
+        val config = ai.api.android.AIConfiguration("35b6e6bf57cf4c6dbeeb18b1753471ab",
+                AIConfiguration.SupportedLanguages.English,
+                ai.api.android.AIConfiguration.RecognitionEngine.System)
+        aiService = AIService.getService(context, config)
+    }
 
     /**
      * Adds a list of message models to the database
@@ -41,10 +60,10 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
                 if (model.type.toInt() == MessageType.RECEIVED) {
                     val handler = Handler()
                     handler.postDelayed(Runnable {
-                        presenter?.onMessageAdded(model)
+                        listener?.messagesCallback(model)
                     }, 500)
-                } else presenter?.onMessageAdded(model)
-            } else presenter?.onMessageAdded(model)
+                } else listener?.messagesCallback(model)
+            } else listener?.messagesCallback(model)
         }
     }
 
@@ -63,6 +82,18 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
                 .child("assignment").setValue(assignmentContext)
     }
 
+    fun getClassContext() : String {
+        return BaseApplication.getInstance().database.getClassContext()
+    }
+
+    fun getConversationContext() : String {
+        return BaseApplication.getInstance().database.getConvoContext()
+    }
+
+    fun getAssignmentContext() : String {
+        return "Default"
+    }
+
     /**
      * Adds a single message from the message string and messageType
      */
@@ -72,34 +103,11 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
         saveMessagesToDatabase(listOf(model))
     }
 
-    fun loadMessages() {
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError?) {
-                Timber.e("Database could not load dataSnapshot")
-            }
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (ds in dataSnapshot.child("users").child(user!!.uid).child("messages").children) {
-                    val messageModel = MessageModel()
-                    messageModel.type = ds.child("type").value as Long
-                    messageModel.message = ds.child("message").value as String
-                    messageModel.timestamp = Timestamp((ds.child("timestamp").child("time").value as Long))
-                    userMessages.add(messageModel)
-                }
-                presenter?.messagesLoaded()
-            }
-        })
-    }
-
     /**
-     * Retrieve a copy of the list of user messages
-     *
-     * @return copy
+     * Sends the message to DialogFlow for processing in order to receive an appropriate response
      */
-    fun getMessages(): List<MessageModel> {
-        val copy = mutableListOf<MessageModel>()
-        copy.addAll(userMessages)
-        return copy
+    fun processNewMessage(message: String) {
+        DoTextRequestTask().execute(message)
     }
 
     /**
@@ -349,6 +357,95 @@ class MessageHandler(val context: Context, val presenter: ChatPresenter? = null)
     }
 
     private fun getMessageKey() = databaseReference.child("users").child(user!!.uid).child("messages").push().key
-
     private fun getAssignmentKey() = databaseReference.child("users").child(user!!.uid).child("assignments").push().key
+
+    fun determineResponseActions(result: Result) {
+        when (result.action) {
+            Constants.ACTION_ASSIGNMENT_SPECIFIC_CLASS -> {
+                Timber.d("Action was specific class")
+                val params = result.parameters
+                val date = params["date"]?.asString?.trim()
+                val assignment = params["assignment-official"]?.asString?.trim()
+                val userClass = params["class"]?.asString?.trim()
+
+                if (date.isNullOrEmpty() || assignment.isNullOrEmpty() || userClass.isNullOrEmpty()) {
+                    val textResponse = result.fulfillment.speech
+                    addMessage(MessageType.RECEIVED, textResponse)
+                } else {
+                    confirmNewAssignmentSpecificClass(assignment!!, userClass!!, date!!)
+                }
+            }
+            Constants.ACTION_ASSIGNMENT_PROMPTED_CLASS -> {
+                Timber.d("Action was prompted class")
+                val params = result.parameters
+                val date = params["date"]?.asString?.trim()
+                val assignment = params["assignment-official"]?.asString?.trim()
+
+                if (date.isNullOrEmpty() || assignment.isNullOrEmpty()) {
+                    val textResponse = result.fulfillment.speech
+                    addMessage(MessageType.RECEIVED, textResponse)
+                } else {
+                    confirmNewAssignment(assignment!!, getClassContext(), date!!)
+                }
+            }
+            Constants.ACTION_OVERDUE_ASSIGNMENTS -> {
+                getOverdueAssignments(context)
+            }
+            Constants.ACTION_NEXT_ASSIGNMENT -> {
+                getNextAssignment(context)
+            }
+            Constants.ACTION_REQUEST_HELP -> {
+                receiveHelp()
+            }
+            Constants.ACTION_CURRENT_ASSIGNMENTS -> {
+                getCurrentAssignments(context)
+            }
+            Constants.ACTION_EXAMPLE -> {
+                getExamples(context)
+            }
+            else -> {
+                val textResponse = result.fulfillment.speech
+                addMessage(MessageType.RECEIVED, textResponse)
+            }
+        }
+    }
+
+    internal inner class DoTextRequestTask : AsyncTask<String, Void, AIResponse>() {
+        private val exception: Exception? = null
+
+        override fun doInBackground(vararg text: String): AIResponse? {
+            var resp: AIResponse? = null
+            try {
+                resp = run {
+                    val contexts = ArrayList<AIContext>()
+                    contexts.add(AIContext(getConversationContext()))
+                    Timber.d("context is " + getConversationContext())
+                    val requestExtras = RequestExtras(contexts, null)
+                    aiService.textRequest(text[0], requestExtras)
+                }
+            } catch (e: Exception) {
+                Timber.d(e)
+            }
+            return resp
+        }
+
+        override fun onPostExecute(response: AIResponse?) {
+            if (response != null && !response.isError) {
+                val result = response.result
+
+                val params = result.parameters
+                if (params != null && !params.isEmpty()) {
+                    for ((key, value) in params) {
+                        Timber.d(String.format("%s: %s", key, value.toString()))
+                    }
+                }
+
+                Timber.d("Query:" + result.resolvedQuery +
+                        "\nAction: " + result.action)
+                determineResponseActions(result)
+            } else {
+                Timber.d("API.AI response was an error ")
+            }
+        }
+    }
 }
