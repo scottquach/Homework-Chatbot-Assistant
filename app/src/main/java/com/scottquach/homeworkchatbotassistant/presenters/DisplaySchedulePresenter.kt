@@ -37,7 +37,7 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
      */
     override fun requestLoadData() {
         view.resetData()
-        view.setTextLabel("Loading Classes")
+        view.setTextLabel(view.context.getString(R.string.loading_classes))
         view.textLabelSetVisible()
         database.loadData()
     }

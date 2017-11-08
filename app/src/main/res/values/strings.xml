@@ -15,7 +15,7 @@
 
     <!-- IntroActivity Strings: WIP! -->
     <string name="intro_card1">Welcome</string>
-    <string name="intro_welcome">Organize your homework with ease of just typing it out.</string>
+    <string name="intro_welcome">Organize your homework with the ease of just typing it out.</string>
     <string name="intro_card2">Natural Language</string>
     <string name="intro_natural_language">Powered by powerful machine learning and NLP algorithms for constant improvement.</string>
     <string name="intro_card3">Set Your Classes</string>
@@ -98,5 +98,6 @@
     <!-- Notification Strings -->
     <string name="notify_assignment_due_title">Homework Tracker</string>
     <string name="notify_class_end_text">Give me homework for </string>
+    <string name="loading_classes">Loading Classes</string>
 
 </resources>

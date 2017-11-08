@@ -109,7 +109,7 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
      */
     override fun notifyNoInternet() {
         AlertDialogFragment.newInstance(getString(R.string.no_internet_connection),
-                getString(R.string.cannot_send_messages_internet_connection), positiveString = "Ok",haveNegative = false)
+                getString(R.string.cannot_send_messages_internet_connection), positiveString = getString(R.string.ok),haveNegative = false)
                 .show(fragmentManager, AlertDialogFragment::class.java.name)
     }
 }
