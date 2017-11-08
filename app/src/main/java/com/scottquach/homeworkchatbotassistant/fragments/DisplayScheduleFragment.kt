@@ -35,7 +35,6 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
         super.onAttach(context)
         if (context is ScheduleDisplayInterface) {
             listener = context
-            presenter = DisplaySchedulePresenter(this)
         } else {
             throw RuntimeException(context!!.toString() + " must implement ScheduleDisplayInterface")
         }
@@ -68,6 +67,7 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
 
     override fun onResume() {
         super.onResume()
+        presenter = DisplaySchedulePresenter(this)
         presenter.requestLoadData()
     }
 

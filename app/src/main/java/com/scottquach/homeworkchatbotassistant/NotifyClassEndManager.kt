@@ -135,6 +135,7 @@ class NotifyClassEndManager(var context: Context) : BaseDatabase(){
 //        today after current time
         if (nextClasses.isEmpty()) {
             occursOnDay = false
+            daysFromNow++
             Timber.d("classes was empty, occurs on another day")
             Timber.d(classesOnDay.toString())
             //Reload class of the day, except day is tomorrow

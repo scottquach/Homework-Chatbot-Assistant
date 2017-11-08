@@ -12,6 +12,7 @@ import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import kotlinx.android.synthetic.main.row_assignment.view.*
+import timber.log.Timber
 
 /**
  * Created by Scott Quach on 9/22/2017.
@@ -75,6 +76,8 @@ class RecyclerAssignmentsAdapter(private val context: Context,
 
     fun add(model: AssignmentModel) {
         userAssignments.add(model)
+        Timber.d(userAssignments.toString())
+        notifyDataSetChanged()
     }
 
     fun removeItem(position: Int) {
@@ -84,6 +87,8 @@ class RecyclerAssignmentsAdapter(private val context: Context,
 
     fun resetData(){
         userAssignments.clear()
+        Timber.d(userAssignments.toString())
+        notifyDataSetChanged()
     }
 
     class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

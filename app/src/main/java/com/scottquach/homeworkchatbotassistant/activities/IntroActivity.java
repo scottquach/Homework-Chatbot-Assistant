@@ -66,5 +66,6 @@ public class IntroActivity extends AhoyOnboarderActivity {
     @Override
     public void onFinishButtonPressed() {
         startActivity(new Intent(IntroActivity.this, SignInActivity.class));
+        finish();
     }
 }

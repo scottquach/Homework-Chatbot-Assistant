@@ -52,7 +52,7 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
         if (userClasses.size > 0) {
             view.textLabelSetInvisible()
         } else {
-            view.setTextLabel("No Classes")
+            view.setTextLabel(view.context.getString(R.string.no_classes))
             view.textLabelSetVisible()
         }
     }
@@ -87,7 +87,10 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
 
                         if (userClasses.size > 0) {
                             view.textLabelSetInvisible()
-                        } else view.textLabelSetVisible()
+                        } else {
+                            view.setTextLabel(view.context.getString(R.string.no_classes))
+                            view.textLabelSetVisible()
+                        }
                     }
                 })
                 .setNegativeButton(context.getString(R.string.cancel), object : DialogInterface.OnClickListener {
