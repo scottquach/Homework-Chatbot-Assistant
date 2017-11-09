@@ -19,7 +19,6 @@ interface DisplayAssignmentsContract {
     interface Presenter {
         fun deleteAssignment(model: AssignmentModel, position:Int)
         fun requestLoadData()
-        fun onDataLoaded(loadedData: List<AssignmentModel>)
     }
 
 }

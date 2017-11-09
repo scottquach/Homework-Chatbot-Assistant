@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.scottquach.homeworkchatbotassistant.BaseApplication
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
+import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.presenters.DisplayAssignmentsPresenter
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import timber.log.Timber
@@ -17,15 +18,27 @@ import java.util.*
  * Responsible for containing helper methods that involve retrieving assignments based on time,
  * such as retrieving overdue assignments or the next upcoming assignment
  */
-class AssignmentDatabaseManager(val presenter: DisplayAssignmentsPresenter? = null) : BaseDatabase() {
+class AssignmentDatabaseManager(caller: Any) : BaseDatabase() {
 
     private var userAssignments: MutableList<AssignmentModel> = BaseApplication.getInstance().database
             .getAssignments().toMutableList()
 
+    private var listener: AssignmentCallback? = null
+
+    interface AssignmentCallback {
+        fun assignmentsCallback(data: List<AssignmentModel>)
+    }
+
+    init {
+        if (caller is AssignmentCallback) {
+            listener = caller as AssignmentCallback
+        }
+    }
+
     /**
      * Loads data for DisplayAssignmentsPresenter
      */
-    fun loadData() {
+    fun loadAssignments() {
         databaseReference.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError?) {
                 Timber.e("Error loading data")
@@ -43,7 +56,7 @@ class AssignmentDatabaseManager(val presenter: DisplayAssignmentsPresenter? = nu
 
                     userAssignments.add(model)
                 }
-                presenter?.onDataLoaded(userAssignments.toList())
+                listener?.assignmentsCallback(userAssignments.toList())
             }
         })
     }

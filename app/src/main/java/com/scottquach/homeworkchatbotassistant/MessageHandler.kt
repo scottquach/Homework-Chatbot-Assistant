@@ -228,7 +228,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
         databaseReference.child("users").child(user!!.uid).child("assignments")
                 .child(assignmentKey).setValue(assignmentModel)
         val assignmentManager = AssignmentDueManager(context)
-        assignmentManager.startNextAlarm(assignmentModel)
+        assignmentManager.scheduleNextAlarm(assignmentModel)
 
         saveMessagesToDatabase(listOf(model))
         updateAssignmentContext(assignment)
@@ -240,7 +240,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      * has a default message if no upcoming assignments
      */
     fun getNextAssignment(context: Context) {
-        val assignmentManager = AssignmentDatabaseManager()
+        val assignmentManager = AssignmentDatabaseManager(this)
         val nextAssignment = assignmentManager.getNextAssignment(context)
 
         if (nextAssignment.key == "empty") {
@@ -260,7 +260,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      * has a default message if no overdue assignments
      */
     fun getOverdueAssignments(context: Context) {
-        val assignmentManager = AssignmentDatabaseManager()
+        val assignmentManager = AssignmentDatabaseManager(this)
         val overdueAssignments = assignmentManager.getOverdueAssignments(context)
 
         if (overdueAssignments.isEmpty()) {
@@ -285,7 +285,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      * available a default message is displayed
      */
     fun getCurrentAssignments(context: Context) {
-        val assignmentManager = AssignmentDatabaseManager()
+        val assignmentManager = AssignmentDatabaseManager(this)
         val userAssignments = assignmentManager.getCurrentAssignments(context)
 
         if (userAssignments.isEmpty()) {
