@@ -68,7 +68,7 @@ class JobNotifyClassEnd : JobService() {
         val replyIntent = Intent(context, NotificationReplyReceiver::class.java)
         val replyPendingIntent = PendingIntent.getBroadcast(context, 203,
                 replyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val action = NotificationCompat.Action.Builder(R.drawable.ic_send, "reply", replyPendingIntent)
+        val action = NotificationCompat.Action.Builder(R.drawable.ic_send, context.getString(R.string.notify_reply_label), replyPendingIntent)
                 .addRemoteInput(remoteInput)
                 .build()
 

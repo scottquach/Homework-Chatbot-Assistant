@@ -116,18 +116,18 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      */
     fun receiveWelcomeMessages() {
         val message1 = "Hi there I'm ${context.getString(R.string.assistant_name)}, here to help " +
-                "organize and assist you in your busy school life"
+                "organize and assist you in your busy school life!"
         val model1 = createReceivedMessage(message1)
 
         //Don't yell at the user LOL
-        val message2 = "If you haven't PLEASE SET YOUR CLASSES, as the app won't function properly " +
+        val message2 = "Before I can do my job, please set your classes in the Classes tab! I won't function properly " +
                 "without your class information"
         val model2 = createReceivedMessage(message2)
 
         val message3 = "If you have any questions feel free to ask me for help or even examples! "
         val model3 = createReceivedMessage(message3)
 
-        val message4 = "Otherwise welcome and thank you for giving me a try "
+        val message4 = "Otherwise, welcome and thanks for giving me a try! "
         val model4 = createReceivedMessage(message4)
 
         Timber.d("created welcome message")
@@ -140,15 +140,15 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
     fun receiveHelp() {
         val stringMessages = arrayOf(
                 "If you haven't done so please specify your classes in the classes tab",
-                "Every time you finish a class, I'll be here to ask you what homework you have",
-                "Using advanced machine learning, you can answer naturally such as",
+                "Every time you finish a class, I'll ask you what homework you have",
+                "And you can tell me by saying something like:",
                 "\"I have a chapter 3 summary due next Monday\"",
                 "or",
                 "\"I have an exam in 4 days\"",
-                "Or if you don't have any homework you don't have to say anything",
-                "You can also add assignments to specific classes later by saying something such as \"Interview Bob for Research Writing by October 5th",
-                "Remember that the above statements are just basic examples, feel free to speak the way YOU would naturally speak and I'll learn over time",
-                "Feel free to ask for examples if you are still confused")
+                "Or if you don't have any homework you don't have to say anything.",
+                "You can also add assignments to specific classes later by saying something such as: \"Interview Bob for Research Writing by October 5th.",
+                "Remember that the above statements are just some examples, feel free to speak the way YOU would naturally speak and I'll learn over time!",
+                "Feel free to ask for more examples if you are still confused!")
         val messagesModels = stringMessages.map { createReceivedMessage(it) }
         saveMessagesToDatabase(messagesModels)
     }
@@ -167,7 +167,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
 
     fun promptForAssignment(userClass: String): List<MessageModel> {
         val model = MessageModel()
-        model.message = "Give me homework for $userClass"
+        model.message = "What was the homework for $userClass?"
         model.type = MessageType.RECEIVED.toLong()
         model.key = getMessageKey()
         model.timestamp = Timestamp(System.currentTimeMillis())
@@ -329,7 +329,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
         val message5 = "Assignment \"Study the integral test\" for Calculus III by 2017-10-13 saved"
         val model5 = createReceivedMessage(message5)
 
-        val message6 = "Research machine learning for research writing by October 4th"
+        val message6 = "Research machine learning for Research Writing by October 4th"
         val model6 = createSentMessage(message6)
 
         val message7 = "Assignment \"Research machine learning\" for Research Writing by 2017-10-04 saved"
