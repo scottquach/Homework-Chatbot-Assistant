@@ -3,9 +3,11 @@ package com.scottquach.homeworkchatbotassistant.presenters
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
+import com.scottquach.homeworkchatbotassistant.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.contracts.CreateClassContract
 import com.scottquach.homeworkchatbotassistant.fragments.CreateClassFragment
+import com.scottquach.homeworkchatbotassistant.logEvent
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import com.scottquach.homeworkchatbotassistant.utils.NetworkUtils
@@ -93,6 +95,7 @@ class CreateClassPresenter(val view: CreateClassFragment) : CreateClassContract.
                 newClass.days = selectedDays
                 newClass.timeEnd = timeEnd!!
                 addNewClass(newClass)
+                logEvent(InstrumentationUtils.ADD_CLASS)
             } else view.notifyMissingRequiredFields()
         } else view.notifyNoInternet()
     }

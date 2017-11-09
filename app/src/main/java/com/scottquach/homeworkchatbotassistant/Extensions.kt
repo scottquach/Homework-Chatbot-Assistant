@@ -10,7 +10,11 @@ import android.view.ViewGroup
  * Created by Scott Quach on 9/13/2017.
  */
 
-fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false) : View {
+fun Any.logEvent(event: String) {
+    BaseApplication.getInstance().instrumentation.logEvent(event)
+}
+
+fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
 }
 

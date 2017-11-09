@@ -178,6 +178,7 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
                             }
                             feedbackItem -> {
                                 EmailHandler(this@MainActivity).sendFeedbackEmail()
+                                logEvent(InstrumentationUtils.SEND_FEEDBACK)
                             }
                         }
                         return true

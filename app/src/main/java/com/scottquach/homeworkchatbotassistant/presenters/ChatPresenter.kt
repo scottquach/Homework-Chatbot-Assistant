@@ -55,6 +55,7 @@ ChatDatabaseManager.CallbackInterface{
         messageHandler.addMessage(MessageType.SENT, text)
         messageHandler.processNewMessage(text)
         view.edit_input.setText("")
+        logEvent(InstrumentationUtils.USER_SENT_MESSAGE)
     }
 
     override fun addMessage(message: String) {
