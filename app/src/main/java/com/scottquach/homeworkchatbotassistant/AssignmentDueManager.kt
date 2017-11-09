@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager
 import com.scottquach.homeworkchatbotassistant.receivers.AssignmentDueReceiver
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
@@ -16,7 +17,12 @@ import java.util.*
  * Created by Scott Quach on 9/23/2017.
  */
 
-class AssignmentDueManager(var context: Context) {
+class AssignmentDueManager(var context: Context) : AssignmentDatabaseManager.AssignmentCallback {
+
+
+    private val database by lazy {
+        AssignmentDatabaseManager(this)
+    }
 
     /**
      * Gets the due date for assignment and configures minimumDelay and overrideDelay for when
@@ -24,7 +30,7 @@ class AssignmentDueManager(var context: Context) {
      * roughly around 5pm. Calls a job if above api 21, else uses alarm manager. Reminder will only
      * be sent if the reminder time is after current time
      */
-    fun startNextAlarm(model: AssignmentModel) {
+    fun scheduleNextAlarm(model: AssignmentModel) {
 
         val alarm = StringUtils.convertStringToCalendar(context, model.dueDate)
         alarm.add(Calendar.DAY_OF_MONTH, -1)
@@ -57,6 +63,25 @@ class AssignmentDueManager(var context: Context) {
 
                 Timber.d("Homework alarm set for " + alarm)
             }
+        }
+    }
+
+    /**
+     * Usually called when an assignment is deleted and the jobs schedules for assignments is cleared.
+     * Requests an updated list of user assignments from database. Logic for reschedule occurs
+     * in assignmentsCallback
+     */
+    fun requestReschedule() {
+        database.loadAssignments()
+    }
+
+    /**
+     * Called once data is loaded and will go through the process of rescheduling the jobs for all
+     * user assignments
+     */
+    override fun assignmentsCallback(data: List<AssignmentModel>) {
+        for (model in data) {
+            scheduleNextAlarm(model)
         }
     }
 }

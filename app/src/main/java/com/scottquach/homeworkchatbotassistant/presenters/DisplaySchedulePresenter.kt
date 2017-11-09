@@ -8,11 +8,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.scottquach.homeworkchatbotassistant.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.contracts.DisplayScheduleContract
 import com.scottquach.homeworkchatbotassistant.database.ClassDatabaseManager
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
+import com.scottquach.homeworkchatbotassistant.logEvent
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import timber.log.Timber
 
@@ -91,6 +93,7 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
                             view.setTextLabel(view.context.getString(R.string.no_classes))
                             view.textLabelSetVisible()
                         }
+                        logEvent(InstrumentationUtils.DELETE_CLASS)
                     }
                 })
                 .setNegativeButton(context.getString(R.string.cancel), object : DialogInterface.OnClickListener {

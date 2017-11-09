@@ -1,10 +1,9 @@
-package com.scottquach.homeworkchatbotassistant
+package com.scottquach.homeworkchatbotassistant.database
 
 import android.content.Context
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.scottquach.homeworkchatbotassistant.database.BaseDatabase
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import timber.log.Timber
 import java.sql.Timestamp
