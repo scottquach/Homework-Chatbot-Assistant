@@ -20,6 +20,7 @@ import com.scottquach.homeworkchatbotassistant.MessageHandler
 import com.scottquach.homeworkchatbotassistant.R
 
 import android.app.Dialog
+import android.app.NotificationManager
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import com.mikepenz.materialdrawer.AccountHeaderBuilder
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
 
         val toolbar = findViewById<View>(R.id.toolbar_main) as Toolbar
         val toolbarTitle = findViewById<View>(R.id.toolbar_title) as TextView
-        toolbarTitle.text = "Chat"
+        toolbarTitle.text = getString(R.string.chat)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
 
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
 
         if (BaseApplication.getInstance().isFirstOpen) {
             Timber.d("first open")
-            val handler = MessageHandler(this)
+            val handler = MessageHandler(this, this)
             handler.receiveWelcomeMessages()
             BaseApplication.getInstance().sharePref.edit().putBoolean("first_open", false).apply()
         } else {
@@ -87,6 +88,8 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
     override fun onResume() {
         super.onResume()
         requestPermissions()
+        val notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll()
     }
 
     private fun requestPermissions() {

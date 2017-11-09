@@ -11,13 +11,15 @@ interface DisplayAssignmentsContract {
         fun toggleNoHomeworkLabelsVisible()
         fun toggleNoHomeworkLabelsInvisible()
         fun removeAssignment(position: Int)
+        fun resetData()
         fun addData(data: List<AssignmentModel>)
         fun notifyNoInternet()
     }
 
     interface Presenter {
         fun deleteAssignment(model: AssignmentModel, position:Int)
-        fun loadData()
+        fun requestLoadData()
+        fun onDataLoaded(loadedData: List<AssignmentModel>)
     }
 
 }

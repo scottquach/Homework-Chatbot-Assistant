@@ -35,7 +35,7 @@ object JobSchedulerUtil {
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .setMinimumLatency(minimumLatency)
-                .setOverrideDeadline(overrideDelay)
+//                .setOverrideDeadline(overrideDelay)
                 .setExtras(bundle)
                 .build())
         Timber.d("Class end scheduled")
@@ -61,7 +61,7 @@ object JobSchedulerUtil {
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .setMinimumLatency(minimumDelay)
-                .setOverrideDeadline(overrideDelay)
+//                .setOverrideDeadline(overrideDelay)
                 .setExtras(bundle)
                 .build())
 

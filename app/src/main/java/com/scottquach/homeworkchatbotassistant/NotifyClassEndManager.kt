@@ -2,19 +2,14 @@ package com.scottquach.homeworkchatbotassistant
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.app.job.JobParameters
-import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.annotation.RequiresApi
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.scottquach.homeworkchatbotassistant.receivers.NotifyClassEndReceiver
+import com.scottquach.homeworkchatbotassistant.database.BaseDatabase
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
 import com.scottquach.homeworkchatbotassistant.models.TimeModel
 import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
@@ -28,9 +23,9 @@ import java.util.*
  * intent for NotifyClassEndReceiver
  */
 
-class NotifyClassEndManager(var context: Context) {
+class NotifyClassEndManager(var context: Context) : BaseDatabase(){
 
-    private lateinit var userClasses: MutableList<ClassModel>
+    private val userClasses = mutableListOf<ClassModel>()
 
     private var daysFromNow: Int = 0
 
@@ -48,9 +43,24 @@ class NotifyClassEndManager(var context: Context) {
         //If this wasn't called by a end class time job, just use current time
         previousEndTime.timeInMillis = specificEndTime
         Timber.d("Previous end time is ${previousEndTime.timeInMillis}")
-        userClasses = BaseApplication.getInstance().database.getClasses().toMutableList()
-        determineNextAlarm()
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                Timber.e("Database could not load dataSnapshot")
+            }
 
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (ds in dataSnapshot.child("users").child(user!!.uid).child("classes").children) {
+                    val model = ClassModel()
+                    model.title = ds.child("title").value as String
+                    model.timeEnd = TimeModel(ds.child("timeEnd").child("timeEndHour").value as Long,
+                            ds.child("timeEnd").child("timeEndMinute").value as Long)
+                    ds.child("days").children.mapTo(model.days) { (it.value as Long).toInt() }
+
+                    userClasses.add(model)
+                }
+                determineNextAlarm()
+            }
+        })
     }
 
     private fun determineNextAlarm() {
@@ -93,11 +103,12 @@ class NotifyClassEndManager(var context: Context) {
                 iteratedDay = 1
             }
             daysFromNow++
+            Timber.d("Days from noew " + daysFromNow)
             classesOnDay = loadClassesOnDay()
             Timber.d("iterated")
         }
 
-        Timber.d("proecessed classes on day iterated day $iteratedDay daysFromNOw $daysFromNow " + classesOnDay.toString())
+        Timber.d("processed classes on day iterated day $iteratedDay daysFromNow $daysFromNow " + classesOnDay.toString())
         return classesOnDay
     }
 
@@ -163,7 +174,7 @@ class NotifyClassEndManager(var context: Context) {
             Timber.d("Occurs on today, not adding any days")
         }
 
-        Timber.d("added days is $daysFromNow selected class is $model")
+        Timber.d("Added days is $daysFromNow selected class is $model")
         Timber.d(alarm.timeInMillis.toString())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -173,11 +184,11 @@ class NotifyClassEndManager(var context: Context) {
             val overrideDeadline = (alarm.timeInMillis - previousEndTime.timeInMillis)
             alarm.add(Calendar.MINUTE, -2)
 
-            Timber.d("was after lallipop")
+            Timber.d("Was after Lollipop")
             JobSchedulerUtil.scheduleClassManagerJob(context, model.title, minimumLatency, overrideDeadline,
                     alarm.timeInMillis)
         } else {
-            Timber.d("Was before lollipop")
+            Timber.d("Was before Lollipop")
             val intent = Intent(context, NotifyClassEndReceiver::class.java)
             intent.putExtra(Constants.CLASS_NAME, model.title)
             val pendingIntent = PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT)

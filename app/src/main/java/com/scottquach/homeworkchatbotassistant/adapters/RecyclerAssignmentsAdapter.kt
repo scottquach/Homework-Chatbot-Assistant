@@ -10,7 +10,9 @@ import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
 import com.scottquach.homeworkchatbotassistant.inflate
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
+import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import kotlinx.android.synthetic.main.row_assignment.view.*
+import timber.log.Timber
 
 /**
  * Created by Scott Quach on 9/22/2017.
@@ -74,11 +76,19 @@ class RecyclerAssignmentsAdapter(private val context: Context,
 
     fun add(model: AssignmentModel) {
         userAssignments.add(model)
+        Timber.d(userAssignments.toString())
+        notifyDataSetChanged()
     }
 
     fun removeItem(position: Int) {
         userAssignments.removeAt(position)
         notifyItemRemoved(position)
+    }
+
+    fun resetData(){
+        userAssignments.clear()
+        Timber.d(userAssignments.toString())
+        notifyDataSetChanged()
     }
 
     class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -87,7 +97,7 @@ class RecyclerAssignmentsAdapter(private val context: Context,
             itemView.apply {
                 text_assignment_title.text = model.title
                 text_assignment_class.text = model.userClass
-                text_assignment_due_date.text = model.dueDate
+                text_assignment_due_date.text = StringUtils.convertStoredDateToAmericanDate(model.dueDate)
             }
         }
     }
@@ -98,7 +108,7 @@ class RecyclerAssignmentsAdapter(private val context: Context,
             itemView.apply {
                 text_assignment_title.text = model.title
                 text_assignment_class.text = model.userClass
-                text_assignment_due_date.text = model.dueDate
+                text_assignment_due_date.text = StringUtils.convertStoredDateToAmericanDate(model.dueDate)
             }
         }
     }

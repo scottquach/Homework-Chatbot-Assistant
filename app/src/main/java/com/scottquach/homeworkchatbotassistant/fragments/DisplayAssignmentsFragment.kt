@@ -18,6 +18,9 @@ import kotlinx.android.synthetic.main.fragment_display_assignments.*
 
 class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.AssignmentAdapterInterface,
         DisplayAssignmentsContract.View {
+    override fun resetData() {
+        assignmentsAdapter?.resetData()
+    }
 
     private var assignmentsRecycler: RecyclerView? = null
     private var assignmentsAdapter: RecyclerAssignmentsAdapter? = null
@@ -47,7 +50,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     override fun onResume() {
         super.onResume()
-        presenter.loadData()
+        presenter.requestLoadData()
     }
 
     override fun delete(model: AssignmentModel, position: Int) {

@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="39dp"
         android:fontFamily="@font/source_sans_pro"
-        android:text="Sign Out"
+        android:text="@string/settings_sign_out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

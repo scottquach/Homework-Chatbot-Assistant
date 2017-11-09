@@ -3,7 +3,6 @@
     package="com.scottquach.homeworkchatbotassistant">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -14,10 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.ClassScheduleActivity" />
         <activity android:name=".activities.SignInActivity"></activity>
-
-        <activity android:name=".activities.DisplayAssignmentsActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.IntroActivity">
 
@@ -32,14 +28,27 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".NotifyClassEndReceiver"
+        <receiver android:name=".receivers.NotifyClassEndReceiver"
             android:enabled="true"/>
-        <receiver android:name=".AssignmentDueReceiver"
+        <receiver android:name=".receivers.AssignmentDueReceiver"
             android:enabled="true"/>
-        <receiver android:name=".RebootReceiver"
+        <receiver android:name=".receivers.RebootReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.NotificationReplyReceiver"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <receiver android:name=".receivers.TimeChangeReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DATE_CHANGED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
             </intent-filter>
         </receiver>
 

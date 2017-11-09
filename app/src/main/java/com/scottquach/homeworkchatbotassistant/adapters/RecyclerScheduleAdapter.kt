@@ -47,11 +47,17 @@ class RecyclerScheduleAdapter(val fragment:DisplayScheduleFragment) :
         for (model in newData) {
             userClasses.add(model)
         }
+        notifyDataSetChanged()
     }
 
     fun removeItem(position: Int) {
         userClasses.removeAt(position)
         notifyItemRemoved(position)
+    }
+
+    fun resetData() {
+        userClasses.clear()
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = userClasses.size
@@ -69,5 +75,4 @@ class RecyclerScheduleAdapter(val fragment:DisplayScheduleFragment) :
     interface ScheduleAdapterInterface {
         fun deleteClass(model: ClassModel, position: Int)
     }
-
 }

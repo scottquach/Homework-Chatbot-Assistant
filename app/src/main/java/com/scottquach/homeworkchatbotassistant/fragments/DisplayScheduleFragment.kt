@@ -23,22 +23,6 @@ import kotlinx.android.synthetic.main.fragment_display_schedule.*
 class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdapterInterface,
         DisplayScheduleContract.View {
 
-    override fun textNoAssignmentSetVisible() {
-        text_no_classes.visibility = View.VISIBLE
-    }
-
-    override fun textNoAssignmentSetInvisible() {
-        text_no_classes.visibility = View.INVISIBLE
-    }
-
-    override fun removeClass(position: Int) {
-        scheduleAdapter?.removeItem(position)
-    }
-
-    override fun addData(data: List<ClassModel>) {
-        scheduleAdapter?.add(data)
-        scheduleAdapter?.notifyDataSetChanged()
-    }
 
     private var listener: ScheduleDisplayInterface? = null
 
@@ -51,7 +35,6 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
         super.onAttach(context)
         if (context is ScheduleDisplayInterface) {
             listener = context
-            presenter = DisplaySchedulePresenter(this)
         } else {
             throw RuntimeException(context!!.toString() + " must implement ScheduleDisplayInterface")
         }
@@ -84,11 +67,37 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
 
     override fun onResume() {
         super.onResume()
-        presenter.loadData()
+        presenter = DisplaySchedulePresenter(this)
+        presenter.requestLoadData()
     }
 
     interface ScheduleDisplayInterface {
         fun switchToCreateFragment()
+    }
+
+    override fun setTextLabel(message: String) {
+        text_label_classes.text = message
+    }
+
+    override fun resetData() {
+        scheduleAdapter?.resetData()
+    }
+
+    override fun textLabelSetVisible() {
+        text_label_classes.visibility = View.VISIBLE
+    }
+
+    override fun textLabelSetInvisible() {
+        text_label_classes.visibility = View.INVISIBLE
+    }
+
+    override fun removeClass(position: Int) {
+        scheduleAdapter?.removeItem(position)
+    }
+
+    override fun addData(data: List<ClassModel>) {
+        scheduleAdapter?.add(data)
+        scheduleAdapter?.notifyDataSetChanged()
     }
 
     override fun deleteClass(model: ClassModel, position: Int) {
@@ -100,7 +109,7 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
      */
     override fun notifyNoInternet() {
         AlertDialogFragment.newInstance(getString(R.string.no_internet_connection),
-                getString(R.string.cannot_send_messages_internet_connection), positiveString = "Ok",haveNegative = false)
+                getString(R.string.cannot_send_messages_internet_connection), positiveString = getString(R.string.ok),haveNegative = false)
                 .show(fragmentManager, AlertDialogFragment::class.java.name)
     }
 }

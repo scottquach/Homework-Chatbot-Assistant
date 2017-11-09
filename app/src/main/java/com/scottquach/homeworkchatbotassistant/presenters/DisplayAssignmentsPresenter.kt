@@ -14,23 +14,27 @@ import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
  */
 class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : DisplayAssignmentsContract.Presenter {
 
+
     private val databaseReference = FirebaseDatabase.getInstance().reference
     private val user = FirebaseAuth.getInstance().currentUser
 
     private val database by lazy {
-        AssignmentDatabaseManager()
+        AssignmentDatabaseManager(this)
     }
 
-    private lateinit var userAssignments: MutableList<AssignmentModel>
+    private val userAssignments = mutableListOf<AssignmentModel>()
 
     /**
      * Deletes the assignment from the database and notifies the view of it's deletion. Toggles
-     * whether or not there are any assignments labels
+     * whether or not there are any assignments labels. Resets data before adding assignments to
+     * make sure no repeats are shown
      */
     override fun deleteAssignment(model: AssignmentModel, position: Int) {
         databaseReference.child("users").child(user!!.uid).child("assignments").child(model.key).removeValue()
         view.removeAssignment(position)
         userAssignments.removeAt(position)
+
+        database.addToNumberOfCompletedAssignments()
 
         if (userAssignments.size > 0) {
             view.toggleNoHomeworkLabelsInvisible()
@@ -38,11 +42,18 @@ class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : Displa
     }
 
     /**
-     * Loads data from the database and pushes it to the view to be displayed. Toggles the no homework labels
-     * depending on data retrieved
+     * Calls to the database to start loading data
      */
-    override fun loadData() {
-        userAssignments = BaseApplication.getInstance().database.getAssignments().toMutableList()
+    override fun requestLoadData() {
+        database.loadData()
+    }
+
+    /**
+     * Called by database once the data is loaded
+     */
+    override fun onDataLoaded(loadedData: List<AssignmentModel>) {
+        view.resetData()
+        userAssignments.addAll(loadedData)
         view.addData(userAssignments)
         if (userAssignments.size > 0) {
             view.toggleNoHomeworkLabelsInvisible()

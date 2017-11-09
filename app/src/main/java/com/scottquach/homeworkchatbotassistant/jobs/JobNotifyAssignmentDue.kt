@@ -1,11 +1,11 @@
 package com.scottquach.homeworkchatbotassistant.jobs
 
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
@@ -32,25 +32,36 @@ class JobNotifyAssignmentDue : JobService() {
 
         createNotification(this, userAssignment, userClass)
 
-        val handler = MessageHandler(this)
+        val handler = MessageHandler(this, this)
         handler.assignmentDueReminder(userAssignment, userClass)
         jobFinished(jobParameters, false)
         return true
     }
 
-    private fun createNotification(context: Context, userAssignment: String, userClass: String) {
+     fun createNotification(context: Context, userAssignment: String, userClass: String) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel("channel_2", "assignment_channel", NotificationManager.IMPORTANCE_DEFAULT)
+            channel.enableLights(true)
+            channel.lightColor = Color.BLUE
+            channel.description = "Homework Assistant"
+            channel.enableVibration(true)
+
+        }
+
         val intent = Intent(context, SignInActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
-        val builder = NotificationCompat.Builder(context, "app_channel")
-                .setContentTitle("Homework Tracker")
+        val builder = NotificationCompat.Builder(context, "channel_2")
+                .setContentTitle("Homework Assistant")
                 .setContentText("\"$userAssignment\" is due tomorrow for $userClass")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
+                .setPriority(Notification.PRIORITY_HIGH)
                 .setAutoCancel(true)
 
         val notification = builder.build()
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(1012, notification)
+        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
     }
 }

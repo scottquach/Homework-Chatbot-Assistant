@@ -21,7 +21,7 @@ public class Constants {
     public static final String CONETEXT_DEFAULT = "default";
     public static final String CONTEXT_PROMPT_HOMEWORK = "prompt-assignment";
 
-    //Argument key values for AlertdialogFragment
+    //Argument key values for AlertDialogFragment
     public static final String ALERT_TITLE = "alert_title";
     public static final String ALERT_MESSAGE = "alert_message";
     public static final String ALERT_POSITIVE = "alert_positive";
@@ -33,4 +33,8 @@ public class Constants {
     public static final String CLASS_END_TIME = "class_end_time";
     public static final String USER_CLASS = "user_class";
     public static final String USER_ASSIGNMENT = "user_assignment";
+
+
+    //Notifications
+    public static final String RESULT_KEY = "class_end_reply";
 }

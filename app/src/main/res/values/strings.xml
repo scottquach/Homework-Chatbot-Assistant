@@ -1,23 +1,63 @@
 <resources>
     <string name="app_name">Homework Assistant</string>
+
     <string name="assistant_name">Assistant</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="cancel">Cancel</string>
-    <string name="set">Set</string>
-    <string name="classes">Classes</string>
-    <string name="homework">Homework</string>
-    <string name="chat">Chat</string>
-    <string name="loading_messages">Loading Messages</string>
-    <string name="no_classes">No Classes</string>
-    <string name="no_homework">No Assignments!</string>
-    <string name="settings">Settings</string>
-    <string name="assignments">Assignments</string>
-    <string name="sign_in_to_continue">Sign in to continue</string>
-    <string name="welcome">Welcome</string>
+    <string name="transition_toolbar">transition_toolbar</string>
+
+    <!-- Credits -->
     <string name="created_by">Created by Scott Quach</string>
+    <string name="designed_and_created_by">Designed and Created by Scott Quach</string>
+    <string name="translated_by">Translated by Joe Villegas</string>
+
+    <!-- IntroActivity Strings: WIP! -->
+    <string name="intro_card1">Welcome</string>
+    <string name="intro_welcome">Organize your homework with the ease of just typing it out.</string>
+    <string name="intro_card2">Natural Language</string>
+    <string name="intro_natural_language">Powered by powerful machine learning and NLP algorithms for constant improvement.</string>
+    <string name="intro_card3">Set Your Classes</string>
+    <string name="intro_set_classes">Remember to set your classes and I\'ll remind you to give me your homework!</string>
+    <string name="intro_card4">Provide Homework</string>
+    <string name="intro_provide_homework">Once prompted, enter homework by simply replying. (For example: \"Finish reading chapter 8 by next Monday\")</string>
+    <string name="intro_start">Let\'s Get Started</string>
+
+    <!-- Sign-in Strings -->
+    <string name="welcome">Welcome</string>
+    <string name="sign_in_to_continue">Sign in to continue</string>
+
+    <!-- Non-Specific Button Strings -->
+    <string name="set">Set</string>
+    <string name="cancel">Cancel</string>
+    <string name="send">Send</string>
+    <string name="delete">Delete</string>
+    <string name="ok">Ok</string>
+
+    <!-- Navigation Activity Strings -->
     <string name="navigation">Navigation</string>
+    <string name="homework">Homework</string>
+    <string name="classes">Classes</string>
+    <string name="assignments">Assignments</string>
+    <string name="chat">Chat</string>
+    <string name="settings">Settings</string>
+    <string name="feedback">Feedback</string>
+
+    <!-- Chat Screen Strings -->
+    <string name="chat_box_hint">Say Something...</string>
+    <string name="quick_reply_next_assignment">What should I work on next?</string>
+    <string name="quick_reply_overdue">What\'s overdue?</string>
+    <string name="quick_reply_current_assignments">What assignments do I have?</string>
+
+    <!-- Class Creation Activity Strings -->
+    <string name="create_class_title_hint">Tap here to change title</string>
+    <string name="select_class_days_dialog_title">Select Days Class Occurs</string>
+    <string name="class_set_days">Set Days</string>
+    <string name="class_set_time">Set Time</string>
+    <string name="class_when_class_ends">WHEN CLASS ENDS</string>
+    <string name="class_days_class_occurs">DAYS CLASS OCCURS</string>
+
     <string-array name="days_of_week">
         <item>Sunday</item>
         <item>Monday</item>
@@ -28,25 +68,36 @@
         <item>Saturday</item>
     </string-array>
 
-    <string name="transition_tooblar">transition_toolbar</string>
-    <string name="send">Send</string>
+    <!-- Settings Activity Strings -->
+    <string name="settings_sign_out">Sign Out</string>
+
+    <!-- Feedback Activity Strings -->
+    <string name="email_email_to">chuckglobal@gmail.com</string>
+    <string name="email_email_subject">Homework Assistant Feedback</string>
+    <string name="email_feedback_starting_text">Type feedback below:</string>
+    <string name="email_select_client">Select client to email feedback:</string>
+    <string name="email_error_sending">Error sending feedback email</string>
+
+
+    <!-- Toasts n' Stuff -->
+    <string name="loading_messages">Loading Messages</string>
+    <string name="no_messages">No Messages</string>
+    <string name="no_classes">No Classes</string>
+    <string name="no_homework">No Homework!</string>
+    <string name="class_created">Class Created</string>
+    <string name="missing_required_fields">Missing required fields</string>
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="cannot_send_messages_internet_connection">Cannot send messages while you are not connected to the internet</string>
     <string name="cannot_create_class_internet_connection">Cannot create classes while you are not connected to the internet</string>
-    <string name="chat_box_hint">Say Something...</string>
-    <string name="create_class_title_hint">Tap here to change title</string>
-    <string name="select_class_days_dialog_title">Select Days Class Occurs</string>
-    <string name="ok">Ok</string>
-    <string name="class_created">Class Created</string>
-    <string name="missing_required_fields">Missing required fields</string>
-    <string name="delete">Delete</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="signed_in">Signed in</string>
+    <string name="sign_in_success">Signed in successful</string>
+    <string name="sign_in_failed">Sign in failed</string>
     <string name="signed_out">Signed Out</string>
-    <string name="feedback">Feedback</string>
-    <string name="designed_and_created_by">Designed and Created by Scott Quach</string>
-    <string name="translated_by">Translated by Joe Villegas</string>
-    <string name="quick_reply_next_assignment">What should I work on next?</string>
-    <string name="quick_reply_overdue">What\'s overdue?</string>
-    <string name="quick_reply_current_assignments">What assignments do I have?</string>
-    <string name="no_messages">No Messages</string>
+
+    <!-- Notification Strings -->
+    <string name="notify_assignment_due_title">Homework Tracker</string>
+    <string name="notify_class_end_text">Give me homework for </string>
+    <string name="loading_classes">Loading Classes</string>
+
 </resources>

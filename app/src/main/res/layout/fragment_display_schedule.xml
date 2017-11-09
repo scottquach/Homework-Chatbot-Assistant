@@ -24,7 +24,7 @@
         tools:layout_editor_absoluteY="8dp" />
 
     <TextView
-        android:id="@+id/text_no_classes"
+        android:id="@+id/text_label_classes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/lato"

@@ -5,14 +5,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.widget.Toast
+import com.scottquach.homeworkchatbotassistant.receivers.AssignmentDueReceiver
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import timber.log.Timber
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -24,7 +21,8 @@ class AssignmentDueManager(var context: Context) {
     /**
      * Gets the due date for assignment and configures minimumDelay and overrideDelay for when
      * scheduling the job to notify the user. User will be notify the day before assignment is due
-     * roughly around 5pm. Calls a job if above api 21, else uses alarm manager
+     * roughly around 5pm. Calls a job if above api 21, else uses alarm manager. Reminder will only
+     * be sent if the reminder time is after current time
      */
     fun startNextAlarm(model: AssignmentModel) {
 
@@ -35,28 +33,30 @@ class AssignmentDueManager(var context: Context) {
 
         Timber.d("Assignment Notify is " + alarm.timeInMillis)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            alarm.add(Calendar.MINUTE, -30)
-            val minimumDelay = alarm.timeInMillis - System.currentTimeMillis()
-            alarm.add(Calendar.MINUTE, 60)
-            val overrideDelay = alarm.timeInMillis - System.currentTimeMillis()
+        val currentTime = Calendar.getInstance()
+        if (alarm.after(currentTime)) {
+            Timber.d("Assignment reminder is after current time")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                alarm.add(Calendar.MINUTE, -30)
+                val minimumDelay = alarm.timeInMillis - System.currentTimeMillis()
+                alarm.add(Calendar.MINUTE, 60)
+                val overrideDelay = alarm.timeInMillis - System.currentTimeMillis()
 
 
-            JobSchedulerUtil.scheduleAssignmentManagerJob(context, model.title, model.userClass,
-                    minimumDelay, overrideDelay)
-        } else {
-            val intent = Intent(context, AssignmentDueReceiver::class.java)
-            intent.setClass(context, AssignmentDueReceiver::class.java)
-            intent.putExtra(Constants.USER_ASSIGNMENT, model.title)
-            val pendingIntent = PendingIntent.getBroadcast(context, System.currentTimeMillis().toInt(),
-                    intent, PendingIntent.FLAG_CANCEL_CURRENT)
+                JobSchedulerUtil.scheduleAssignmentManagerJob(context, model.title, model.userClass,
+                        minimumDelay, overrideDelay)
+            } else {
+                val intent = Intent(context, AssignmentDueReceiver::class.java)
+                intent.setClass(context, AssignmentDueReceiver::class.java)
+                intent.putExtra(Constants.USER_ASSIGNMENT, model.title)
+                val pendingIntent = PendingIntent.getBroadcast(context, System.currentTimeMillis().toInt(),
+                        intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
+                val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.timeInMillis, pendingIntent)
 
-            Timber.d("Homework alarm set for " + alarm)
+                Timber.d("Homework alarm set for " + alarm)
+            }
         }
-
-
     }
 }

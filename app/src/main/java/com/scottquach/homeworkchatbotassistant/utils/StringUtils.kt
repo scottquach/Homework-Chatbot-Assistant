@@ -28,7 +28,7 @@ class StringUtils {
                     2 -> displayString += "M"
                     3 -> displayString += "T"
                     4 -> displayString += "W"
-                    5 -> displayString += "T"
+                    5 -> displayString += "TH"
                     6 -> displayString += "F"
                     7 -> displayString += "S"
                 }
@@ -68,6 +68,26 @@ class StringUtils {
             val calendar = Calendar.getInstance()
             calendar.time = convertedDate
             return calendar
+        }
+
+        /**
+         * Returns a string that is converted from the stored YYY/MM/DD to the more known
+         * MM/DD/YYYY
+         */
+        fun convertStoredDateToAmericanDate(stringDate: String) : String {
+            val oldDateFormat = SimpleDateFormat("yyyy-MM-dd")
+            val newDateFormat = SimpleDateFormat("MM-dd-yyyy")
+
+            var date: Date? = null
+            try {
+                date = oldDateFormat.parse(stringDate)
+            } catch (e: ParseException) {
+                Timber.e(e, "couldn't convert oldDateFormat to newDateFormat")
+            }
+
+            return if (date != null) {
+                newDateFormat.format(date)
+            } else stringDate
         }
     }
 }
