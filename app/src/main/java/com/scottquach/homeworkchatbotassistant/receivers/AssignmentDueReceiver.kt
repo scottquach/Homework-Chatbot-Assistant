@@ -47,7 +47,7 @@ class AssignmentDueReceiver : BroadcastReceiver() {
         val pendingIntent = PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val builder = NotificationCompat.Builder(context, "channel_2")
-                .setContentTitle("Homework Assistant")
+                .setContentTitle(context.getString(R.string.notify_title))
                 .setContentText("\"$userAssignment\" is due tomorrow for $userClass")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)

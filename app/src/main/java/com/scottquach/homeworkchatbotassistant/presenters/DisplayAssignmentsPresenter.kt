@@ -6,10 +6,12 @@ import android.support.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.scottquach.homeworkchatbotassistant.AssignmentDueManager
+import com.scottquach.homeworkchatbotassistant.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.contracts.DisplayAssignmentsContract
 import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
+import com.scottquach.homeworkchatbotassistant.logEvent
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
 
@@ -50,6 +52,7 @@ class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : Displa
             AssignmentDueManager(view.context).requestReschedule()
             NotifyClassEndManager(view.context).startManaging(System.currentTimeMillis())
         }
+        logEvent(InstrumentationUtils.DELETE_ASSIGNMENT)
     }
 
     /**

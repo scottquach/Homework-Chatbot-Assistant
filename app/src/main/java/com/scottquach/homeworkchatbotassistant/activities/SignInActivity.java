@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +23,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.scottquach.homeworkchatbotassistant.BaseApplication;
+import com.scottquach.homeworkchatbotassistant.InstrumentationUtils;
 import com.scottquach.homeworkchatbotassistant.R;
 
 import timber.log.Timber;
@@ -102,8 +104,10 @@ public class SignInActivity extends AppCompatActivity{
                             Toast.makeText(SignInActivity.this, getString(R.string.signed_in), Toast.LENGTH_SHORT).show();
                             createUserInDatabase(user);
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                            BaseApplication.getInstance().instrumentation.logEvent(FirebaseAnalytics.Event.LOGIN);
                             finish();
                         } else {
+                            BaseApplication.getInstance().instrumentation.logEvent(InstrumentationUtils.Companion.getLOGIN_FAIL());
                             Timber.d("Sign in failed to authenticate google with firebase");
                         }
                     }

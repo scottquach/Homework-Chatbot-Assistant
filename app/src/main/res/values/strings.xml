@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Homework Assistant</string>
+    <string name="app_name">PlannerBot</string>
 
     <string name="assistant_name">Assistant</string>
 
@@ -98,11 +98,17 @@
 
     <!-- Notification Strings -->
     <string name="notify_title">Homework Tracker</string>
+<<<<<<< HEAD
     <string name="notify_reply_label">Reply</string>
     <string name="notify_class_end_text">Give me homework for </string>
     <string name="notify_assignment_due_text"> is due tomorrow for </string>
     <string name="notify_channel_class">Class Notifications</string>
     <string name="notify_class_assignments">Assignment Notification</string>
 
+=======
+    <string name="notify_class_end_text">Give me homework for </string>
+    <string name="loading_classes">Loading Classes</string>
+    <string name="notify_reply_label">Reply</string>
+>>>>>>> origin/development
 
 </resources>

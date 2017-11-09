@@ -45,7 +45,11 @@ class JobNotifyAssignmentDue : JobService() {
             val channel = NotificationChannel("channel_2", "assignment_channel", NotificationManager.IMPORTANCE_DEFAULT)
             channel.enableLights(true)
             channel.lightColor = Color.BLUE
+<<<<<<< HEAD
             channel.description = context.getString(R.string.notify_class_assignments)
+=======
+            channel.description = context.getString(R.string.notify_title)
+>>>>>>> origin/development
             channel.enableVibration(true)
 
         }
@@ -55,7 +59,11 @@ class JobNotifyAssignmentDue : JobService() {
 
         val builder = NotificationCompat.Builder(context, "channel_2")
                 .setContentTitle(context.getString(R.string.notify_title))
+<<<<<<< HEAD
                 .setContentText("\"$userAssignment\"" + context.getString(R.string.notify_assignment_due_text) + "$userClass")
+=======
+                .setContentText("\"$userAssignment\" is due tomorrow for $userClass")
+>>>>>>> origin/development
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setPriority(Notification.PRIORITY_HIGH)

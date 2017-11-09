@@ -137,7 +137,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
     /**
      * Creates and pushes default messages that provides the user with a short tutorial for help
      */
-    fun receiveHelp() {
+    private fun receiveHelp() {
         val stringMessages = arrayOf(
                 "If you haven't done so please specify your classes in the classes tab",
                 "Every time you finish a class, I'll ask you what homework you have",
@@ -151,6 +151,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
                 "Feel free to ask for more examples if you are still confused!")
         val messagesModels = stringMessages.map { createReceivedMessage(it) }
         saveMessagesToDatabase(messagesModels)
+        logEvent(InstrumentationUtils.REQUEST_HELP)
     }
 
     fun assignmentDueReminder(userAssignment: String, userClass: String) {
@@ -192,7 +193,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      * Confirm if the information is correct for specific class addition assignments. If it is not
      * notify the user, if it is confirm with the user
      */
-    fun confirmNewAssignmentSpecificClass(assignment: String, userClass: String, dueDate: String) {
+    private fun confirmNewAssignmentSpecificClass(assignment: String, userClass: String, dueDate: String) {
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot?) {
                 var classMatch = false
@@ -239,7 +240,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      * Creates a message model that specifies the next due assignment and saves it to the database,
      * has a default message if no upcoming assignments
      */
-    fun getNextAssignment(context: Context) {
+    private fun getNextAssignment(context: Context) {
         val assignmentManager = AssignmentDatabaseManager(this)
         val nextAssignment = assignmentManager.getNextAssignment(context)
 
@@ -253,13 +254,14 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
             updateAssignmentContext(nextAssignment.title)
             updateClassContext(nextAssignment.userClass)
         }
+        logEvent(InstrumentationUtils.REQUEST_NEXT_ASSIGNMENT)
     }
 
     /**
      * Creates message models that specify overdue assignments and saves it to the database,
      * has a default message if no overdue assignments
      */
-    fun getOverdueAssignments(context: Context) {
+    private fun getOverdueAssignments(context: Context) {
         val assignmentManager = AssignmentDatabaseManager(this)
         val overdueAssignments = assignmentManager.getOverdueAssignments(context)
 
@@ -277,6 +279,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
 
             saveMessagesToDatabase(messages)
         }
+        logEvent(InstrumentationUtils.REQUEST_OVERDUE_ASSIGNMENTS)
     }
 
     /**
@@ -284,7 +287,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      * includes assignments that overdue (specially labeled). If there are not assignments currently
      * available a default message is displayed
      */
-    fun getCurrentAssignments(context: Context) {
+    private fun getCurrentAssignments(context: Context) {
         val assignmentManager = AssignmentDatabaseManager(this)
         val userAssignments = assignmentManager.getCurrentAssignments(context)
 
@@ -307,13 +310,14 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
             }
             saveMessagesToDatabase(messages)
         }
+        logEvent(InstrumentationUtils.REQUEST_CURRENT_ASSIGNMENTS)
     }
 
     /**
      * Creates and send message models that provide the user with examples of the apps
      * functionality
      */
-    fun getExamples(context: Context) {
+    private fun getExamples(context: Context) {
         val message1 = "Provide homework for Calculus III"
         val model1 = createReceivedMessage(message1)
 
@@ -336,6 +340,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
         val model7 = createReceivedMessage(message7)
 
         saveMessagesToDatabase(listOf(model1, model2, model3, model4, model5, model6, model7), false)
+        logEvent(InstrumentationUtils.REQUEST_EXAMPLES)
     }
 
     private fun createSentMessage(message: String): MessageModel {

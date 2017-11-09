@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.scottquach.homeworkchatbotassistant.database.Database;
 
 import io.fabric.sdk.android.Fabric;
@@ -21,6 +22,7 @@ public class BaseApplication extends Application {
     }
 
     public Database database;
+    public InstrumentationUtils instrumentation;
 
     public BaseApplication() {}
 
@@ -31,6 +33,7 @@ public class BaseApplication extends Application {
         instance = this;
         Timber.plant(new MyDebugTree());
 
+        instrumentation = new InstrumentationUtils(getApplicationContext());
         database = new Database();
     }
 

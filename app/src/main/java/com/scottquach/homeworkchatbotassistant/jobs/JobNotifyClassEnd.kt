@@ -56,7 +56,11 @@ class JobNotifyClassEnd : JobService() {
             val channel = NotificationChannel("channel_1", "class_channel", NotificationManager.IMPORTANCE_HIGH)
             channel.enableLights(true)
             channel.lightColor = Color.BLUE
+<<<<<<< HEAD
             channel.description = context.getString(R.string.notify_channel_class)
+=======
+            channel.description = context.getString(R.string.notify_title)
+>>>>>>> origin/development
             channel.enableVibration(true)
 
             notificationManager.createNotificationChannel(channel)
