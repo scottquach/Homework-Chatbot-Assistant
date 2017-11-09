@@ -96,8 +96,9 @@
     <string name="signed_out">Signed Out</string>
 
     <!-- Notification Strings -->
-    <string name="notify_assignment_due_title">Homework Tracker</string>
+    <string name="notify_title">Homework Tracker</string>
     <string name="notify_class_end_text">Give me homework for </string>
     <string name="loading_classes">Loading Classes</string>
+    <string name="notify_reply_label">Reply</string>
 
 </resources>

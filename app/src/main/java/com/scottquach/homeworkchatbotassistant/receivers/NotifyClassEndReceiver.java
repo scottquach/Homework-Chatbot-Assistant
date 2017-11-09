@@ -41,7 +41,7 @@ public class NotifyClassEndReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 102, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "app_channel")
-                .setContentTitle("Homework Assistant")
+                .setContentTitle(context.getString(R.string.notify_title))
                 .setContentText("do you have any homework for " + className)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
