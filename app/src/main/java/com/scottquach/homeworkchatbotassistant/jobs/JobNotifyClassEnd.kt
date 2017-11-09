@@ -56,14 +56,14 @@ class JobNotifyClassEnd : JobService() {
             val channel = NotificationChannel("channel_1", "class_channel", NotificationManager.IMPORTANCE_HIGH)
             channel.enableLights(true)
             channel.lightColor = Color.BLUE
-            channel.description = "Homework Assistant"
+            channel.description = context.getString(R.string.notify_channel_class)
             channel.enableVibration(true)
 
             notificationManager.createNotificationChannel(channel)
         }
 
         val remoteInput = RemoteInput.Builder(Constants.RESULT_KEY)
-                .setLabel("reply")
+                .setLabel(context.getString(R.string.notify_reply_label))
                 .build()
         val replyIntent = Intent(context, NotificationReplyReceiver::class.java)
         val replyPendingIntent = PendingIntent.getBroadcast(context, 203,

@@ -45,7 +45,7 @@ class JobNotifyAssignmentDue : JobService() {
             val channel = NotificationChannel("channel_2", "assignment_channel", NotificationManager.IMPORTANCE_DEFAULT)
             channel.enableLights(true)
             channel.lightColor = Color.BLUE
-            channel.description = context.getString(R.string.notify_title)
+            channel.description = context.getString(R.string.notify_class_assignments)
             channel.enableVibration(true)
 
         }
