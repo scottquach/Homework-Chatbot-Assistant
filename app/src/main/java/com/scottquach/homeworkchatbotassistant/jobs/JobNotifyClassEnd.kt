@@ -78,8 +78,8 @@ class JobNotifyClassEnd : JobService() {
         val pendingIntent = PendingIntent.getActivity(context, 102, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val builder = NotificationCompat.Builder(context, "channel_1")
-                .setContentTitle("Homework Assistant")
-                .setContentText("Give me homework for " + userClass)
+                .setContentTitle(context.getString(R.string.notify_title))
+                .setContentText(context.getString(R.string.notify_assignment_due_text) + userClass)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setPriority(Notification.PRIORITY_HIGH)

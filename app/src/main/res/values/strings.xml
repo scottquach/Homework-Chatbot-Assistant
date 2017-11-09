@@ -81,6 +81,7 @@
 
     <!-- Toasts n' Stuff -->
     <string name="loading_messages">Loading Messages</string>
+    <string name="loading_classes">Loading Classes</string>
     <string name="no_messages">No Messages</string>
     <string name="no_classes">No Classes</string>
     <string name="no_homework">No Homework!</string>
@@ -96,8 +97,11 @@
     <string name="signed_out">Signed Out</string>
 
     <!-- Notification Strings -->
-    <string name="notify_assignment_due_title">Homework Tracker</string>
+    <string name="notify_title">Homework Tracker</string>
+    <string name="notify_reply_label">Reply</string>
     <string name="notify_class_end_text">Give me homework for </string>
-    <string name="loading_classes">Loading Classes</string>
+    <string name="notify_assignment_due_text">is due tomorrow for</string>
+
+
 
 </resources>

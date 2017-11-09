@@ -45,7 +45,7 @@ class JobNotifyAssignmentDue : JobService() {
             val channel = NotificationChannel("channel_2", "assignment_channel", NotificationManager.IMPORTANCE_DEFAULT)
             channel.enableLights(true)
             channel.lightColor = Color.BLUE
-            channel.description = "Homework Assistant"
+            channel.description = context.getString(R.string.notify_title)
             channel.enableVibration(true)
 
         }
@@ -54,8 +54,8 @@ class JobNotifyAssignmentDue : JobService() {
         val pendingIntent = PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val builder = NotificationCompat.Builder(context, "channel_2")
-                .setContentTitle("Homework Assistant")
-                .setContentText("\"$userAssignment\" is due tomorrow for $userClass")
+                .setContentTitle(context.getString(R.string.notify_title))
+                .setContentText("\"$userAssignment\"" + context.getString(R.string.notify_assignment_due_text) + "$userClass")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setPriority(Notification.PRIORITY_HIGH)
