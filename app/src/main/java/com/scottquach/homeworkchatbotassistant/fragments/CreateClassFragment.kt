@@ -62,7 +62,6 @@ class CreateClassFragment : Fragment(), CreateClassContract.View {
         super.onAttach(context)
         if (context is CreateClassInterface) {
             listener = context
-            presenter = CreateClassPresenter(this)
         } else {
             throw RuntimeException(context!!.toString() + " must implement ScheduleDisplayInterface")
         }
@@ -73,6 +72,10 @@ class CreateClassFragment : Fragment(), CreateClassContract.View {
         listener = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter = CreateClassPresenter(this)
+    }
 
     override fun updateDayOfWeekView(message: String) {
         button_day_picker.text = message

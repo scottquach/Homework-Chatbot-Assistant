@@ -34,7 +34,6 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        presenter = DisplayAssignmentsPresenter(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -50,6 +49,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     override fun onResume() {
         super.onResume()
+        presenter = DisplayAssignmentsPresenter(this)
         presenter.requestLoadData()
     }
 
