@@ -49,6 +49,10 @@ class SettingsActivity : AppCompatActivity(), SettingsContract.View {
             presenter.signOutUser()
         }
 
+        button_resync.setOnClickListener {
+            presenter.resyncAlarms()
+        }
+
         toolbar_settings.toolbar_menu_icon.setOnClickListener {
             presenter.onBackButton()
         }

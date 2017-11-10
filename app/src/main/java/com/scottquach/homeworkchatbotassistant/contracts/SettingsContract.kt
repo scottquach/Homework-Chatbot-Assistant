@@ -13,6 +13,7 @@ interface SettingsContract {
 
     interface Presenter {
         fun signOutUser()
+        fun resyncAlarms()
         fun onBackButton()
     }
 }

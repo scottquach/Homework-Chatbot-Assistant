@@ -1,12 +1,10 @@
 package com.scottquach.homeworkchatbotassistant.presenters
 
-import android.annotation.TargetApi
 import android.os.Build
-import android.support.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.scottquach.homeworkchatbotassistant.AssignmentDueManager
-import com.scottquach.homeworkchatbotassistant.InstrumentationUtils
+import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.contracts.DisplayAssignmentsContract
 import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager

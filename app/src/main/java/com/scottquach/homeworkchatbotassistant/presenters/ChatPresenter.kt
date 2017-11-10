@@ -5,6 +5,7 @@ import com.scottquach.homeworkchatbotassistant.contracts.ChatContract
 import com.scottquach.homeworkchatbotassistant.database.ChatDatabaseManager
 import com.scottquach.homeworkchatbotassistant.fragments.ChatFragment
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
+import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
 import kotlinx.android.synthetic.main.fragment_chat.*
 
 /**

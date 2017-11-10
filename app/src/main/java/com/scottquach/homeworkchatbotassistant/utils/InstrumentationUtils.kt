@@ -1,4 +1,4 @@
-package com.scottquach.homeworkchatbotassistant
+package com.scottquach.homeworkchatbotassistant.utils
 
 import android.content.Context
 import android.os.Bundle
@@ -24,6 +24,7 @@ class InstrumentationUtils(val context: Context) {
         val ADD_CLASS = "add_class"
         val DELETE_CLASS = "delete_class"
         val DELETE_ASSIGNMENT = "delete_assignment"
+        val ADDED_ASSIGNMENT = "added_assignment"
         val SEND_FEEDBACK = "send_feedback"
         val USER_SENT_MESSAGE = "user_sent_message"
         val REQUEST_HELP = "request_help"

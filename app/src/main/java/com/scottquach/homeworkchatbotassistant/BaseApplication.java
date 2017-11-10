@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.SharedPreferences;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.scottquach.homeworkchatbotassistant.database.Database;
+import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;

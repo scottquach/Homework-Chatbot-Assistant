@@ -3,7 +3,7 @@ package com.scottquach.homeworkchatbotassistant.presenters
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
-import com.scottquach.homeworkchatbotassistant.InstrumentationUtils
+import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.contracts.CreateClassContract
 import com.scottquach.homeworkchatbotassistant.fragments.CreateClassFragment

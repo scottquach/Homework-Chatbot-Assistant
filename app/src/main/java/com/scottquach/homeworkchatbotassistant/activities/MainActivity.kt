@@ -14,7 +14,6 @@ import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.scottquach.homeworkchatbotassistant.BaseApplication
-import com.scottquach.homeworkchatbotassistant.Constants
 import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.MessageHandler
 import com.scottquach.homeworkchatbotassistant.R
@@ -35,6 +34,7 @@ import com.scottquach.homeworkchatbotassistant.fragments.*
 import timber.log.Timber
 
 import com.scottquach.homeworkchatbotassistant.utils.AnimationUtils
+import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
 import kotlinx.android.synthetic.main.toolbar_main.view.*
 
 

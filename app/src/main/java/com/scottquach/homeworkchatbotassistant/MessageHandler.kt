@@ -14,6 +14,7 @@ import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManage
 import com.scottquach.homeworkchatbotassistant.database.BaseDatabase
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
+import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import timber.log.Timber
 
@@ -234,6 +235,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
         saveMessagesToDatabase(listOf(model))
         updateAssignmentContext(assignment)
         updateClassContext(userClass)
+        logEvent(InstrumentationUtils.ADDED_ASSIGNMENT)
     }
 
     /**

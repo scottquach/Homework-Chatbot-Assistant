@@ -22,8 +22,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.scottquach.homeworkchatbotassistant.AssignmentDueManager;
 import com.scottquach.homeworkchatbotassistant.BaseApplication;
-import com.scottquach.homeworkchatbotassistant.InstrumentationUtils;
+import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils;
 import com.scottquach.homeworkchatbotassistant.R;
 
 import timber.log.Timber;
@@ -105,6 +106,7 @@ public class SignInActivity extends AppCompatActivity{
                             createUserInDatabase(user);
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
                             BaseApplication.getInstance().instrumentation.logEvent(FirebaseAnalytics.Event.LOGIN);
+                            new AssignmentDueManager(SignInActivity.this).requestReschedule();
                             finish();
                         } else {
                             BaseApplication.getInstance().instrumentation.logEvent(InstrumentationUtils.Companion.getLOGIN_FAIL());
