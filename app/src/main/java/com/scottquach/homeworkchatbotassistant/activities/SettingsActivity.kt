@@ -8,6 +8,7 @@ import android.support.annotation.RequiresApi
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import com.scottquach.homeworkchatbotassistant.MessageHandler
 
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.contracts.SettingsContract

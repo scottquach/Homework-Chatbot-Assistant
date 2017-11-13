@@ -8,6 +8,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.scottquach.homeworkchatbotassistant.AssignmentDueManager
 import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.R
@@ -16,6 +17,7 @@ import com.scottquach.homeworkchatbotassistant.database.ClassDatabaseManager
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.logEvent
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
+import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
 import timber.log.Timber
 
 /**
@@ -73,11 +75,13 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
                         //Delete the assignments for corresponding class
                         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                JobSchedulerUtil.cancelAllJobs(view.context)
                                 dataSnapshot.child("users").child(user!!.uid).child("assignments").children
                                         .filter { it.child("userClass").value as String == model.title }
                                         .forEach { databaseReference.child("users").child(user!!.uid).child("assignments").child(it.key).removeValue() }
                                 val manager = NotifyClassEndManager(context)
                                 manager.startManaging()
+                                AssignmentDueManager(view.context).requestReschedule()
                             }
 
                             override fun onCancelled(p0: DatabaseError?) {
@@ -103,5 +107,4 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
                 })
                 .create().show()
     }
-
 }
