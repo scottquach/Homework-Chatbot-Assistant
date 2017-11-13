@@ -48,6 +48,7 @@ class JobNotifyAssignmentDue : JobService() {
             channel.description = context.getString(R.string.notify_title)
             channel.enableVibration(true)
 
+            notificationManager.createNotificationChannel(channel)
         }
 
         val intent = Intent(context, SignInActivity::class.java)
