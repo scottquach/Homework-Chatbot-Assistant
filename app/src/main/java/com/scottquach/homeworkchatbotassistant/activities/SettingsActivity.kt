@@ -14,6 +14,7 @@ import com.scottquach.homeworkchatbotassistant.contracts.SettingsContract
 import com.scottquach.homeworkchatbotassistant.presenters.SettingsPresenter
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar_main.view.*
+import android.widget.ArrayAdapter
 
 class SettingsActivity : AppCompatActivity(), SettingsContract.View {
     override fun navigateBack() {
@@ -38,7 +39,9 @@ class SettingsActivity : AppCompatActivity(), SettingsContract.View {
         toolbar_settings.toolbar_menu_icon.visibility = View.VISIBLE
         toolbar_settings.toolbar_menu_icon.setImageResource(R.drawable.ic_arrow_back)
 
-
+        val adapter = ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, resources.getStringArray(R.array.libraries_git))
+        list_libraries.adapter = adapter
 
         presenter = SettingsPresenter(this)
 

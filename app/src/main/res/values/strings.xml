@@ -101,4 +101,9 @@
     <string name="loading_classes">Loading Classes</string>
     <string name="notify_reply_label">Reply</string>
 
+    <string-array name="libraries_git">
+        <item>https://github.com/codemybrainsout/ahoy-onboarding</item>
+        <item>https://github.com/mikepenz/MaterialDrawer</item>
+        <item>https://github.com/JakeWharton/timber</item>
+    </string-array>
 </resources>
