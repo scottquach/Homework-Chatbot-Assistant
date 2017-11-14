@@ -34,7 +34,7 @@ android {
         applicationId "com.scottquach.homeworkchatbotassistant"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 5
+        versionCode 6
         versionName ".1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
