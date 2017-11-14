@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PlannerBot</string>
 
-    <string name="assistant_name">Assistant</string>
+    <string name="assistant_name">PlannerBot</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -15,9 +15,9 @@
 
     <!-- IntroActivity Strings: WIP! -->
     <string name="intro_card1">Welcome</string>
-    <string name="intro_welcome">Organize your homework with the ease of just typing it out.</string>
+    <string name="intro_welcome">Organize your workload with the ease of just typing it out</string>
     <string name="intro_card2">Natural Language</string>
-    <string name="intro_natural_language">Powered by powerful machine learning and NLP algorithms for constant improvement.</string>
+    <string name="intro_natural_language">Powered by powerful machine learning and NLP algorithms for constant improvement</string>
     <string name="intro_card3">Set Your Classes</string>
     <string name="intro_set_classes">Remember to set your classes and I\'ll remind you to give me your homework!</string>
     <string name="intro_card4">Provide Homework</string>
@@ -101,4 +101,9 @@
     <string name="loading_classes">Loading Classes</string>
     <string name="notify_reply_label">Reply</string>
 
+    <string-array name="libraries_git">
+        <item>https://github.com/codemybrainsout/ahoy-onboarding</item>
+        <item>https://github.com/mikepenz/MaterialDrawer</item>
+        <item>https://github.com/JakeWharton/timber</item>
+    </string-array>
 </resources>

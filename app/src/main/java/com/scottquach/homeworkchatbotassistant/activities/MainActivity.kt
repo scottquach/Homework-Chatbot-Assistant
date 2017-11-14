@@ -41,16 +41,6 @@ import kotlinx.android.synthetic.main.toolbar_main.view.*
 class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDisplayInterface
         , AlertDialogFragment.AlertDialogInterface, CreateClassFragment.CreateClassInterface {
 
-    override fun switchToDisplayFragment() {
-        val fragment = DisplayScheduleFragment()
-        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_main, fragment, canGoBack = false)
-    }
-
-
-    override fun switchToCreateFragment() {
-        val fragment = CreateClassFragment()
-        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_main, fragment, true, true)
-    }
 
     private val databaseReference = FirebaseDatabase.getInstance().reference
     private val user = FirebaseAuth.getInstance().currentUser
@@ -197,6 +187,17 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    override fun switchToDisplayFragment() {
+        val fragment = DisplayScheduleFragment()
+        supportFragmentManager.changeFragmentLeftAnimated(R.id.fragment_container_main, fragment, canGoBack = false)
+    }
+
+
+    override fun switchToCreateFragment() {
+        val fragment = CreateClassFragment()
+        supportFragmentManager.changeFragmentRightAnimated(R.id.fragment_container_main, fragment, true, true)
     }
 
     override fun notifyNoInternetConnection() {
