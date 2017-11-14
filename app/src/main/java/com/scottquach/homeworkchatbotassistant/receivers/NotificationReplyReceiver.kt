@@ -14,6 +14,7 @@ import android.os.Build
 import android.support.v4.app.NotificationCompat
 import com.scottquach.homeworkchatbotassistant.Constants
 import com.scottquach.homeworkchatbotassistant.MessageHandler
+import com.scottquach.homeworkchatbotassistant.MessageType
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
@@ -36,6 +37,7 @@ class NotificationReplyReceiver : BroadcastReceiver(), MessageHandler.CallbackIn
         Timber.d("Reply was " + message)
 
         if (message != null) {
+            messageHandler.addMessage(MessageType.SENT, message)
             messageHandler.processNewMessage(message)
         } else {
             updateNotification(context, "Error")

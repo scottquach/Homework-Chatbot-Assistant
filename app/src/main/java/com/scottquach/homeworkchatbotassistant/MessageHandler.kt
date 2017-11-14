@@ -169,7 +169,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
 
     fun promptForAssignment(userClass: String): List<MessageModel> {
         val model = MessageModel()
-        model.message = "Give me homework for $userClass"
+        model.message = "Do you have homework for $userClass?"
         model.type = MessageType.RECEIVED.toLong()
         model.key = getMessageKey()
         model.timestamp = Timestamp(System.currentTimeMillis())
@@ -320,7 +320,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      * functionality
      */
     private fun getExamples(context: Context) {
-        val message1 = "Provide homework for Calculus III"
+        val message1 = "Do you have homework for Calculus III?"
         val model1 = createReceivedMessage(message1)
 
         val message2 = "Finish online review by next Tuesday"

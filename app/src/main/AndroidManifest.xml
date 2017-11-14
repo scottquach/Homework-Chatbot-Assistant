@@ -13,11 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.SignInActivity"></activity>
+        <activity android:name=".activities.SignInActivity" />
         <activity android:name=".activities.SettingsActivity" />
-        <activity android:name=".activities.IntroActivity">
+        <activity android:name=".activities.IntroActivity" />
+        <activity android:name=".activities.MaterialActivity"
+            android:theme="@style/Theme.Intro"></activity>
 
-        </activity>
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -28,36 +29,41 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".receivers.NotifyClassEndReceiver"
-            android:enabled="true"/>
-        <receiver android:name=".receivers.AssignmentDueReceiver"
-            android:enabled="true"/>
-        <receiver android:name=".receivers.RebootReceiver"
+        <receiver
+            android:name=".receivers.NotifyClassEndReceiver"
+            android:enabled="true" />
+        <receiver
+            android:name=".receivers.AssignmentDueReceiver"
+            android:enabled="true" />
+        <receiver
+            android:name=".receivers.RebootReceiver"
             android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".receivers.NotificationReplyReceiver"
+        <receiver
+            android:name=".receivers.NotificationReplyReceiver"
             android:enabled="true"
-            android:exported="true"/>
-
-        <receiver android:name=".receivers.TimeChangeReceiver"
+            android:exported="true" />
+        <receiver
+            android:name=".receivers.TimeChangeReceiver"
             android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.DATE_CHANGED"/>
-                <action android:name="android.intent.action.TIME_SET"/>
-                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".jobs.JobNotifyClassEnd"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
-        <service android:name=".jobs.JobNotifyAssignmentDue"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+        <service
+            android:name=".jobs.JobNotifyClassEnd"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".jobs.JobNotifyAssignmentDue"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -65,7 +71,7 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-    </application>
 
+    </application>
 
 </manifest>

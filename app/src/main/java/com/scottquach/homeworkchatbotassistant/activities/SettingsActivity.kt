@@ -8,12 +8,9 @@ import android.support.annotation.RequiresApi
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import com.scottquach.homeworkchatbotassistant.MessageHandler
 
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.contracts.SettingsContract
-import com.scottquach.homeworkchatbotassistant.jobs.JobNotifyAssignmentDue
-import com.scottquach.homeworkchatbotassistant.jobs.JobNotifyClassEnd
 import com.scottquach.homeworkchatbotassistant.presenters.SettingsPresenter
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar_main.view.*

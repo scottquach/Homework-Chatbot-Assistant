@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.scottquach.homeworkchatbotassistant.AssignmentDueManager;
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager;
 
 /**
@@ -16,5 +17,6 @@ public class RebootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         NotifyClassEndManager manager = new NotifyClassEndManager(context);
         manager.startManaging(System.currentTimeMillis());
+        new AssignmentDueManager(context).requestReschedule();
     }
 }

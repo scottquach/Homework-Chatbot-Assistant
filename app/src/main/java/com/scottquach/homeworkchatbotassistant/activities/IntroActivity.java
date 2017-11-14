@@ -22,32 +22,37 @@ public class IntroActivity extends AhoyOnboarderActivity {
         ahoyOnboarderCard1.setBackgroundColor(R.color.black_transparent);
         ahoyOnboarderCard1.setTitleColor(R.color.white);
         ahoyOnboarderCard1.setDescriptionColor(R.color.grey_200);
-        ahoyOnboarderCard1.setTitleTextSize(dpToPixels(10, this));
-        ahoyOnboarderCard1.setDescriptionTextSize(dpToPixels(8, this));
+//        ahoyOnboarderCard1.setTitleTextSize(dpToPixels(6, this));
+//        ahoyOnboarderCard1.setDescriptionTextSize(dpToPixels(4, this));
 
         AhoyOnboarderCard ahoyOnboarderCard2 = new AhoyOnboarderCard(getString(R.string.intro_card2),
                 getString(R.string.intro_natural_language), R.drawable.ic_think);
-        ahoyOnboarderCard1.setBackgroundColor(R.color.black_transparent);
-        ahoyOnboarderCard1.setTitleColor(R.color.white);
-        ahoyOnboarderCard1.setDescriptionColor(R.color.grey_200);
-        ahoyOnboarderCard1.setTitleTextSize(dpToPixels(10, this));
-        ahoyOnboarderCard1.setDescriptionTextSize(dpToPixels(8, this));
+        ahoyOnboarderCard2.setBackgroundColor(R.color.black_transparent);
+        ahoyOnboarderCard2.setTitleColor(R.color.white);
+        ahoyOnboarderCard2.setDescriptionColor(R.color.grey_200);
+//        ahoyOnboarderCard2.setTitleTextSize(dpToPixels(6, this));
+//        ahoyOnboarderCard2.setDescriptionTextSize(dpToPixels(4, this));
+
 
         AhoyOnboarderCard ahoyOnboarderCard3 = new AhoyOnboarderCard(getString(R.string.intro_card3),
                 getString(R.string.intro_set_classes), R.drawable.ic_blackboard);
-        ahoyOnboarderCard1.setBackgroundColor(R.color.black_transparent);
-        ahoyOnboarderCard1.setTitleColor(R.color.white);
-        ahoyOnboarderCard1.setDescriptionColor(R.color.grey_200);
-        ahoyOnboarderCard1.setTitleTextSize(dpToPixels(10, this));
-        ahoyOnboarderCard1.setDescriptionTextSize(dpToPixels(8, this));
+        ahoyOnboarderCard3.setBackgroundColor(R.color.black_transparent);
+        ahoyOnboarderCard3.setTitleColor(R.color.white);
+        ahoyOnboarderCard3.setDescriptionColor(R.color.grey_200);
+
+//        ahoyOnboarderCard3.setTitleTextSize(dpToPixels(6, this));
+//        ahoyOnboarderCard3.setDescriptionTextSize(dpToPixels(4, this));
+
+
 
         AhoyOnboarderCard ahoyOnboarderCard4 = new AhoyOnboarderCard(getString(R.string.intro_card4),
                 getString(R.string.intro_provide_homework), R.drawable.ic_chat);
-        ahoyOnboarderCard1.setBackgroundColor(R.color.black_transparent);
-        ahoyOnboarderCard1.setTitleColor(R.color.white);
-        ahoyOnboarderCard1.setDescriptionColor(R.color.grey_200);
-        ahoyOnboarderCard1.setTitleTextSize(dpToPixels(10, this));
-        ahoyOnboarderCard1.setDescriptionTextSize(dpToPixels(8, this));
+        ahoyOnboarderCard4.setBackgroundColor(R.color.black_transparent);
+        ahoyOnboarderCard4.setTitleColor(R.color.white);
+        ahoyOnboarderCard4.setDescriptionColor(R.color.grey_200);
+//        ahoyOnboarderCard4.setTitleTextSize(dpToPixels(6, this));    
+
+
 
         List<AhoyOnboarderCard> pages = new ArrayList<>();
         pages.add(ahoyOnboarderCard1);
