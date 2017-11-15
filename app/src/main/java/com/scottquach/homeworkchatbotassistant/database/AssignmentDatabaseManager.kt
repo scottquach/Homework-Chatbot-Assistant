@@ -62,16 +62,18 @@ class AssignmentDatabaseManager(caller: Any) : BaseDatabase() {
     }
 
     /**
-     * Returns the model of the next assignment that is due, does not include overdue assignments.
+     * Returns the model of the next assignment that is due.
      *  If there are no upcoming assignments, return an empty model
      *
      * @param context
      * @return iteratedAssignment
      */
     fun getNextAssignment(context: Context): AssignmentModel {
-        val futureAssignments = userAssignments.filter {
-            StringUtils.convertStringToCalendar(context, it.dueDate).after(Calendar.getInstance())
-        }
+//        val futureAssignments = userAssignments.filter {
+//            StringUtils.convertStringToCalendar(context, it.dueDate).after(Calendar.getInstance())
+//        }
+
+        val futureAssignments = userAssignments
 
 
         if (futureAssignments.isEmpty()) {

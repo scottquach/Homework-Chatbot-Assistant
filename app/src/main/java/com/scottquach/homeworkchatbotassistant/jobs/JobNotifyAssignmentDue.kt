@@ -52,7 +52,7 @@ class JobNotifyAssignmentDue : JobService() {
         }
 
         val intent = Intent(context, SignInActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val builder = NotificationCompat.Builder(context, "channel_2")
                 .setContentTitle(context.getString(R.string.notify_title))

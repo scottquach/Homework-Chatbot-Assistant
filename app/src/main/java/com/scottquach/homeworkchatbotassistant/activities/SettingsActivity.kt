@@ -15,6 +15,7 @@ import com.scottquach.homeworkchatbotassistant.presenters.SettingsPresenter
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar_main.view.*
 import android.widget.ArrayAdapter
+import com.scottquach.homeworkchatbotassistant.jobs.JobNotifyAssignmentDue
 
 class SettingsActivity : AppCompatActivity(), SettingsContract.View {
     override fun navigateBack() {

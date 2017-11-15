@@ -48,7 +48,7 @@ class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : Displa
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             JobSchedulerUtil.cancelAllJobs(view.context)
             AssignmentDueManager(view.context).requestReschedule()
-            NotifyClassEndManager(view.context).startManaging(System.currentTimeMillis())
+            NotifyClassEndManager(view.context).startManaging()
         }
         logEvent(InstrumentationUtils.DELETE_ASSIGNMENT)
     }

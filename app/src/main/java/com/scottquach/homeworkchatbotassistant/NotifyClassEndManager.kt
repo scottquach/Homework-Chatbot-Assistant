@@ -39,7 +39,7 @@ class NotifyClassEndManager(var context: Context) : BaseDatabase(){
      */
     private val previousEndTime = Calendar.getInstance()
 
-    fun startManaging(specificEndTime: Long = System.currentTimeMillis()) {
+    fun startManaging(specificEndTime: Long = System.currentTimeMillis() + 120000) {
         //If this wasn't called by a end class time job, just use current time
         previousEndTime.timeInMillis = specificEndTime
         Timber.d("Previous end time is ${previousEndTime.timeInMillis}")
