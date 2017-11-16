@@ -16,6 +16,7 @@ import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
+import org.json.JSONArray
 import timber.log.Timber
 
 import java.sql.Timestamp
@@ -374,7 +375,23 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
                 Timber.d("Action was specific class")
                 val params = result.parameters
                 val date = params["date"]?.asString?.trim()
-                val assignment = params["assignment-official"]?.asString?.trim()
+
+                var assignment = ""
+                params["assignment-official"]?.let {
+                    if (params["assignment-official"]!!.isJsonArray) {
+                        Timber.d("Was a json array")
+                        val jsonArray = params["assignment-official"]!!.asJsonArray
+                        var temp = ""
+                        for (i in 0..(jsonArray!!.size() - 1)) {
+                            temp += ((jsonArray[i].toString().trim() + " "))
+                        }
+
+                        assignment = temp.trim().subSequence(1, temp.length - 2).toString()
+                    } else {
+                        Timber.d("Was not a json array")
+                        assignment = it.asString.trim()
+                    }
+                }
                 val userClass = params["class"]?.asString?.trim()
 
                 if (date.isNullOrEmpty() || assignment.isNullOrEmpty() || userClass.isNullOrEmpty()) {
@@ -388,7 +405,20 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
                 Timber.d("Action was prompted class")
                 val params = result.parameters
                 val date = params["date"]?.asString?.trim()
-                val assignment = params["assignment-official"]?.asString?.trim()
+                var assignment = ""
+
+                params["assignment-official"]?.let {
+                    if (params["assignment-official"]!!.isJsonArray) {
+                        val jsonArray = params["assignment-official"]!!.asJsonArray
+                        var temp = ""
+                        for (i in 0..(jsonArray.size() - 1)) {
+                            temp += jsonArray[i].toString().trim() + " "
+                        }
+                        assignment = temp.trim().subSequence(1, temp.length - 2).toString()
+                    } else {
+                        assignment = it.asString.trim()
+                    }
+                }
 
                 if (date.isNullOrEmpty() || assignment.isNullOrEmpty()) {
                     val textResponse = result.fulfillment.speech
