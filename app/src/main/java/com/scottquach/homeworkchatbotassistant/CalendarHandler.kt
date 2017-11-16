@@ -1,9 +1,12 @@
 package com.scottquach.homeworkchatbotassistant
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.content.pm.PackageManager
 import android.provider.CalendarContract
+import android.support.v4.content.ContextCompat
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
 import java.util.*
@@ -33,7 +36,9 @@ class CalendarHandler {
         contentValues.put(CalendarContract.Events.DURATION, "+P1H")
         contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
 
-        contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
+        }
     }
 
 
