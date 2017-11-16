@@ -233,6 +233,8 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
         assignmentManager.scheduleNextAlarm(assignmentModel)
 
         saveMessagesToDatabase(listOf(model))
+        CalendarHandler().addAssignmentToCalendar(context, assignmentModel)
+
         updateAssignmentContext(assignment)
         updateClassContext(userClass)
         logEvent(InstrumentationUtils.ADDED_ASSIGNMENT)
