@@ -12,7 +12,7 @@ import java.sql.Timestamp
 /**
  * Created by Scott Quach on 11/6/2017.
  */
-class ChatDatabaseManager(val context: Context, val caller: Any) : BaseDatabase() {
+class ChatDatabase(val context: Context, val caller: Any) : BaseDatabase() {
     val userMessages = mutableListOf<MessageModel>()
 
     private var listener: CallbackInterface? = null

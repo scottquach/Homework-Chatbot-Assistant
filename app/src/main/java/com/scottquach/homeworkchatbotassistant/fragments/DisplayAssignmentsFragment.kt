@@ -70,13 +70,13 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
     }
 
     override fun toggleNoHomeworkLabelsVisible() {
-        text_no_homework.visibility = View.VISIBLE
-        image_no_homework.visibility = View.VISIBLE
+        text_no_homework?.visibility = View.VISIBLE
+        image_no_homework?.visibility = View.VISIBLE
     }
 
     override fun toggleNoHomeworkLabelsInvisible() {
-        text_no_homework.visibility = View.INVISIBLE
-        image_no_homework.visibility = View.INVISIBLE
+        text_no_homework?.visibility = View.INVISIBLE
+        image_no_homework?.visibility = View.INVISIBLE
     }
 
     /**

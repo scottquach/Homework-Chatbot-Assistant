@@ -84,11 +84,11 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
     }
 
     override fun textLabelSetVisible() {
-        text_label_classes.visibility = View.VISIBLE
+        text_label_classes?.visibility = View.VISIBLE
     }
 
     override fun textLabelSetInvisible() {
-        text_label_classes.visibility = View.INVISIBLE
+        text_label_classes?.visibility = View.INVISIBLE
     }
 
     override fun removeClass(position: Int) {

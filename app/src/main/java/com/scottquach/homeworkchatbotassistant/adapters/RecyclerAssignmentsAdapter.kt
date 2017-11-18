@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager
+import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabase
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
 import com.scottquach.homeworkchatbotassistant.inflate
@@ -55,13 +55,13 @@ class RecyclerAssignmentsAdapter(private val context: Context,
     override fun getItemCount() = userAssignments.size
 
     override fun getItemViewType(position: Int): Int {
-        return if (AssignmentDatabaseManager.isOverdueAssignment(context, userAssignments[position])) {
+        return if (AssignmentDatabase.isOverdueAssignment(context, userAssignments[position])) {
             TYPE_OVERDUE
         } else TYPE_REGULAR
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        if (AssignmentDatabaseManager.isOverdueAssignment(context, userAssignments[position])) {
+        if (AssignmentDatabase.isOverdueAssignment(context, userAssignments[position])) {
             (holder as AssignmentDueViewHolder).bindInformation(userAssignments[position])
             (holder as AssignmentDueViewHolder).itemView.findViewById<ImageView>(R.id.button_assignment_delete).setOnClickListener {
                 listener?.delete(userAssignments[holder.adapterPosition], holder.adapterPosition)

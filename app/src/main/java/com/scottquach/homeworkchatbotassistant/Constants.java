@@ -34,6 +34,9 @@ public class Constants {
     public static final String USER_CLASS = "user_class";
     public static final String USER_ASSIGNMENT = "user_assignment";
 
+    //Shared Preference Keys
+    public static final String ADD_ASSIGNMENTS_TO_CALENDAR = "add_assignments_to_calendar";
+
 
     //Notifications
     public static final String RESULT_KEY = "class_end_reply";

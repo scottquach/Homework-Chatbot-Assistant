@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.scottquach.homeworkchatbotassistant.BaseApplication
 import com.scottquach.homeworkchatbotassistant.*
-import com.scottquach.homeworkchatbotassistant.MessageHandler
+import com.scottquach.homeworkchatbotassistant.database.MessageDatabaseHandler
 import com.scottquach.homeworkchatbotassistant.R
 
 import android.app.Dialog
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), DisplayScheduleFragment.ScheduleDispla
 
         if (BaseApplication.getInstance().isFirstOpen) {
             Timber.d("first open")
-            val handler = MessageHandler(this, this)
+            val handler = MessageDatabaseHandler(this, this)
             handler.receiveWelcomeMessages()
             BaseApplication.getInstance().sharePref.edit().putBoolean("first_open", false).apply()
         } else {

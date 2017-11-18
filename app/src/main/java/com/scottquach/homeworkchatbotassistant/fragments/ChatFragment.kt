@@ -81,12 +81,12 @@ class ChatFragment : Fragment(), ChatContract.View, RecyclerQuickReplyAdapter.Qu
     }
 
     override fun textNoMessagesSetVisible() {
-        text_loading_messages.text = getString(R.string.no_messages)
-        text_loading_messages.visibility = View.VISIBLE
+        text_loading_messages?.text = getString(R.string.no_messages)
+        text_loading_messages?.visibility = View.VISIBLE
     }
 
     override fun textNoMessagesSetInvisible() {
-        text_loading_messages.visibility = View.INVISIBLE
+        text_loading_messages?.visibility = View.INVISIBLE
     }
 
     override fun addData(data: List<MessageModel>) {

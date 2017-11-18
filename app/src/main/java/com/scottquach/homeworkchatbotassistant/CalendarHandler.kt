@@ -1,7 +1,6 @@
 package com.scottquach.homeworkchatbotassistant
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -17,31 +16,26 @@ import java.util.*
  * assignments from the calendar
  */
 class CalendarHandler {
-
-
-    @SuppressLint("MissingPermission")
     fun addAssignmentToCalendar(context: Context, model: AssignmentModel) {
-        val dueDate = StringUtils.convertStringToCalendar(context, model.dueDate)
-        dueDate.set(Calendar.HOUR_OF_DAY, 9)
-        dueDate.set(Calendar.MINUTE, 0)
+        if (BaseApplication.getInstance().sharePref.getBoolean(Constants.ADD_ASSIGNMENTS_TO_CALENDAR, true)) {
+            val dueDate = StringUtils.convertStringToCalendar(context, model.dueDate)
+            dueDate.set(Calendar.HOUR_OF_DAY, 9)
+            dueDate.set(Calendar.MINUTE, 0)
 
-        val contentResolver = context.contentResolver
-        val contentValues = ContentValues()
+            val contentResolver = context.contentResolver
+            val contentValues = ContentValues()
 
-        contentValues.put(CalendarContract.Events.TITLE, model.title)
-        contentValues.put(CalendarContract.Events.DESCRIPTION, "Assignment is due for ${model.userClass}")
-        contentValues.put(CalendarContract.Events.DTSTART, dueDate.timeInMillis)
+            contentValues.put(CalendarContract.Events.TITLE, model.title)
+            contentValues.put(CalendarContract.Events.DESCRIPTION, "Assignment is due for ${model.userClass}")
+            contentValues.put(CalendarContract.Events.DTSTART, dueDate.timeInMillis)
 
-        contentValues.put(CalendarContract.Events.CALENDAR_ID, 1)
-        contentValues.put(CalendarContract.Events.DURATION, "+P1H")
-        contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
+            contentValues.put(CalendarContract.Events.CALENDAR_ID, 1)
+            contentValues.put(CalendarContract.Events.DURATION, "+P1H")
+            contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
 
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+                contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues)
+            }
         }
     }
-
-
-
-
 }

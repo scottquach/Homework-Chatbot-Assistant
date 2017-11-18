@@ -10,7 +10,7 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import com.scottquach.homeworkchatbotassistant.Constants
-import com.scottquach.homeworkchatbotassistant.MessageHandler
+import com.scottquach.homeworkchatbotassistant.database.MessageDatabaseHandler
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
 
@@ -32,7 +32,7 @@ class JobNotifyAssignmentDue : JobService() {
 
         createNotification(this, userAssignment, userClass)
 
-        val handler = MessageHandler(this, this)
+        val handler = MessageDatabaseHandler(this, this)
         handler.assignmentDueReminder(userAssignment, userClass)
         jobFinished(jobParameters, false)
         return true
@@ -42,7 +42,7 @@ class JobNotifyAssignmentDue : JobService() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("channel_2", "assignment_channel", NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel("channel_2", "Assignments Due", NotificationManager.IMPORTANCE_DEFAULT)
             channel.enableLights(true)
             channel.lightColor = Color.BLUE
             channel.description = context.getString(R.string.notify_title)

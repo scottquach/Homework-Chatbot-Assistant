@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager
+import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabase
 import com.scottquach.homeworkchatbotassistant.receivers.AssignmentDueReceiver
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
@@ -17,11 +17,11 @@ import java.util.*
  * Created by Scott Quach on 9/23/2017.
  */
 
-class AssignmentDueManager(var context: Context) : AssignmentDatabaseManager.AssignmentCallback {
+class AssignmentDueManager(var context: Context) : AssignmentDatabase.AssignmentCallback {
 
 
     private val database by lazy {
-        AssignmentDatabaseManager(this)
+        AssignmentDatabase(this)
     }
 
     /**
