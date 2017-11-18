@@ -6,15 +6,15 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.view.View
-import android.widget.Button
-import android.widget.Toast
+import android.widget.*
+import com.scottquach.homeworkchatbotassistant.BaseApplication
+import com.scottquach.homeworkchatbotassistant.Constants
 
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.contracts.SettingsContract
 import com.scottquach.homeworkchatbotassistant.presenters.SettingsPresenter
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.toolbar_main.view.*
-import android.widget.ArrayAdapter
 import com.scottquach.homeworkchatbotassistant.jobs.JobNotifyAssignmentDue
 
 class SettingsActivity : AppCompatActivity(), SettingsContract.View {
@@ -46,8 +46,7 @@ class SettingsActivity : AppCompatActivity(), SettingsContract.View {
 
         presenter = SettingsPresenter(this)
 
-        val signOutButton = findViewById<View>(R.id.button_sign_out) as Button
-        signOutButton.setOnClickListener {
+        button_sign_out.setOnClickListener {
             presenter.signOutUser()
         }
 
@@ -59,9 +58,21 @@ class SettingsActivity : AppCompatActivity(), SettingsContract.View {
             presenter.onBackButton()
         }
 
-//        val testButton = findViewById<View>(R.id.button_test) as Button
-//        testButton.setOnClickListener {
-//            JobSchedulerUtil.cancelAllJobs(this@SettingsActivity)
-//        }
+        switch_calendar.setOnCheckedChangeListener(object: CompoundButton.OnCheckedChangeListener {
+            override fun onCheckedChanged(p0: CompoundButton?, isChecked: Boolean) {
+                if (isChecked) {
+                    BaseApplication.getInstance().sharePref.edit().putBoolean(Constants.ADD_ASSIGNMENTS_TO_CALENDAR, true).apply()
+                } else {
+                    BaseApplication.getInstance().sharePref.edit().putBoolean(Constants.ADD_ASSIGNMENTS_TO_CALENDAR, false).apply()
+                }
+            }
+        })
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        switch_calendar.isChecked = BaseApplication.getInstance().sharePref.getBoolean(Constants.ADD_ASSIGNMENTS_TO_CALENDAR, true)
+
     }
 }

@@ -1,4 +1,4 @@
-package com.scottquach.homeworkchatbotassistant
+package com.scottquach.homeworkchatbotassistant.database
 
 import ai.api.AIConfiguration
 import ai.api.RequestExtras
@@ -10,13 +10,12 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Handler
 import com.google.firebase.database.*
-import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager
-import com.scottquach.homeworkchatbotassistant.database.BaseDatabase
+import com.scottquach.homeworkchatbotassistant.*
+import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.utils.StringUtils
-import org.json.JSONArray
 import timber.log.Timber
 
 import java.sql.Timestamp
@@ -29,7 +28,7 @@ import java.util.ArrayList
  * notifies the presenter of these changes in order to update the UI
  */
 
-class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
+class MessageDatabaseHandler(val context: Context, caller: Any) : BaseDatabase() {
 
     private val aiService: AIService
 
@@ -246,7 +245,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      * has a default message if no upcoming assignments
      */
     private fun getNextAssignment(context: Context) {
-        val assignmentManager = AssignmentDatabaseManager(this)
+        val assignmentManager = AssignmentDatabase(this)
         val nextAssignment = assignmentManager.getNextAssignment(context)
 
         if (nextAssignment.key == "empty") {
@@ -267,7 +266,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      * has a default message if no overdue assignments
      */
     private fun getOverdueAssignments(context: Context) {
-        val assignmentManager = AssignmentDatabaseManager(this)
+        val assignmentManager = AssignmentDatabase(this)
         val overdueAssignments = assignmentManager.getOverdueAssignments(context)
 
         if (overdueAssignments.isEmpty()) {
@@ -293,7 +292,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
      * available a default message is displayed
      */
     private fun getCurrentAssignments(context: Context) {
-        val assignmentManager = AssignmentDatabaseManager(this)
+        val assignmentManager = AssignmentDatabase(this)
         val userAssignments = assignmentManager.getCurrentAssignments(context)
 
         if (userAssignments.isEmpty()) {
@@ -304,7 +303,7 @@ class MessageHandler(val context: Context, caller: Any) : BaseDatabase() {
             var assignmentNumber = 1
             for (assignment in userAssignments) {
 
-                if (AssignmentDatabaseManager.isOverdueAssignment(context, assignment)) {
+                if (AssignmentDatabase.isOverdueAssignment(context, assignment)) {
                     val messageModel = createReceivedMessage("$assignmentNumber. \"${assignment.title}\" (Overdue)")
                     messages.add(messageModel)
                 } else {

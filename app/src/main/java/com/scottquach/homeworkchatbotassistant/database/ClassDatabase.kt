@@ -12,7 +12,7 @@ import timber.log.Timber
 /**
  * Created by Scott Quach on 11/2/2017.
  */
-class ClassDatabaseManager(val presenter: DisplaySchedulePresenter) : BaseDatabase() {
+class ClassDatabase(val presenter: DisplaySchedulePresenter) : BaseDatabase() {
 
     private val userClasses = mutableListOf<ClassModel>()
 

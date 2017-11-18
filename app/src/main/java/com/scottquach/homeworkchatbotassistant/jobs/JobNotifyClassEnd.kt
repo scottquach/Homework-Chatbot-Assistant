@@ -14,6 +14,7 @@ import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.receivers.NotificationReplyReceiver
 
 import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
+import com.scottquach.homeworkchatbotassistant.database.MessageDatabaseHandler
 
 import timber.log.Timber
 
@@ -40,7 +41,7 @@ class JobNotifyClassEnd : JobService() {
         Timber.d("ON RECEIVE WAS CALLED")
         createNotification(this, userClass!!)
 
-        val messageHandler = MessageHandler(this, this)
+        val messageHandler = MessageDatabaseHandler(this, this)
         messageHandler.promptForAssignment(userClass!!)
 
         val manager = NotifyClassEndManager(this)
@@ -53,7 +54,7 @@ class JobNotifyClassEnd : JobService() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("channel_1", "class_channel", NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel("channel_1", "Class Ended", NotificationManager.IMPORTANCE_HIGH)
             channel.enableLights(true)
             channel.lightColor = Color.BLUE
             channel.description = context.getString(R.string.notify_title)

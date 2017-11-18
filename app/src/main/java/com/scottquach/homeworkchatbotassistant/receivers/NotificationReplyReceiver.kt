@@ -13,7 +13,7 @@ import android.graphics.Color
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import com.scottquach.homeworkchatbotassistant.Constants
-import com.scottquach.homeworkchatbotassistant.MessageHandler
+import com.scottquach.homeworkchatbotassistant.database.MessageDatabaseHandler
 import com.scottquach.homeworkchatbotassistant.MessageType
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
@@ -24,21 +24,21 @@ import com.scottquach.homeworkchatbotassistant.models.MessageModel
  * Created by Scott Quach on 11/6/2017.
  * Handles notification replies from notifying the user when the class ends
  */
-class NotificationReplyReceiver : BroadcastReceiver(), MessageHandler.CallbackInterface {
+class NotificationReplyReceiver : BroadcastReceiver(), MessageDatabaseHandler.CallbackInterface {
 
-    private lateinit var messageHandler: MessageHandler
+    private lateinit var messageDatabaseHandler: MessageDatabaseHandler
     private lateinit var context: Context
 
     override fun onReceive(context: Context, intent: Intent) {
         this.context = context
-        messageHandler = MessageHandler(context, this@NotificationReplyReceiver)
+        messageDatabaseHandler = MessageDatabaseHandler(context, this@NotificationReplyReceiver)
 
         val message = getMessageText(intent).toString()
         Timber.d("Reply was " + message)
 
         if (message != null) {
-            messageHandler.addMessage(MessageType.SENT, message)
-            messageHandler.processNewMessage(message)
+            messageDatabaseHandler.addMessage(MessageType.SENT, message)
+            messageDatabaseHandler.processNewMessage(message)
         } else {
             updateNotification(context, "Error")
         }

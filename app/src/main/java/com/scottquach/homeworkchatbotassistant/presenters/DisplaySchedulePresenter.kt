@@ -13,7 +13,7 @@ import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.contracts.DisplayScheduleContract
-import com.scottquach.homeworkchatbotassistant.database.ClassDatabaseManager
+import com.scottquach.homeworkchatbotassistant.database.ClassDatabase
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayScheduleFragment
 import com.scottquach.homeworkchatbotassistant.logEvent
 import com.scottquach.homeworkchatbotassistant.models.ClassModel
@@ -32,7 +32,7 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
     private val userClasses = mutableListOf<ClassModel>()
 
     private val database by lazy {
-        ClassDatabaseManager(this)
+        ClassDatabase(this)
     }
 
     /**

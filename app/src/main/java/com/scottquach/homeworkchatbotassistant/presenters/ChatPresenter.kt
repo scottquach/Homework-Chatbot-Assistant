@@ -2,7 +2,8 @@ package com.scottquach.homeworkchatbotassistant.presenters
 
 import com.scottquach.homeworkchatbotassistant.*
 import com.scottquach.homeworkchatbotassistant.contracts.ChatContract
-import com.scottquach.homeworkchatbotassistant.database.ChatDatabaseManager
+import com.scottquach.homeworkchatbotassistant.database.ChatDatabase
+import com.scottquach.homeworkchatbotassistant.database.MessageDatabaseHandler
 import com.scottquach.homeworkchatbotassistant.fragments.ChatFragment
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
 import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
@@ -11,17 +12,17 @@ import kotlinx.android.synthetic.main.fragment_chat.*
 /**
  * Created by Scott Quach on 10/25/2017.
  */
-class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter, MessageHandler.CallbackInterface,
-ChatDatabaseManager.CallbackInterface{
+class ChatPresenter(val view: ChatFragment) : ChatContract.Presenter, MessageDatabaseHandler.CallbackInterface,
+ChatDatabase.CallbackInterface{
 
     private val userMessages = mutableListOf<MessageModel>()
 
     private val messageHandler by lazy {
-        MessageHandler(view.context, this)
+        MessageDatabaseHandler(view.context, this)
     }
 
     private val chatDatabase by lazy {
-        ChatDatabaseManager(view.context, this)
+        ChatDatabase(view.context, this)
     }
 
     private lateinit var convoContext: String

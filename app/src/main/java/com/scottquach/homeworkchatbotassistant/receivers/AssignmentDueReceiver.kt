@@ -11,7 +11,7 @@ import android.graphics.Color
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import com.scottquach.homeworkchatbotassistant.Constants
-import com.scottquach.homeworkchatbotassistant.MessageHandler
+import com.scottquach.homeworkchatbotassistant.database.MessageDatabaseHandler
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
 
@@ -26,7 +26,7 @@ class AssignmentDueReceiver : BroadcastReceiver() {
             val userClass = intent.extras.getString(Constants.USER_CLASS)
             createNotification(context, userAssignment, userClass)
 
-            val handler = MessageHandler(context, this)
+            val handler = MessageDatabaseHandler(context, this)
             handler.assignmentDueReminder(userAssignment, userClass)
         }
     }

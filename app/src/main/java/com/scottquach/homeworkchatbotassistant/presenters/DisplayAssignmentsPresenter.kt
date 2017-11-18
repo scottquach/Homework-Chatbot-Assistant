@@ -7,7 +7,7 @@ import com.scottquach.homeworkchatbotassistant.AssignmentDueManager
 import com.scottquach.homeworkchatbotassistant.utils.InstrumentationUtils
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager
 import com.scottquach.homeworkchatbotassistant.contracts.DisplayAssignmentsContract
-import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabaseManager
+import com.scottquach.homeworkchatbotassistant.database.AssignmentDatabase
 import com.scottquach.homeworkchatbotassistant.fragments.DisplayAssignmentsFragment
 import com.scottquach.homeworkchatbotassistant.logEvent
 import com.scottquach.homeworkchatbotassistant.models.AssignmentModel
@@ -18,13 +18,13 @@ import com.scottquach.homeworkchatbotassistant.utils.JobSchedulerUtil
  * Presenter for controlling business logic for showing user their current assignments
  */
 class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : DisplayAssignmentsContract.Presenter,
-    AssignmentDatabaseManager.AssignmentCallback{
+    AssignmentDatabase.AssignmentCallback{
 
     private val databaseReference = FirebaseDatabase.getInstance().reference
     private val user = FirebaseAuth.getInstance().currentUser
 
     private val database by lazy {
-        AssignmentDatabaseManager(this)
+        AssignmentDatabase(this)
     }
 
     private val userAssignments = mutableListOf<AssignmentModel>()

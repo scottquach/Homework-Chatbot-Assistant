@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import com.scottquach.homeworkchatbotassistant.Constants;
-import com.scottquach.homeworkchatbotassistant.MessageHandler;
+import com.scottquach.homeworkchatbotassistant.database.MessageDatabaseHandler;
 import com.scottquach.homeworkchatbotassistant.NotifyClassEndManager;
 import com.scottquach.homeworkchatbotassistant.R;
 import com.scottquach.homeworkchatbotassistant.activities.SignInActivity;
@@ -27,8 +27,8 @@ public class NotifyClassEndReceiver extends BroadcastReceiver {
         Timber.d("ON RECEIVE old WAS CALLED");
         if (intent.getExtras() != null) {
             String className = intent.getExtras().getString(Constants.CLASS_NAME, "class");
-            MessageHandler messageHandler = new MessageHandler(context, null);
-            messageHandler.promptForAssignment(className);
+            MessageDatabaseHandler messageDatabaseHandler = new MessageDatabaseHandler(context, null);
+            messageDatabaseHandler.promptForAssignment(className);
 
             createNotification(context, className);
             NotifyClassEndManager manager = new NotifyClassEndManager(context);
