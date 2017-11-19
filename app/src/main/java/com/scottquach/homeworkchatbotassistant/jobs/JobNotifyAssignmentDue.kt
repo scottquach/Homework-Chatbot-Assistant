@@ -10,6 +10,7 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import com.scottquach.homeworkchatbotassistant.Constants
+import com.scottquach.homeworkchatbotassistant.NotificationHandler
 import com.scottquach.homeworkchatbotassistant.database.MessageDatabaseHandler
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
@@ -30,39 +31,11 @@ class JobNotifyAssignmentDue : JobService() {
         val userAssignment = jobParameters.extras.getString(Constants.USER_ASSIGNMENT)
         val userClass = jobParameters.extras.getString(Constants.USER_CLASS)
 
-        createNotification(this, userAssignment, userClass)
+        NotificationHandler().NotifyAssignmentDue(this, userAssignment, userClass)
 
         val handler = MessageDatabaseHandler(this, this)
         handler.assignmentDueReminder(userAssignment, userClass)
         jobFinished(jobParameters, false)
         return true
-    }
-
-     fun createNotification(context: Context, userAssignment: String, userClass: String) {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("channel_2", "Assignments Due", NotificationManager.IMPORTANCE_DEFAULT)
-            channel.enableLights(true)
-            channel.lightColor = Color.BLUE
-            channel.description = context.getString(R.string.notify_title)
-            channel.enableVibration(true)
-
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        val intent = Intent(context, SignInActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(context, 103, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-        val builder = NotificationCompat.Builder(context, "channel_2")
-                .setContentTitle(context.getString(R.string.notify_title))
-                .setContentText("\"$userAssignment\" is due tomorrow for $userClass")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setAutoCancel(true)
-
-        val notification = builder.build()
-        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
     }
 }

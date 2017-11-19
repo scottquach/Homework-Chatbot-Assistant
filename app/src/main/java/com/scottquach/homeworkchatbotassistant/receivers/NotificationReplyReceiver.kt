@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationCompat
 import com.scottquach.homeworkchatbotassistant.Constants
 import com.scottquach.homeworkchatbotassistant.database.MessageDatabaseHandler
 import com.scottquach.homeworkchatbotassistant.MessageType
+import com.scottquach.homeworkchatbotassistant.NotificationHandler
 import com.scottquach.homeworkchatbotassistant.R
 import com.scottquach.homeworkchatbotassistant.activities.SignInActivity
 import com.scottquach.homeworkchatbotassistant.models.MessageModel
@@ -40,46 +41,13 @@ class NotificationReplyReceiver : BroadcastReceiver(), MessageDatabaseHandler.Ca
             messageDatabaseHandler.addMessage(MessageType.SENT, message)
             messageDatabaseHandler.processNewMessage(message)
         } else {
-            updateNotification(context, "Error")
+            NotificationHandler().updateNotificationConversation(context, "Error")
         }
 
     }
 
     override fun messagesCallback(model: MessageModel) {
-        updateNotification(context, model.message)
-    }
-
-    private fun updateNotification(context: Context, message: String) {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("channel_1", "class_channel", NotificationManager.IMPORTANCE_HIGH)
-            channel.enableLights(true)
-            channel.lightColor = Color.BLUE
-            channel.description = "Homework Assistant"
-            channel.enableVibration(true)
-
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        val intent = Intent(context, SignInActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(context, 102, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-
-        val bigTextStyle = NotificationCompat.BigTextStyle()
-        bigTextStyle.setBigContentTitle("Homework Assistant")
-        bigTextStyle.bigText(message)
-
-        val builder = NotificationCompat.Builder(context, "channel_1")
-                .setContentTitle("Homework Assistant")
-                .setContentText(message)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .setStyle(bigTextStyle)
-
-        val notification = builder.build()
-        notificationManager.notify(1011, notification)
+        NotificationHandler().updateNotificationConversation(context, model.message)
     }
 
     private fun getMessageText(intent: Intent) : CharSequence? {

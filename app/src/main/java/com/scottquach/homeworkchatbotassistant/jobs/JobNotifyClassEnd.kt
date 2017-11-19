@@ -37,9 +37,9 @@ class JobNotifyClassEnd : JobService() {
         return true
     }
 
-    private fun notifyUser(jobParameters: JobParameters, userClass: String?) {
+    private fun notifyUser(jobParameters: JobParameters, userClass: String) {
         Timber.d("ON RECEIVE WAS CALLED")
-        createNotification(this, userClass!!)
+        NotificationHandler().NotifyClassEnd(this, userClass)
 
         val messageHandler = MessageDatabaseHandler(this, this)
         messageHandler.promptForAssignment(userClass!!)
@@ -48,46 +48,5 @@ class JobNotifyClassEnd : JobService() {
         manager.startManaging(jobParameters.extras.getLong(Constants.CLASS_END_TIME))
 
         jobFinished(jobParameters, false)
-    }
-
-    fun createNotification(context: Context, userClass: String) {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("channel_1", "Class Ended", NotificationManager.IMPORTANCE_HIGH)
-            channel.enableLights(true)
-            channel.lightColor = Color.BLUE
-            channel.description = context.getString(R.string.notify_title)
-            channel.enableVibration(true)
-
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        val remoteInput = RemoteInput.Builder(Constants.RESULT_KEY)
-                .setLabel(context.getString(R.string.notify_reply_label))
-                .build()
-        val replyIntent = Intent(context, NotificationReplyReceiver::class.java)
-        val replyPendingIntent = PendingIntent.getBroadcast(context, 203,
-                replyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val action = NotificationCompat.Action.Builder(R.drawable.ic_send, context.getString(R.string.notify_reply_label), replyPendingIntent)
-                .addRemoteInput(remoteInput)
-                .build()
-
-
-        Timber.d("showing notification")
-        val intent = Intent(context, SignInActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(context, 102, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-
-        val builder = NotificationCompat.Builder(context, "channel_1")
-                .setContentTitle(context.getString(R.string.notify_title))
-                .setContentText("Do you have any homework for $userClass?")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .addAction(action)
-
-        val notification = builder.build()
-        notificationManager.notify(1011, notification)
     }
 }
