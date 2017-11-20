@@ -24,7 +24,7 @@ object JobSchedulerUtil {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     fun scheduleClassManagerJob(context: Context, userClass: String,
-                                minimumLatency: Long, overrideDelay: Long, specificTime: Long) {
+                                minimumLatency: Long, specificTime: Long) {
         val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         val bundle = PersistableBundle()
         bundle.putString(Constants.CLASS_NAME, userClass)
@@ -39,7 +39,7 @@ object JobSchedulerUtil {
                 .setExtras(bundle)
                 .build())
         Timber.d("Class end scheduled")
-        Timber.d("minlatency was $minimumLatency override delay was $overrideDelay")
+        Timber.d("minlatency was $minimumLatency override delay was ")
     }
 
     /**
@@ -48,7 +48,7 @@ object JobSchedulerUtil {
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun scheduleAssignmentManagerJob(context: Context, userAssignment: String, userClass: String,
-                                     minimumDelay: Long, overrideDelay: Long) {
+                                     minimumDelay: Long) {
         val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         val bundle = PersistableBundle()
         bundle.putString(Constants.USER_ASSIGNMENT, userAssignment)
@@ -61,7 +61,6 @@ object JobSchedulerUtil {
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .setMinimumLatency(minimumDelay)
-//                .setOverrideDeadline(overrideDelay)
                 .setExtras(bundle)
                 .build())
 

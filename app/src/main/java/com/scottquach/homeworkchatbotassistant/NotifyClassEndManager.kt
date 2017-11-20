@@ -180,12 +180,10 @@ class NotifyClassEndManager(var context: Context) : BaseDatabase(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             alarm.add(Calendar.MINUTE, -2)
             val minimumLatency = (alarm.timeInMillis - previousEndTime.timeInMillis)
-            alarm.add(Calendar.MINUTE, 4)
-            val overrideDeadline = (alarm.timeInMillis - previousEndTime.timeInMillis)
-            alarm.add(Calendar.MINUTE, -2)
+            alarm.add(Calendar.MINUTE, 2)
 
             Timber.d("Was after Lollipop")
-            JobSchedulerUtil.scheduleClassManagerJob(context, model.title, minimumLatency, overrideDeadline,
+            JobSchedulerUtil.scheduleClassManagerJob(context, model.title, minimumLatency,
                     alarm.timeInMillis)
         } else {
             Timber.d("Was before Lollipop")

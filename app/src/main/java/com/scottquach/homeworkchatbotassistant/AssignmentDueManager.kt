@@ -43,14 +43,10 @@ class AssignmentDueManager(var context: Context) : AssignmentDatabase.Assignment
         if (alarm.after(currentTime)) {
             Timber.d("Assignment reminder is after current time")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                alarm.add(Calendar.MINUTE, -30)
                 val minimumDelay = alarm.timeInMillis - System.currentTimeMillis()
-                alarm.add(Calendar.MINUTE, 60)
-                val overrideDelay = alarm.timeInMillis - System.currentTimeMillis()
-
 
                 JobSchedulerUtil.scheduleAssignmentManagerJob(context, model.title, model.userClass,
-                        minimumDelay, overrideDelay)
+                        minimumDelay)
             } else {
                 val intent = Intent(context, AssignmentDueReceiver::class.java)
                 intent.setClass(context, AssignmentDueReceiver::class.java)
