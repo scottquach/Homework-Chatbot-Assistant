@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_chat.*
 
 class ChatFragment : Fragment(), ChatContract.View, RecyclerQuickReplyAdapter.QuickReplyInterface {
     override fun onQuickReply(reply: String) {
-        if (NetworkUtils.isConnected(context)) {
+        if (NetworkUtils.isConnected(context!!)) {
             AnimationUtils.fadeOutFadeIn(recycler_quick_reply,
                     resources.getInteger(android.R.integer.config_shortAnimTime))
             presenter.addMessage(reply)
@@ -37,15 +37,14 @@ class ChatFragment : Fragment(), ChatContract.View, RecyclerQuickReplyAdapter.Qu
 
     private lateinit var presenter: ChatPresenter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_chat)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         messageRecycler = recycler_messages
-        messageAdapter = RecyclerChatAdapter(context)
+        messageAdapter = RecyclerChatAdapter(context!!)
         val messagesManager = LinearLayoutManager(context)
         messagesManager.stackFromEnd = true
         messageRecycler.apply {
@@ -67,7 +66,7 @@ class ChatFragment : Fragment(), ChatContract.View, RecyclerQuickReplyAdapter.Qu
         presenter.loadData()
 
         button_send.setOnClickListener {
-            if (NetworkUtils.isConnected(context)) {
+            if (NetworkUtils.isConnected(context!!)) {
                 if (edit_input.text.isNotEmpty()) {
                     presenter.onSendMessageButtonClicked()
                 }

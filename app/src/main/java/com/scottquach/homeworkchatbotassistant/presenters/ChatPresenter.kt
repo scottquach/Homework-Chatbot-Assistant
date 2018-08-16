@@ -18,11 +18,11 @@ ChatDatabase.CallbackInterface{
     private val userMessages = mutableListOf<MessageModel>()
 
     private val messageHandler by lazy {
-        MessageDatabaseHandler(view.context, this)
+        MessageDatabaseHandler(view.context!!, this)
     }
 
     private val chatDatabase by lazy {
-        ChatDatabase(view.context, this)
+        ChatDatabase(view.context!!, this)
     }
 
     private lateinit var convoContext: String

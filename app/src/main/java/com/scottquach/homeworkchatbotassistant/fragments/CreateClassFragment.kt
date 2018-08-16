@@ -33,8 +33,7 @@ class CreateClassFragment : Fragment(), CreateClassContract.View {
         fun notifyNoInternetConnection()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_create_class)
     }
 
@@ -97,7 +96,7 @@ class CreateClassFragment : Fragment(), CreateClassContract.View {
     override fun showDayPicker() {
         val items: Array<String> = resources.getStringArray(R.array.days_of_week)
 
-        AlertDialog.Builder(context)
+        AlertDialog.Builder(context!!)
                 .setTitle(getString(R.string.select_class_days_dialog_title))
                 .setMultiChoiceItems(items, null, { dialogInterface: DialogInterface?, index: Int, isChecked: Boolean ->
                     presenter.onToggleDayPicked(isChecked, index)

@@ -33,8 +33,8 @@ class RecyclerAssignmentsAdapter(private val context: Context,
         } else throw RuntimeException(fragment!!.toString() + " must implement DisplayHomeworkInterface")
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
-        super.onDetachedFromRecyclerView(recyclerView)
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView!!)
         listener = null
     }
 
@@ -60,7 +60,7 @@ class RecyclerAssignmentsAdapter(private val context: Context,
         } else TYPE_REGULAR
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (AssignmentDatabase.isOverdueAssignment(context, userAssignments[position])) {
             (holder as AssignmentDueViewHolder).bindInformation(userAssignments[position])
             (holder as AssignmentDueViewHolder).itemView.findViewById<ImageView>(R.id.button_assignment_delete).setOnClickListener {

@@ -46,9 +46,9 @@ class DisplayAssignmentsPresenter(val view: DisplayAssignmentsFragment) : Displa
         } else view.toggleNoHomeworkLabelsVisible()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            JobSchedulerUtil.cancelAllJobs(view.context)
-            AssignmentDueManager(view.context).requestReschedule()
-            NotifyClassEndManager(view.context).startManaging()
+            JobSchedulerUtil.cancelAllJobs(view.context!!)
+            AssignmentDueManager(view.context!!).requestReschedule()
+            NotifyClassEndManager(view.context!!).startManaging()
         }
         logEvent(InstrumentationUtils.DELETE_ASSIGNMENT)
     }

@@ -27,8 +27,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
 
     private lateinit var presenter: DisplayAssignmentsPresenter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_display_assignments)
     }
 
@@ -39,7 +38,7 @@ class DisplayAssignmentsFragment : Fragment(), RecyclerAssignmentsAdapter.Assign
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         assignmentsRecycler = recycler_homework
-        assignmentsAdapter = RecyclerAssignmentsAdapter(context, this)
+        assignmentsAdapter = RecyclerAssignmentsAdapter(context!!, this)
         assignmentsRecycler?.apply {
             adapter = this@DisplayAssignmentsFragment.assignmentsAdapter
             layoutManager = LinearLayoutManager(context)

@@ -27,12 +27,12 @@ class RecyclerScheduleAdapter(val fragment:DisplayScheduleFragment) :
         } else throw RuntimeException(fragment!!.toString() + " must implement DisplayHomeworkInterface")
     }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
         listener = null
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder? {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(parent.inflate(R.layout.row_class))
     }
 

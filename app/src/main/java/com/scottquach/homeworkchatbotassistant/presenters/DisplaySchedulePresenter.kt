@@ -41,7 +41,7 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
      */
     override fun requestLoadData() {
         view.resetData()
-        view.setTextLabel(view.context.getString(R.string.loading_classes))
+        view.setTextLabel(view.context!!.getString(R.string.loading_classes))
         view.textLabelSetVisible()
         database.loadData()
     }
@@ -56,7 +56,7 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
         if (userClasses.size > 0) {
             view.textLabelSetInvisible()
         } else {
-            view.setTextLabel(view.context.getString(R.string.no_classes))
+            view.setTextLabel(view.context!!.getString(R.string.no_classes))
             view.textLabelSetVisible()
         }
     }
@@ -75,13 +75,13 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
                         //Delete the assignments for corresponding class
                         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                JobSchedulerUtil.cancelAllJobs(view.context)
+                                JobSchedulerUtil.cancelAllJobs(view.context!!)
                                 dataSnapshot.child("users").child(user!!.uid).child("assignments").children
                                         .filter { it.child("userClass").value as String == model.title }
                                         .forEach { databaseReference.child("users").child(user!!.uid).child("assignments").child(it.key).removeValue() }
                                 val manager = NotifyClassEndManager(context)
                                 manager.startManaging()
-                                AssignmentDueManager(view.context).requestReschedule()
+                                AssignmentDueManager(view.context!!).requestReschedule()
                             }
 
                             override fun onCancelled(p0: DatabaseError?) {
@@ -94,7 +94,7 @@ class DisplaySchedulePresenter(val view: DisplayScheduleFragment) : DisplaySched
                         if (userClasses.size > 0) {
                             view.textLabelSetInvisible()
                         } else {
-                            view.setTextLabel(view.context.getString(R.string.no_classes))
+                            view.setTextLabel(view.context!!.getString(R.string.no_classes))
                             view.textLabelSetVisible()
                         }
                         logEvent(InstrumentationUtils.DELETE_CLASS)

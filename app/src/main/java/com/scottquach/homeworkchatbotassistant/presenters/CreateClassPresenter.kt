@@ -88,7 +88,7 @@ class CreateClassPresenter(val view: CreateClassFragment) : CreateClassContract.
      * call for it to be added in database
      */
     override fun onCreateClassAttempt() {
-        if (NetworkUtils.isConnected(view.context)) {
+        if (NetworkUtils.isConnected(view.context!!)) {
             if (isRequiredFieldsFilled()) {
                 val newClass = ClassModel()
                 newClass.title = view.edit_title.text.toString().trim()
@@ -112,7 +112,7 @@ class CreateClassPresenter(val view: CreateClassFragment) : CreateClassContract.
         val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
         databaseReference.child("users").child(user!!.uid).child("classes").child(model.title).setValue(model)
-        val manager = NotifyClassEndManager(view.context)
+        val manager = NotifyClassEndManager(view.context!!)
         manager.startManaging()
 
         view.returnToScheduleView()

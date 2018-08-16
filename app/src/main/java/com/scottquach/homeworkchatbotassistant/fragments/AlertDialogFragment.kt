@@ -34,13 +34,13 @@ class AlertDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val title = arguments.getString(Constants.ALERT_TITLE)
-        val message = arguments.getString(Constants.ALERT_MESSAGE)
-        val positiveString = arguments.getString(Constants.ALERT_POSITIVE)
-        val negativeString = arguments.getString(Constants.ALERT_NEGATIVE)
-        val haveNegative = arguments.getBoolean(Constants.ALERT_HAVE_NEGATIVE)
+        val title = arguments?.getString(Constants.ALERT_TITLE)
+        val message = arguments?.getString(Constants.ALERT_MESSAGE)
+        val positiveString = arguments?.getString(Constants.ALERT_POSITIVE)
+        val negativeString = arguments?.getString(Constants.ALERT_NEGATIVE)
+        val haveNegative = arguments?.getBoolean(Constants.ALERT_HAVE_NEGATIVE)
 
-        val builder =  AlertDialog.Builder(context)
+        val builder =  AlertDialog.Builder(context!!)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(positiveString, object : DialogInterface.OnClickListener {
@@ -49,7 +49,7 @@ class AlertDialogFragment : DialogFragment() {
                     }
                 })
 
-        if (haveNegative) {
+        if (haveNegative!!) {
             builder.setNegativeButton(negativeString, object : DialogInterface.OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
                     listener?.onAlertNegativeClicked(dialog)

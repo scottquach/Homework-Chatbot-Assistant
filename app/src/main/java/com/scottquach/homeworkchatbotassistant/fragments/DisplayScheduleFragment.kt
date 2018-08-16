@@ -45,8 +45,7 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
         listener = null
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.fragment_display_schedule)
     }
 
@@ -101,7 +100,7 @@ class DisplayScheduleFragment : Fragment(), RecyclerScheduleAdapter.ScheduleAdap
     }
 
     override fun deleteClass(model: ClassModel, position: Int) {
-        presenter.deleteClass(context, model, position)
+        presenter.deleteClass(this!!.context!!, model, position)
     }
 
     /**
